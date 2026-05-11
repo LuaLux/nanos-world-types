@@ -1,0 +1,5 @@
+name = "nanos-world-types"
+version = "0.1.0"
+target = "5.4"
+
+types_only = true

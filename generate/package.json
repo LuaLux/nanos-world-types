@@ -1,0 +1,9 @@
+{
+    "name": "nanos-world-types-generator",
+    "version": "0.0.0",
+    "private": true,
+    "description": "Generates the .d.lux declaration file from the nanos-world api JSON specs.",
+    "scripts": {
+        "generate": "node generate.js"
+    }
+}

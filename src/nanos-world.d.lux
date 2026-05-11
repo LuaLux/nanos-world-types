@@ -1,0 +1,2872 @@
+-- Auto-generated from the nanos-world api JSON specs.
+-- Source: api/  (git submodule)  ·  Generator: generate/generate.js
+-- Do not edit by hand. Run `npm run generate` after bumping the submodule.
+
+-- ========================================================================
+-- Enums
+-- ========================================================================
+
+-- Used by Characters to change the Aiming Mode while holding Weapons
+declare enum AimMode
+    None
+    ADS
+    ZoomedZoom
+    Zoomed
+    ZoomedFar
+end
+
+declare enum AnimationSlotType
+    FullBody
+    UpperBody
+    Head
+end
+
+declare enum AssetType
+    Map
+    StaticMesh
+    SkeletalMesh
+    Sound
+    Animation
+    Particle
+    Material
+    Blueprint
+    Other
+end
+
+declare enum AttachmentRule
+    -- Will keep the current relative position/rotation if already attached.
+    KeepRelative
+    -- Will calculate the new relative position/rotation so the Actor stays at the same position after being attached.
+    KeepWorld
+    -- Will set the Actor to the same position/rotation as the parent actor (or at the bone location) and reset its relative position/rotation to zero.
+    SnapToTarget
+end
+
+declare enum AttenuationFunction
+    Linear
+    Logarithmic
+    Inverse
+    LogReverse
+    NaturalSound
+end
+
+declare enum BlendMode
+    Opaque
+    Masked
+    Translucent
+    Additive
+    Modulate
+    MaskedDistanceField
+    MaskedDistanceFieldShadowed
+    TranslucentDistanceField
+    TranslucentDistanceFieldShadowed
+    AlphaComposite
+    AlphaHoldout
+    AlphaBlend
+    TranslucentAlphaOnly
+    TranslucentAlphaOnlyWriteAlpha
+end
+
+declare enum CameraMode
+    FPSTPS
+    FPSOnly
+    TPSOnly
+end
+
+declare enum CCDMode
+    -- Automatically enables/disables depending on the Object size
+    Auto
+    -- Disables CCD
+    Disabled
+    -- Enables CCD
+    Enabled
+end
+
+declare enum CollisionChannel
+    -- WorldStatic Object Types
+    WorldStatic
+    -- WorldDynamic Object Types
+    WorldDynamic
+    -- Capsules (usually from Characters)
+    Pawn
+    -- Pickables and Props Meshes
+    PhysicsBody
+    -- Character Mesh
+    Mesh
+    -- Water Body
+    Water
+    -- Foliage Meshes
+    Foliage
+    -- Vehicles Meshes
+    Vehicle
+    -- All Objects
+    All
+end
+
+declare enum CollisionType
+    -- Blocks All
+    Normal
+    -- Only Blocks Static objects
+    StaticOnly
+    -- Doesn't Block anything
+    NoCollision
+    -- Blocks everything but Pawns (Characters)
+    IgnoreOnlyPawn
+    -- Automatically selects - usually will be Normal. On Props it will switch between Normal and IgnoreOnlyPawn depending on the Prop size
+    Auto
+end
+
+declare enum CursorType
+    None
+    Default
+    TextEditBeam
+    ResizeLeftRight
+    ResizeUpDown
+    ResizeSouthEast
+    ResizeSouthWest
+    CardinalCross
+    Crosshairs
+    Hand
+    GrabHand
+    GrabHandClosed
+    SlashedCircle
+    EyeDropper
+end
+
+declare enum ConstraintMotion
+    Free
+    Limited
+    Locked
+end
+
+declare enum DamageType
+    Shot
+    Explosion
+    Punch
+    Fall
+    RunOverProp
+    RunOverVehicle
+    Melee
+    Unknown
+end
+
+declare enum DatabaseEngine
+    SQLite
+    MySQL
+    PostgreSQL
+end
+
+declare enum DifferentialType
+    Undefined
+    AllWheelDrive
+    FrontWheelDrive
+    RearWheelDrive
+end
+
+declare enum FallingMode
+    None
+    Jumping
+    Climbing
+    Vaulting
+    Falling
+    HighFalling
+    Parachuting
+    SkyDiving
+end
+
+declare enum FontType
+    Roboto
+    GothicA1
+    PoiretOne
+    Oswald
+    RobotoMono
+    OpenSans
+end
+
+declare enum GaitMode
+    None
+    Walking
+    Sprinting
+end
+
+declare enum GizmoTransformMode
+    Translation
+    Rotation
+    Scale
+end
+
+declare enum GizmoAlignSpace
+    Local
+    World
+end
+
+declare enum GrabMode
+    -- Disables grabbing
+    Disabled
+    -- Automatically enables/disables depending on the Prop size
+    Auto
+    -- Enables grabbing
+    Enabled
+end
+
+declare enum HandlingMode
+    SingleHandedWeapon
+    DoubleHandedWeapon
+    SingleHandedMelee
+    DoubleHandedMelee
+    Throwable
+    Torch
+    Barrel
+    Box
+end
+
+declare enum HighlightMode
+    Always
+    OnlyHidden
+    OnlyVisible
+end
+
+-- HTTP defines a set of request methods to indicate the desired action to be performed for a given resource. Read more here.
+declare enum HTTPMethod
+    -- The GET method requests a representation of the specified resource. Requests using GET should only retrieve data.
+    GET
+    -- The POST method submits an entity to the specified resource, often causing a change in state or side effects on the server.
+    POST
+    -- The PUT method replaces all current representations of the target resource with the request payload.
+    PUT
+    -- The HEAD method asks for a response identical to a GET request, but without the response body.
+    HEAD
+    -- The DELETE method deletes the specified resource.
+    DELETE
+    -- The PATCH method applies partial modifications to a resource.
+    PATCH
+    -- The OPTIONS method describes the communication options for the target resource.
+    OPTIONS
+end
+
+declare enum ImageFormat
+    JPEG
+    PNG
+    BMP
+end
+
+declare enum InputEvent
+    Pressed
+    Released
+end
+
+declare enum KeyModifier
+    None
+    LeftShiftDown
+    RightShiftDown
+    LeftControlDown
+    RightControlDown
+    LeftAltDown
+    RightAltDown
+    LeftCommandDown
+    RightCommandDown
+    CapsLocked
+end
+
+declare enum LightProfile
+    None
+    Arrow_Star
+    Arrow_Up
+    Beam_01
+    Beam_02
+    Beam_03
+    Beam_04
+    Beam_05
+    Beam_06
+    Beam_07
+    Beam_08
+    Beam_LED_01
+    Beam_LED_02
+    Beam_LED_03
+    Beam_LED_04
+    Beam_LED_05
+    Beam_LED_06
+    Beam_LED_07
+    Bow
+    Capped_01
+    Capped_02
+    Shattered_01
+    Shattered_02
+    Shattered_03
+    Shattered_04
+    Shattered_05
+    SpotLight_01
+    SpotLight_02
+    SpotLight_03
+    SpotLight_04
+    Spreadout_01
+    Spreadout_02
+    Spreadout_03
+    Spreadout_04
+    Star_Bow
+    Star_Burst_01
+    Star_Burst_02
+    Star_Burst_03
+    Star_Burst_04
+    Star_Burst_05
+    Star_Burst_06
+    Star_Burst_07
+    Star_Burst_08
+    Star_X_01
+    Star_X_02
+    Wall_Boomerang
+    Wall_Inverted_V
+    Wall_Star_T
+    Wing_6
+    Wing_V_01
+    Wing_V_02
+end
+
+declare enum LogType
+    Display
+    Warning
+    Error
+    Debug
+    Verbose
+    Scripting
+    ScriptingWarn
+    ScriptingError
+    Chat
+    WebUI
+    Success
+    Fatal
+end
+
+declare enum LightType
+    Point
+    Spot
+    React
+end
+
+declare enum NativeWidget
+    Border
+    Button
+    CheckBox
+    Image
+    ProgressBar
+    RichTextBlock
+    Slider
+    Text
+    ComboBox
+    EditableText
+    EditableTextMultiLine
+    SpinBox
+    TextBox
+    TextBoxMultiLine
+    CanvasPanel
+    GridPanel
+    HorizontalBox
+    Overlay
+    ScaleBox
+    ScrollBox
+    SizeBox
+    UniformGridPanel
+    VerticalBox
+    WrapBox
+    BackgroundBlur
+end
+
+declare enum NotificationType
+    Info
+    Warning
+    Error
+    Fatal
+    Success
+end
+
+declare enum PackageType
+    Script
+    GameMode
+    LoadingScreen
+    Map
+    CModule
+    All
+end
+
+declare enum SkyMode
+    -- Uses a 3D Volumetric Cloud layer
+    VolumetricClouds
+    -- Designed to mimic the look of the volumetric clouds but as a static cloud texture. Much lower performance cost than volumetric clouds.
+    StaticClouds
+    -- Uses simple 2D dynamic clouds
+    DynamicClouds2D
+    -- Disables all forms of dynamic clouds
+    NoClouds
+    -- Trades clouds for a full 3D volumetric aurora, much more convincing than the 2D effect.
+    VolumetricAurora
+    -- Turns off all sky color, atmospheric scattering, clouds, etc. Specifically for environments which are set in outer space with no planet/ground beneath the camera.
+    Space
+end
+
+declare enum SoundType
+    SFX
+    Music
+    UI
+    Ambient
+end
+
+declare enum SoundLoopMode
+    -- Default value defined in the asset
+    Default
+    -- Overrides it to make it loop forever
+    Forever
+    -- Overrides it to make it play once
+    Never
+end
+
+declare enum StanceMode
+    None
+    Standing
+    Crouching
+    Proning
+end
+
+declare enum SteeringType
+    -- Both wheels steer by the same amount
+    SingleAngle
+    -- Outer wheels on corner steer less than the inner ones by set ratio
+    AngleRatio
+    -- Ackermann steering principle is applied
+    Ackermann
+end
+
+declare enum SurfaceType
+    Default
+    Carpet
+    Concrete
+    Grass
+    Gravel
+    Ground
+    MetalLight
+    Plastic
+    Sand
+    Snow
+    Water
+    WoodLight
+    Flesh
+    MetalHeavy
+    WoodHeavy
+    Ice
+    Mud
+    Rock
+    Thump
+    Glass
+    Rubber
+    Air
+end
+
+declare enum SuspensionSweepShape
+    -- Use ray to determine suspension length to ground - fastest
+    Raycast
+    -- Use sphere to determine suspension length to ground
+    Spherecast
+    -- Use wheel collision shape to determine suspension length to ground - Slowest
+    Shapecast
+end
+
+declare enum SwimmingMode
+    None
+    Surface
+    Underwater
+end
+
+declare enum TextRenderAlignCamera
+    Unaligned
+    AlignCameraRotation
+    FaceCamera
+end
+
+declare enum TextRenderBevelType
+    Linear
+    HalfCircle
+    Convex
+    Concave
+    OneStep
+    TwoSteps
+    Engraved
+end
+
+declare enum TextRenderHorizontalAlignment
+    Left
+    Center
+    Right
+end
+
+declare enum TextRenderRenderingType
+    Lit
+    Unlit
+    UnlitCameraAligned
+    UnlitCameraAlignedDepth
+end
+
+declare enum TextRenderVerticalAlignment
+    Top
+    Center
+    Bottom
+    QuadTop
+end
+
+declare enum TriggerType
+    Sphere
+    Box
+end
+
+declare enum TraceMode
+    -- Whether to draw a 3D line representing the ray
+    DrawDebug
+    -- Whether should trace against complex collision
+    TraceComplex
+    -- Whether want to include the physical material in the results (adds `SurfaceType` to result)
+    ReturnPhysicalMaterial
+    -- Whether want to return the Entity hit (adds `Entity` to result)
+    ReturnEntity
+    -- Whether should return names (adds `ActorName`, `ComponentName` and `BoneName` to result)
+    ReturnNames
+    -- Whether want to trace and return UV information (adds `UV` to result)
+    ReturnUV
+    -- Whether should only trace for objects that don't ignore visibility collision channel
+    TraceOnlyVisibility
+    -- Whether should return extra data about item that was hit (hit primitive specific - usually the instanced index) (adds `Item` to result)
+    ReturnItem
+end
+
+declare enum ViewMode
+    -- First Person View
+    FPS
+    -- Third Person Close View
+    TPS1
+    -- Third Person Medium View
+    TPS2
+    -- Third Person Far View
+    TPS3
+    -- Top Down View
+    TopDown
+end
+
+declare enum VOIPSetting
+    None
+    ListenOnly
+    SpeakOnly
+    Both
+end
+
+declare enum WeatherType
+    ClearSkies
+    Cloudy
+    Foggy
+    Overcast
+    PartlyCloudy
+    Rain
+    RainLight
+    RainThunderstorm
+    SandDustCalm
+    SandDustStorm
+    Snow
+    SnowBlizzard
+    SnowLight
+end
+
+declare enum WebUIModifier
+    None
+    CapsLockOn
+    ShiftDown
+    ControlDown
+    AltDown
+    LeftMouseButton
+    MiddleMouseButton
+    RightMouseButton
+    CommandDown
+    NumLockOn
+    IsKeyPad
+    IsLeft
+    IsRight
+    AltgrDown
+    IsRepeat
+end
+
+declare enum WebUIKeyType
+    Down
+    Up
+    Char
+end
+
+declare enum WebUIMouseType
+    Left
+    Right
+    Middle
+end
+
+declare enum WidgetHorizontalAlignment
+    Fill
+    Left
+    Center
+    Right
+end
+
+declare enum WidgetVerticalAlignment
+    Fill
+    Top
+    Center
+    Bottom
+end
+
+declare enum WidgetVisibility
+    Hidden
+    Visible
+    VisibleNotHitTestable
+end
+
+declare enum WidgetSizeRule
+    Automatic
+    Fill
+end
+
+declare enum WidgetSpace
+    -- The widget is rendered in the world as mesh, it can be occluded like any other mesh in the world
+    World
+    -- The widget is rendered in the screen, completely outside of the world, never occluded
+    Screen
+end
+
+-- ========================================================================
+-- Structs
+-- ========================================================================
+
+-- A color composed of components (R, G, B, A) with floating point precision.
+declare class Color
+    constructor(R: number?, G: number?, B: number?, A: number?)
+    -- Red color percentage (0-1)
+    R: number
+    -- Green color percentage (0-1)
+    G: number
+    -- Blue color percentage (0-1)
+    B: number
+    -- Alpha transparency percentage (0-1)
+    A: number
+    static WHITE: any
+    static BLACK: any
+    static TRANSPARENT: any
+    static RED: any
+    static GREEN: any
+    static BLUE: any
+    static YELLOW: any
+    static CYAN: any
+    static MAGENTA: any
+    static ORANGE: any
+    static CHARTREUSE: any
+    static AQUAMARINE: any
+    static AZURE: any
+    static VIOLET: any
+    static ROSE: any
+    -- Gets the Hexadecimal representation of this Color
+    function ToHex(appends_transparency: boolean?): string
+    -- Returns a random color from Color Palette
+    static function RandomPalette(includes_black: boolean?): Color
+    -- Returns a random color from all color scope
+    static function Random(): Color
+    -- Returns the color from 0-255 range values
+    static function FromRGBA(r: number?, g: number?, b: number?, a: number?): Color
+    -- Returns a color from the CYMK format
+    static function FromCYMK(c: number?, y: number?, m: number?, k: number?, a: number?): Color
+    -- Returns a color from the HSL format
+    static function FromHSL(h: number?, s: number?, l: number?): Color
+    -- Returns a color from the HSV format
+    static function FromHSV(h: number?, s: number?, v: number?): Color
+    -- Returns a color from the Hexadecimal format
+    static function FromHEX(hex: string): Color
+    -- Adds two Colors or a number into each component
+    operator + (rhs: Color | number): Color
+    -- Subtracts two Colors or a number from each component
+    operator - (rhs: Color | number): Color
+    -- Multiplies two Colors or a number into each component
+    operator * (rhs: Color | number): Color
+    -- Divides two Colors or a number from each component
+    operator / (rhs: Color | number): Color
+    -- Checks if two Colors have the same values
+    operator == (rhs: Color): boolean
+end
+
+-- A Matrix is an array of numbers this can be used for geometric and positional calculations. This is mainly used internally.
+declare class Matrix
+    constructor(rotation: Rotator, origin: Vector)
+    -- Transform the vector with the matrix
+    function TransformVector(vector: Vector): Vector
+    -- Returns a new matrix transposed (Wikipedia)
+    function GetTransposed(): Matrix
+end
+
+-- Floating point Quaternion that can represent a rotation about an axis in 3-D space
+declare class Quat
+    constructor(X: number?, Y: number?, Z: number?, W: number?)
+    -- The quaternion's X-component
+    X: number
+    -- The quaternion's Y-component
+    Y: number
+    -- The quaternion's Z-component
+    Z: number
+    -- The quaternion's W-component
+    W: number
+    -- In place normalize this Quaternion
+    function Normalize(): nil
+    -- Get the Rotator representation of this Quaternion
+    function Rotator(): Rotator
+    -- Returns the inverse of this Quaternion
+    function Inverse(): Quat
+    -- Rotates a vector by this Quaternion
+    function RotateVector(vector: Vector): Vector
+    -- Unrotates a vector by this Quaternion
+    function UnrotateVector(vector: Vector): Vector
+    -- Get the forward direction vector from this Quaternion
+    function GetForwardVector(): Vector
+    -- Get the right direction vector from this Quaternion
+    function GetRightVector(): Vector
+    -- Get the up direction vector from this Quaternion
+    function GetUpVector(): Vector
+    operator + (rhs: Quat | number): Quat
+    operator - (rhs: Quat | number): Quat
+    operator * (rhs: Quat | number): Quat
+end
+
+-- A container for rotation information (Pitch, Yaw, Roll). All rotation values are stored in degrees.
+declare class Rotator
+    constructor(pitch: number?, yaw: number?, roll: number?)
+    -- Rotation around the right axis (around Y axis), Looking up and down (0=Straight Ahead, +Up, -Down)
+    Pitch: number
+    -- Rotation around the up axis (around Z axis), Running in circles 0=East, +North, -South.
+    Yaw: number
+    -- Rotation around the forward axis (around X axis), Tilting your head, 0=Straight, +Clockwise, -CCW.
+    Roll: number
+    -- Get the forward (X) unit direction vector from this component, in world space.
+    function GetForwardVector(): Vector
+    -- Get the right (Y) unit direction vector from this component, in world space.
+    function GetRightVector(): Vector
+    -- Get the up (Z) unit direction vector from this component, in world space.
+    function GetUpVector(): Vector
+    -- Rotate a vector rotated by this rotator.
+    function RotateVector(vector: Vector): Vector
+    -- In-place normalize, removes all winding and creates the “shortest route” rotation.
+    function Normalize(): nil
+    -- Returns the vector rotated by the inverse of this rotator.
+    function UnrotateVector(vector: Vector): Vector
+    -- Get Rotation as a quaternion.
+    function Quaternion(): Quat
+    -- Returns a new Rotator normalized.
+    function GetNormalized(): Rotator
+    -- Checks whether rotator is near to zero within a specified tolerance
+    function IsNearlyZero(tolerance: number?): boolean
+    -- Checks whether all components of the rotator are exactly zero
+    function IsZero(): boolean
+    -- Generates a random rotation, with optional random roll
+    static function Random(roll: boolean?, min: number?, max: number?): Rotator
+    operator + (rhs: Rotator | number): Rotator
+    operator - (rhs: Rotator | number): Rotator
+    operator * (rhs: Rotator | number): Rotator
+end
+
+-- A Vector composed of components (X, Y, Z) with floating point precision. Used mainly for entity position.
+declare class Vector
+    constructor(X: number?, Y: number?, Z: number?)
+    -- X Coordinate
+    X: number
+    -- Y Coordinate
+    Y: number
+    -- Z Coordinate
+    Z: number
+    -- Check against another vector for equality, within specified error limits
+    function Equals(other: Vector, tolerance: number?): boolean
+    -- Distance between two points
+    function Distance(other: Vector): number
+    -- Squared distance between two points
+    function DistanceSquared(other: Vector): number
+    -- Calculates normalized version of vector without checking for zero length
+    function GetUnsafeNormal(): Vector
+    -- Gets a normalized copy of the vector, checking it is safe to do so based on the length
+    function GetSafeNormal(): Vector
+    -- Efficiently checks whether vector is near to another vector within a specified radius
+    function IsNear(other: Vector, radius: number): boolean
+    -- Checks whether vector is near to zero within a specified tolerance
+    function IsNearlyZero(tolerance: number?): boolean
+    -- Checks whether all components of the vector are exactly zero
+    function IsZero(): boolean
+    -- Normalize this vector in-place if it is larger than a given tolerance. Leaves it unchanged if not
+    function Normalize(): boolean
+    -- Get the length (magnitude) of this vector
+    function Size(): number
+    -- Get the squared length of this vector
+    function SizeSquared(): number
+    -- Return the Rotator orientation corresponding to the direction in which the vector points
+    function ToOrientationRotator(): Rotator
+    -- Return the Quaternion orientation corresponding to the direction in which the vector points
+    function ToOrientationQuat(): Quat
+    -- Dot product of two vectors
+    function Dot(other: Vector): number
+    -- Cross product of two vectors
+    function Cross(other: Vector): Vector
+    operator + (rhs: Vector | number): Vector
+    operator - (rhs: Vector | number): Vector
+    operator * (rhs: Vector | number): Vector
+    operator / (rhs: Vector | number): Vector
+    operator ^ (rhs: Vector | number): Vector
+end
+
+-- A Vector2D composed of components (X, Y) with floating point precision. Used mainly for HUD and Drawing on screen.
+declare class Vector2D
+    constructor(X: number?, Y: number?)
+    -- X Coordinate
+    X: number
+    -- Y Coordinate
+    Y: number
+    operator + (rhs: Vector2D | number): Vector2D
+    operator - (rhs: Vector2D | number): Vector2D
+    operator * (rhs: Vector2D | number): Vector2D
+    operator / (rhs: Vector2D | number): Vector2D
+end
+
+-- ========================================================================
+-- Classes
+-- ========================================================================
+
+-- Entity is the base for all Classes, and all those entities share the same Methods and Events described in this page.
+declare class Entity
+    -- Finish the spawning process and send the entity to clients if it was spawned with `defer_spawn`
+    function FinishSpawn(): nil
+    -- Gets the universal network ID of this Entity (same on both client and server)
+    function GetID(): number
+    -- Returns true if this Entity is being destroyed
+    function IsBeingDestroyed(): boolean
+    -- Gets if this Entity was spawned by the client side
+    function HasAuthority(): boolean
+    -- Gets the class of this entity
+    function GetClass(): any
+    -- Recursively checks if this entity is inherited from a Class
+    function IsA(class_: any): boolean
+    -- Subscribes to an Event on this specific entity
+    function Subscribe(event_name: string, callback: any): any
+    -- Subscribes to a custom event called from server on this specific entity
+    function SubscribeRemote(event_name: string, callback: any): any
+    -- Unsubscribes all callbacks from this Event in this Entity within this Package, or only the callback passed
+    function Unsubscribe(event_name: string, callback: any?): nil
+    -- Sets a Value in this Entity
+    function SetValue(key: string, value: any, sync_on_clients: boolean?): nil
+    -- Gets a Value stored on this Entity at the given key
+    function GetValue(key: string, fallback: any): any
+    -- Gets a list of all values keys
+    function GetAllValuesKeys(): string[]
+    -- Destroys this Entity
+    function Destroy(): nil
+    -- Returns true if this Entity is valid (i.e. wasn't destroyed and points to a valid Entity)
+    function IsValid(): boolean
+    -- Calls a custom remote event directly on this entity to a specific Player
+    function CallRemoteEvent(event_name: string, player: Player, ...: any): nil
+    -- Calls a custom remote event directly on this entity
+    function CallRemoteEvent(event_name: string, ...: any): nil
+    -- Calls a custom remote event directly on this entity to all Players
+    function BroadcastRemoteEvent(event_name: string, ...: any): nil
+    -- Returns a table containing all Entities of the class this is called on
+    static function GetAll(): Entity[]
+    -- Returns a specific Entity of this class at an index
+    static function GetByIndex(index: number): Entity
+    -- Returns how many Entities of this class exist
+    static function GetCount(): number
+    -- Returns an iterator with all Entities of this class to be used with `pairs()`
+    static function GetPairs(): any
+    -- Inherits this class with the Inheriting System
+    static function Inherit(name: string, custom_values: any?): any
+    -- Gets a list of all directly inherited classes from this Class created with the Inheriting System
+    static function GetInheritedClasses(recursively: boolean?): any[]
+    -- Gets the parent class if this Class was created with the Inheriting System
+    static function GetParentClass(): any?
+    -- Gets if this Class is child of another class if this Class was created with the Inheriting System
+    static function IsChildOf(class_: any): boolean
+    -- Subscribes to an Event for all entities of this Class
+    static function Subscribe(event_name: string, callback: any): any
+    -- Subscribes to a custom event called from server
+    static function SubscribeRemote(event_name: string, callback: any): any
+    -- Unsubscribes all callbacks from this Event in this Class within this Package, or only the callback passed
+    static function Unsubscribe(event_name: string, callback: any?): nil
+end
+
+-- An Actor is an object which can be spawned and destroyed through Lua.
+-- Actors support 3D transformations such as translation (location), rotation, and scale.
+-- 
+-- An Actor is the base for several entities, and all those entities share the same Methods and Events described in this page.
+declare class Actor extends Entity
+    -- Add an impulse to this Actor. Good for one time instant burst
+    function AddImpulse(impulse: Vector, velocity_change: boolean?): nil
+    -- Add an angular impulse to this Actor. Good for one time instant burst
+    function AddAngularImpulse(angular_impulse: Vector, velocity_change: boolean?): nil
+    -- Attaches this Actor to any other Actor, optionally at a specific bone
+    function AttachTo(other: Actor, attachment_rule: AttachmentRule?, bone_name: string?, lifespan_when_detached: number?, use_absolute_rotation: boolean?): boolean
+    -- Detaches this Actor from AttachedTo Actor
+    function Detach(): nil
+    -- Sets this Actor's collision type
+    function SetCollision(collision_type: CollisionType): nil
+    -- Sets this Actor's Dimension
+    function SetDimension(dimension: number): nil
+    -- Adds a permanent force to this Actor, set to Vector(0, 0, 0) to cancel
+    function SetForce(force: Vector, is_local: boolean?): nil
+    -- Adds a permanent angular force to this Actor, set to Vector(0, 0, 0) to cancel
+    function SetAngularForce(angular_force: Vector): nil
+    -- Sets whether gravity is enabled on this Actor
+    function SetGravityEnabled(gravity_enabled: boolean): nil
+    -- Sets whether the actor is visible or not
+    function SetVisibility(is_visible: boolean): nil
+    -- Gets a Socket Transform in world space given a bone or socket name
+    function GetSocketTransform(socket_name: string): any
+    -- Sets whether the highlight is enabled on this Actor, and which highlight index to use
+    function SetHighlightEnabled(is_enabled: boolean, index: number?): nil
+    -- Sets whether the outline is enabled on this Actor, and which outline index to use
+    function SetOutlineEnabled(is_enabled: boolean, index: number?): nil
+    -- Sets the time (in seconds) before this Actor is destroyed. After this time has passed, the actor will be automatically destroyed.
+    function SetLifeSpan(seconds: number): nil
+    -- Sets this Actor's location in the game world
+    function SetLocation(location: Vector): nil
+    -- Sets this Actor's rotation in the game world
+    function SetRotation(rotation: Rotator): nil
+    -- Sets this Actor's relative location in local space (only if this actor is attached)
+    function SetRelativeLocation(relative_location: Vector): nil
+    -- Sets this Actor's relative rotation in local space (only if this actor is attached)
+    function SetRelativeRotation(relative_rotation: Rotator): nil
+    -- Sets this Actor's scale
+    function SetScale(scale: Vector): nil
+    -- Sets this Actor's render cull distance
+    function SetRenderCullDistance(max_distance: number): nil
+    -- Sets this Actor's to cast shadows or not
+    function SetCastShadow(cast_shadow: boolean): nil
+    -- Sets the Player to have network authority over this Actor
+    function SetNetworkAuthority(player: Player?): nil
+    -- Sets if this Actor will auto distribute the network authority between players
+    function SetNetworkAuthorityAutoDistributed(auto_distribute: boolean): nil
+    -- Smoothly moves this actor to a location over a certain time
+    function TranslateTo(location: Vector, time: number, exp: number?): nil
+    -- Smoothly rotates this actor to an angle over a certain time
+    function RotateTo(rotation: Rotator, time: number, exp: number?): nil
+    -- Returns true if this Actor is visible
+    function IsVisible(): boolean
+    -- Returns true if gravity is enabled on this Actor
+    function IsGravityEnabled(): boolean
+    -- Returns true if this Actor is in water
+    function IsInWater(): boolean
+    -- Returns true if this Actor is currently network distributed
+    function IsNetworkDistributed(): boolean
+    -- Gets all Actors attached to this Actor
+    function GetAttachedEntities(): Actor[]
+    -- Gets the Actor this Actor is attached to
+    function GetAttachedTo(): Actor?
+    -- Gets this Actor's bounds
+    function GetBounds(): any
+    -- Gets this Actor's collision type
+    function GetCollision(): CollisionType
+    -- Gets this Actor's location in the game world
+    function GetLocation(): Vector
+    -- Gets this Actor's Relative Location if it's attached
+    function GetRelativeLocation(): Vector
+    -- Gets this Actor's Network Authority Player
+    function GetNetworkAuthority(): Player?
+    -- Gets this Actor's angle in the game world
+    function GetRotation(): Rotator
+    -- Gets this Actor's Relative Rotation if it's attached
+    function GetRelativeRotation(): Rotator
+    -- Gets this Actor's force (set by `SetForce()`)
+    function GetForce(): Vector
+    -- Gets this Actor's angular force (set by `SetAngularForce()`)
+    function GetAngularForce(): Vector
+    -- Gets this Actor's dimension
+    function GetDimension(): number
+    -- Returns true if the local Player is currently the Network Authority of this Actor
+    function HasNetworkAuthority(): boolean
+    -- Gets this Actor's scale
+    function GetScale(): Vector
+    -- Gets this Actor's current velocity
+    function GetVelocity(): Vector
+    -- Adds an Unreal Actor Tag to this Actor
+    function AddActorTag(tag: string): nil
+    -- Removes an Unreal Actor Tag from this Actor
+    function RemoveActorTag(tag: string): nil
+    -- Gets all Unreal Actor Tags on this Actor
+    function GetActorTags(): string[]
+    -- Gets if this Actor was recently rendered on screen
+    function WasRecentlyRendered(): boolean
+    -- Gets the distance of this Actor from the Camera
+    function GetDistanceFromCamera(): number
+    -- Gets the percentage of this Actor size in the screen
+    function GetScreenPercentage(): number
+end
+
+-- Pickables are special Actors which can be grabbed, held and used by Characters.
+declare class Pickable extends Entity
+    -- Attaches a Skeletal Mesh as master pose to this entity
+    function AddSkeletalMeshAttached(id: string, skeletal_mesh_path: string, use_parent_bounds: boolean?, use_base_leader_pose_component: boolean?, attachable_id: string?): nil
+    -- Attaches a Static Mesh to this entity
+    function AddStaticMeshAttached(id: string, static_mesh_path: string, socket: string?, relative_location: Vector?, relative_rotation: Rotator?, use_parent_bounds: boolean?, attachable_id: string?): nil
+    -- Gets all Static Meshes attached to this entity
+    function GetAllStaticMeshAttached(): string[]
+    -- Gets all Skeletal Meshes attached to this entity
+    function GetAllSkeletalMeshAttached(): string[]
+    -- Removes, if it exists, a SkeletalMesh from this Pickable given its custom ID
+    function RemoveSkeletalMeshAttached(id: string): nil
+    -- Sets a Static Mesh Attached location and rotation
+    function SetStaticMeshAttachedTransform(id: string, relative_location: Vector, relative_rotation: Rotator): nil
+    -- Removes, if it exists, a StaticMesh from this Pickable given its custom ID
+    function RemoveStaticMeshAttached(id: string): nil
+    -- Removes all StaticMeshes attached
+    function RemoveAllStaticMeshesAttached(): nil
+    -- Removes all SkeletalMeshes attached
+    function RemoveAllSkeletalMeshesAttached(): nil
+    -- Pulls the usage of this Pickable (will start firing if this is a weapon)
+    function PullUse(release_use_after: number?): nil
+    -- Releases the usage of this Pickable (will stop firing if this is a weapon)
+    function ReleaseUse(): nil
+    -- Sets the Attachment Settings for this Pickable (how it attaches to the Character when Picking up)
+    function SetAttachmentSettings(relative_location: Vector, relative_rotation: Rotator?, socket: string?): nil
+    -- Sets the crosshair material for this Pickable
+    function SetCrosshairMaterial(material_asset: string): nil
+    -- Sets if this Pickable can be picked up from ground by the player
+    function SetPickable(is_pickable: boolean): nil
+    -- Sets if this Pickable can be used by the player when held
+    function SetCanUse(can_use: boolean): nil
+    -- Gets the name of the asset this Pickable uses
+    function GetMesh(): string
+    -- Gets the Character, if it exists, that's holding this Pickable
+    function GetHandler(): Character?
+    -- Gets the Handling Mode of this Pickable
+    function GetHandlingMode(): HandlingMode
+end
+
+-- Base class for all Paintable entities. This class provides customization for materials, exposing common functions to allow you to set custom material parameters, including loading textures from disk.
+declare class Paintable extends Entity
+    -- Sets the material at the specified index of this Actor
+    function SetMaterial(material_path: string, index: number?, attachable_id: string?): nil
+    -- Sets the material at the specified index of this Actor to a Canvas object
+    function SetMaterialFromCanvas(canvas: Canvas, index: number?): nil
+    -- Sets the material at the specified index of this Actor to a SceneCapture object
+    function SetMaterialFromSceneCapture(scene_capture: SceneCapture, index: number?): nil
+    -- Sets the material at the specified index of this Actor to a WebUI object
+    function SetMaterialFromWebUI(webui: WebUI, index: number?): nil
+    -- Resets the material from the specified index to the original one
+    function ResetMaterial(index: number?, attachable_id: string?): nil
+    -- Sets a Color parameter in this Actor's material
+    function SetMaterialColorParameter(parameter_name: string, color: Color, index: number?, attachable_id: string?): nil
+    -- Sets a Scalar parameter in this Actor's material
+    function SetMaterialScalarParameter(parameter_name: string, scalar: number, index: number?, attachable_id: string?): nil
+    -- Sets a texture parameter in this Actor's material to an image
+    function SetMaterialTextureParameter(parameter_name: string, texture_path: string, index: number?, attachable_id: string?): nil
+    -- Sets a Vector parameter in this Actor's material
+    function SetMaterialVectorParameter(parameter_name: string, vector: Vector, index: number?, attachable_id: string?): nil
+    -- Gets a Color parameter from this Actor's material
+    function GetMaterialColorParameter(parameter_name: string, index: number?, attachable_id: string?): Color
+    -- Gets a Vector parameter from this Actor's material
+    function GetMaterialVectorParameter(parameter_name: string, index: number?, attachable_id: string?): Vector
+    -- Gets a Texture parameter from this Actor's material
+    function GetMaterialTextureParameter(parameter_name: string, index: number?, attachable_id: string?): string
+    -- Gets a Scalar parameter from this Actor's material
+    function GetMaterialScalarParameter(parameter_name: string, index: number?, attachable_id: string?): number
+    -- Overrides this Actor's Physical Material with a new one
+    function SetPhysicalMaterial(physical_material_path: string): nil
+end
+
+-- Base class for all Damageable entities. It provides Health and Damage related methods and events.
+declare class Damageable extends Entity
+    -- Do damage to this entity
+    function ApplyDamage(damage: number, bone_name: string?, damage_type: DamageType?, from_direction: Vector?, instigator: Player?, causer: any?): number
+    -- Gets the current health
+    function GetHealth(): number
+    -- Gets the Max Health
+    function GetMaxHealth(): number
+    -- Returns if the entity is dead
+    function IsDead(): boolean
+    -- Respawns the Entity, fullying it's Health and moving it to it's Initial Location
+    function Respawn(location: Vector?, rotation: Rotator?): nil
+    -- Sets the Health of this Entity
+    function SetHealth(new_health: number): nil
+    -- Sets the MaxHealth of this Entity
+    function SetMaxHealth(max_health: number): nil
+    -- Changes how much damage this entity takes on specific bones
+    function SetDamageMultiplier(bone_name: string, multiplier: number): nil
+    -- Gets the Damage Multiplier of a bone
+    function GetDamageMultiplier(bone_name: string): number
+end
+
+-- Base class for all Vehicle entities.
+declare class Vehicle extends Entity
+    -- Attaches a Skeletal Mesh as master pose to this entity
+    function AddSkeletalMeshAttached(id: string, skeletal_mesh_path: string, use_parent_bounds: boolean?, use_base_leader_pose_component: boolean?, attachable_id: string?): nil
+    -- Attaches a Static Mesh to this entity
+    function AddStaticMeshAttached(id: string, static_mesh_path: string, socket: string?, relative_location: Vector?, relative_rotation: Rotator?, use_parent_bounds: boolean?, attachable_id: string?): nil
+    -- Gets all Static Meshes attached to this entity
+    function GetAllStaticMeshAttached(): string[]
+    -- Gets all Skeletal Meshes attached to this entity
+    function GetAllSkeletalMeshAttached(): string[]
+    -- Removes, if it exists, a SkeletalMesh from this Pickable given its custom ID
+    function RemoveSkeletalMeshAttached(id: string): nil
+    -- Sets a Static Mesh Attached location and rotation
+    function SetStaticMeshAttachedTransform(id: string, relative_location: Vector, relative_rotation: Rotator): nil
+    -- Removes, if it exists, a StaticMesh from this Pickable given its custom ID
+    function RemoveStaticMeshAttached(id: string): nil
+    -- Removes all StaticMeshes attached
+    function RemoveAllStaticMeshesAttached(): nil
+    -- Removes all SkeletalMeshes attached
+    function RemoveAllSkeletalMeshesAttached(): nil
+    -- Adds a Door to the Vehicle
+    function SetDoor(seat_index: number, offset_location: Vector, seat_location: Vector, seat_rotation: Rotator, trigger_radius: number, leave_lateral_offset: number): nil
+    -- Plays an Animation on this Vehicle
+    function PlayAnimation(animation_path: string, slot_name: string?, loop_indefinitely: boolean?, blend_in_time: number?, blend_out_time: number?, play_rate: number?, stop_all_montages: boolean?): nil
+    -- Gets the Asset name
+    function GetMesh(): string
+    -- Gets all configured Doors
+    function GetDoors(): any
+    -- Gets a passenger from a seat
+    function GetPassenger(seat: number): Character
+    -- Gets all passengers
+    function GetPassengers(): Character[]
+    -- Configures the Explosion Settings when health reaches zero
+    function SetExplosionSettings(engine_relative_location: Vector, materials_index_burnt_override: any, materials_index_burnt_invisible: any): nil
+end
+
+-- Base class for all Character entities.
+declare class Pawn extends Entity
+    -- Attaches a Skeletal Mesh as master pose to this entity
+    function AddSkeletalMeshAttached(id: string, skeletal_mesh_path: string, use_parent_bounds: boolean?, use_base_leader_pose_component: boolean?, attachable_id: string?): nil
+    -- Attaches a Static Mesh to this entity
+    function AddStaticMeshAttached(id: string, static_mesh_path: string, socket: string?, relative_location: Vector?, relative_rotation: Rotator?, use_parent_bounds: boolean?, attachable_id: string?): nil
+    -- Gets all Static Meshes attached to this entity
+    function GetAllStaticMeshAttached(): string[]
+    -- Gets all Skeletal Meshes attached to this entity
+    function GetAllSkeletalMeshAttached(): string[]
+    -- Removes, if it exists, a SkeletalMesh from this entity given its custom ID
+    function RemoveSkeletalMeshAttached(id: string): nil
+    -- Sets a Static Mesh Attached location and rotation
+    function SetStaticMeshAttachedTransform(id: string, relative_location: Vector, relative_rotation: Rotator): nil
+    -- Removes, if it exists, a StaticMesh from this enitity given its custom ID
+    function RemoveStaticMeshAttached(id: string): nil
+    -- Removes all StaticMeshes attached
+    function RemoveAllStaticMeshesAttached(): nil
+    -- Removes all SkeletalMeshes attached
+    function RemoveAllSkeletalMeshesAttached(): nil
+    -- Stops an Animation Montage on this character
+    function StopAnimation(animation_asset: string): nil
+    -- Gets the base Mesh Asset
+    function GetMesh(): string
+    -- Sets the Flying Mode
+    function SetFlyingMode(flying_mode: boolean): nil
+    -- Gets if it's in Flying mode
+    function GetFlyingMode(): boolean
+    -- Gets the Moving To location
+    function GetMovingTo(): Vector
+    -- AI: Configures the RVO (Reciprocal Velocity Obstacles) Avoidance system used by the AIs when moving
+    function SetAIAvoidanceSettings(enabled: boolean, avoidance_consideration_radius: number?): nil
+    -- AI: Makes this Character to walk to the Location
+    function MoveTo(location: Vector, acceptance_radius: number?): nil
+    -- AI: Makes this Character to follow another actor
+    function Follow(actor: Actor, acceptance_radius: number?, stop_on_succeed: boolean?, stop_on_fail: boolean?, update_rate: number?): nil
+    -- AI: Stops the movement, optionally zeroing the velocity as well
+    function StopMovement(stops_velocity: boolean?): nil
+    -- Gets the possessing Player
+    function GetPlayer(): Player?
+    -- Gets the Control Rotation
+    function GetControlRotation(): Rotator
+    -- Sets the Control Rotation
+    function SetControlRotation(control_rotation: Rotator): nil
+    -- Sets if the character will react to damage by applying small dynamic ragdoll effect to local bones damaged
+    function SetHitReactionEnabled(is_enabled: boolean): nil
+    -- Sets if the character will enter ragdoll mode when it dies. You can set it to false to apply custom Death animations
+    function SetRagdollOnDeathEnabled(is_enabled: boolean): nil
+    -- Hides a bone of this Character
+    function HideBone(bone_name: string?): nil
+    -- UnHide a bone of this Character
+    function UnHideBone(bone_name: string): nil
+    -- Gets if a bone is hidden
+    function IsBoneHidden(bone_name: string): boolean
+    -- Triggers this Character to jump
+    function Jump(): nil
+    -- Sets the velocity of the jump
+    function SetJumpZVelocity(jump_z_velocity: number): nil
+    -- Sets this Character's Capsule size
+    function SetCapsuleSize(radius: number, half_height: number): nil
+    -- Gets the Capsule Size
+    function GetCapsuleSize(): any
+    -- Changes the Gravity Scale
+    function SetGravityScale(gravity_scale: number): nil
+    -- Gets the gravity scale
+    function GetGravityScale(): number
+    -- Sets if this Character is allowed to Jump
+    function SetCanJump(can_jump: boolean): nil
+    -- Sets if this Character is allowed to Crouch and to Prone
+    function SetCanCrouch(can_crouch: boolean): nil
+    -- Sets the Movement Braking Settings of this Character
+    function SetBrakingSettings(ground_friction: number?, braking_friction_factor: number?, braking_walking: number?, braking_flying: number?, braking_swimming: number?, braking_falling: number?): nil
+end
+
+-- A Billboard is a 2D Material that will be rendered always facing the camera.
+declare class Billboard extends Entity
+    constructor(location: Vector, material_asset: string, size: Vector2D?, size_in_screen_space: boolean?)
+end
+
+-- A Blueprint Class allows spawning any Unreal Blueprint Actor in nanos world.
+declare class Blueprint extends Entity
+    constructor(location: Vector, rotation: Rotator, blueprint_asset: string, collision_type: CollisionType?)
+    -- Calls a Blueprint Event or Function
+    function CallBlueprintEvent(event_name: string, ...: any): any
+    -- Assigns and Binds a Blueprint Event Dispatcher
+    function BindBlueprintEventDispatcher(dispatcher_name: string, callback: any): any
+    -- Unbinds a Blueprint Event Dispatcher
+    function UnbindBlueprintEventDispatcher(dispatcher_name: string, callback: any?): nil
+    -- Sets a Blueprint Property/Variable value directly
+    function SetBlueprintPropertyValue(property_name: string, value: any): nil
+    -- Gets a Blueprint Property/Variable value
+    function GetBlueprintPropertyValue(property_name: string): any
+end
+
+-- A Cable represents a Physics Constraint which joins two Actors with a rope-like visual representation between them.
+declare class Cable extends Entity
+    constructor(location: Vector, enable_visuals: boolean?, defer_spawn: boolean?)
+    -- Attaches the beginning of this cable to another Actor at a specific bone or relative location
+    function AttachStartTo(other: Actor, relative_location: Vector?, bone_name: string?): boolean
+    -- Attaches the end of this cable to another Actor at a specific bone or relative location
+    function AttachEndTo(other: Actor, relative_location: Vector?, bone_name: string?, constraint_offset: Vector?): boolean
+    -- Detaches the End of this Cable
+    function DetachEnd(): nil
+    -- Detaches the Start of this Cable
+    function DetachStart(): nil
+    -- Set the overall settings for this cable (visuals only)
+    function SetCableSettings(length: number, num_segments: number?, solver_iterations: number?, enable_stiffness: boolean?): nil
+    -- Set the forces the cable has applied (visuals only)
+    function SetForces(force: Vector, gravity_scale: number?): nil
+    -- Set the Physics Constraint related settings for this cable
+    function SetPhysicsConstraintSettings(disable_collision: boolean): nil
+    -- Sets the Physics Angular Limits of this cable
+    function SetAngularLimits(swing_1_motion: ConstraintMotion, swing_2_motion: ConstraintMotion, twist_motion: ConstraintMotion, swing_1_limit: number?, swing_2_limit: number?, twist_limit: number?): nil
+    -- Sets the Physics Linear Limits of this cable
+    function SetLinearLimits(x_motion: ConstraintMotion, y_motion: ConstraintMotion, z_motion: ConstraintMotion, limit: number?, restitution: number?, use_soft_constraint: boolean?, stiffness: number?, damping: number?): nil
+    -- Sets which linear position drives are enabled and the target position
+    function SetLinearMotorPositionSettings(enable_drive_x: boolean?, enable_drive_y: boolean?, enable_drive_z: boolean?, strength: number?, target: Vector?): nil
+    -- Sets which linear velocity drives are enabled and the target velocity
+    function SetLinearMotorVelocitySettings(enable_drive_x: boolean?, enable_drive_y: boolean?, enable_drive_z: boolean?, strength: number?, target: Vector?): nil
+    -- Sets whether the SLERP angular orientation drive is enabled and the target orientation
+    function SetAngularMotorSLERPOrientationSettings(enable_drive_slerp: boolean?, strength: number?, target: Rotator?): nil
+    -- Sets whether the SLERP angular velocity drive is enabled and the target angular velocity
+    function SetAngularMotorSLERPVelocitySettings(enable_drive_slerp: boolean?, strength: number?, target: Vector?): nil
+    -- Sets which twist and swing angular orientation drives are enabled and the target orientation
+    function SetAngularMotorTwistAndSwingOrientationSettings(enable_drive_twist: boolean?, enable_drive_swing: boolean?, strength: number?, target: Rotator?): nil
+    -- Sets which twist and swing angular velocity drives are enabled and the target angular velocity
+    function SetAngularMotorTwistAndSwingVelocitySettings(enable_drive_twist: boolean?, enable_drive_swing: boolean?, strength: number?, target: Vector?): nil
+    -- Set the rendering settings of this cable (visuals only)
+    function SetRenderingSettings(width: number, num_sides: number, tile_material: number): nil
+    -- Gets the Actor attached to Start
+    function GetAttachedStartTo(): Actor?
+    -- Gets the Actor attached to End
+    function GetAttachedEndTo(): Actor?
+end
+
+-- Canvas is an entity which you can draw onto it.
+declare class Canvas
+    constructor(is_visible: boolean?, clear_color: Color?, auto_repaint_rate: number?, should_clear_before_update: boolean?, auto_resize: boolean?, width: number?, height: number?, screen_position: Vector2D?)
+    -- Draws an unfilled box on the Canvas
+    function DrawBox(screen_position: Vector2D, screen_size: Vector2D, thickness: number, render_color: Color?, blend_mode: BlendMode?): nil
+    -- Draws a line on the Canvas
+    function DrawLine(screen_position_a: Vector2D, screen_position_b: Vector2D, thickness: number, render_color: Color, blend_mode: BlendMode?): nil
+    -- Draws a Material on the Canvas
+    function DrawMaterial(material_path: string, screen_position: Vector2D, screen_size: Vector2D, coordinate_position: Vector2D, coordinate_size: Vector2D?, rotation: number?, pivot_point: Vector2D?, blend_mode: BlendMode?): nil
+    -- Draws a WebUI on the Canvas
+    function DrawMaterialFromWebUI(webui_entity: WebUI, screen_position: Vector2D, screen_size: Vector2D, coordinate_position: Vector2D, coordinate_size: Vector2D?, rotation: number?, pivot_point: Vector2D?, blend_mode: BlendMode?): nil
+    -- Draws a SceneCapture on the Canvas
+    function DrawMaterialFromSceneCapture(scenecapture_entity: SceneCapture, screen_position: Vector2D, screen_size: Vector2D, coordinate_position: Vector2D, coordinate_size: Vector2D?, rotation: number?, pivot_point: Vector2D?, blend_mode: BlendMode?): nil
+    -- Draws a Text on the Canvas
+    function DrawText(text: string, screen_position: Vector2D, font_type: FontType?, font_size: number?, text_color: Color?, kerning: number?, center_x: boolean?, center_y: boolean?, shadow_color: Color?, shadow_offset: Vector2D?, outlined: boolean?, outline_color: Color?): nil
+    -- Draws a Texture on the Canvas
+    function DrawTexture(texture_path: string, screen_position: Vector2D, screen_size: Vector2D, coordinate_position: Vector2D, coordinate_size: Vector2D?, render_color: Color?, blend_mode: BlendMode?, rotation: number?, pivot_point: Vector2D?): nil
+    -- Draws a N-Polygon on the Canvas
+    function DrawPolygon(texture_path: string, screen_position: Vector2D, radius: Vector2D?, number_of_sides: number?, render_color: Color?, blend_mode: BlendMode?): nil
+    -- Draws a filled Rect on the Canvas
+    function DrawRect(texture_path: string, screen_position: Vector2D, screen_size: Vector2D, render_color: Color?, blend_mode: BlendMode?): nil
+    -- Sets the repaint rate
+    function SetAutoRepaintRate(auto_repaint_rate: boolean): nil
+    -- Gets the Canvas Size
+    function GetSize(): Vector2D
+    -- Resizes the Canvas if not using auto_resize
+    function Resize(width: number, height: number): nil
+    -- Sets the Canvas Screen Position offset
+    function SetScreenPosition(screen_position: Vector2D): nil
+    -- Sets if the canvas should auto resize to screen size
+    function SetAutoResize(auto_resize: boolean): nil
+    -- Sets if it's visible on screen
+    function SetVisibility(visible: boolean): nil
+    -- Forces the repaint
+    function Repaint(): nil
+    -- Clear the Canvas with a specific Color
+    function Clear(clear_color: Color): nil
+end
+
+-- Characters represents Actors which can be possessed, can move and interact with world. They are the default Skeletal Mesh Character built for nanos world.
+declare class Character extends Entity
+    constructor(location: Vector, rotation: Rotator, skeletal_mesh_asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, max_health: number?, death_sound: string?, pain_sound: string?, defer_spawn: boolean?)
+    -- Drops any Pickable the Character is holding
+    function Drop(): nil
+    -- Enters the Vehicle at Seat (0 - Driver)
+    function EnterVehicle(vehicle: Vehicle, seat: number?): nil
+    -- Gives a Prop to the Character
+    function GrabProp(prop: Prop): nil
+    -- Leaves the current Vehicle
+    function LeaveVehicle(): nil
+    -- AI: Tries to make this Character to look at Location
+    function LookAt(location: Vector): nil
+    -- Gives a Melee/Grenade/Weapon (Pickable) to the Character
+    function PickUp(pickable: Pickable): nil
+    -- Plays an Animation Montage on this character
+    function PlayAnimation(animation_path: string, slot_type: AnimationSlotType?, loop_indefinitely: boolean?, blend_in_time: number?, blend_out_time: number?, play_rate: number?, stop_all_montages: boolean?): nil
+    -- Sets the Blend Space (2D) Animation for Standing
+    function SetAnimationIdleWalkRunStanding(blend_space_path: string, enable_turn_in_place: boolean?): nil
+    -- Sets the Blend Space (2D) Animation for Crouching
+    -- 
+    -- Horizontal Axis stands for Speed X and Vertical Axis for Speed Y
+    function SetAnimationIdleWalkRunCrouching(blend_space_path: string, enable_turn_in_place: boolean?): nil
+    -- Sets the Blend Space (2D) Animation for Proning
+    -- 
+    -- Horizontal Axis stands for Speed X and Vertical Axis for Speed Y
+    function SetAnimationIdleWalkRunProning(blend_space_path: string): nil
+    -- Sets the Transition Animation between Standing and Crouching
+    function SetAnimationsTransitionStandingCrouching(standing_to_crouching: string, crouching_to_standing: string): nil
+    -- Sets the Transition Animation between Crouching and Proning
+    function SetAnimationsTransitionCrouchingProning(crouching_to_proning: string, proning_to_crouching: string): nil
+    -- Sets the Movement Max Acceleration of this Character
+    function SetAccelerationSettings(walking: number?, parachuting: number?, skydiving: number?, falling: number?, swimming: number?, swimming_surface: number?, flying: number?): nil
+    -- Sets the amount of movement control allowed when it is in air
+    function SetAirControl(air_control: number?, boost_multiplier: number?, boost_velocity_threshold: number?): nil
+    -- Sets the Camera Mode
+    function SetCameraMode(camera_mode: CameraMode): nil
+    -- Sets if this Character is allowed to Aim
+    function SetCanAim(can_aim: boolean): nil
+    -- Sets if this Character is allowed to Drop the Picked up item
+    function SetCanDrop(can_drop: boolean): nil
+    -- Sets if this Character is allowed to Dive
+    function SetCanDive(can_dive: boolean): nil
+    -- Sets if this Character is allowed to Sprint
+    function SetCanSprint(can_sprint: boolean): nil
+    -- Sets if this Character is allowed to Grab any Prop
+    function SetCanGrabProps(can_grab_props: boolean): nil
+    -- Sets if this Character is allowed to Pick up any Pickable (Weapon, Grenade, Melee...)
+    function SetCanPickupPickables(can_pickup: boolean): nil
+    -- Sets if this Character is allowed to use Pickables (Weapon, Grenade, Melee...)
+    function SetCanUsePickables(can_use: boolean): nil
+    -- Sets if this Character is allowed to Punch
+    function SetCanPunch(can_punch: boolean): nil
+    -- Sets if this Character is allowed to deploy the Parachute
+    function SetCanDeployParachute(can_deploy_parachute: boolean): nil
+    -- Changes the Death sound when Character dies
+    function SetDeathSound(sound_asset: string): nil
+    -- Set the Fall Damage multiplier taken when falling from High places
+    function SetFallDamageTaken(damage: number): nil
+    -- Sets the Field of View multiplier
+    function SetFOVMultiplier(multiplier: number): nil
+    -- Sets time to transition to HighFalling state
+    function SetHighFallingTime(time: number): nil
+    -- Sets if the character will enter ragdoll mode when being hit by an object or falling from a high place
+    function SetRagdollOnHitEnabled(is_enabled: boolean): nil
+    -- Sets the cooldown time (in seconds) before this Character can stand up from ragdoll
+    function SetRagdollStandUpCooldown(time: number): nil
+    -- Sets the Gait Mode
+    function SetGaitMode(gait_mode: GaitMode): nil
+    -- Set the Impact Damage taken when being roamed by things
+    function SetImpactDamageTaken(impact_damage: number): nil
+    -- Set the minimum radial damage (e.g. explosions) taken to enter in ragdoll mode
+    function SetRadialDamageToRagdoll(damage: number): nil
+    -- Set the Footstep Volume multiplier
+    function SetFootstepVolumeMultiplier(volume_multiplier: number): nil
+    -- Sets if the Character can receive any damage
+    function SetInvulnerable(is_invulnerable: boolean): nil
+    -- Changes the Character Mesh on the fly
+    function SetMesh(skeletal_mesh_asset: string): nil
+    -- Set Morph Target with Name and Value
+    function SetMorphTarget(name: string, value: number): nil
+    -- Returns the value of a Morph Target
+    function GetMorphTarget(name: string): number
+    -- Clear all Morph Target that are set to this Mesh
+    function ClearMorphTargets(): nil
+    -- Returns a table with all morph targets available
+    function GetAllMorphTargetNames(): string[]
+    -- Applies the physical animation settings to the body given
+    function SetPhysicalAnimationSettings(bone: string, include_self: boolean, is_local_simulation: boolean, orientation_strength: number?, angular_velocity_strength: number?, position_strength: number?, velocity_strength: number?, max_linear_force: number?, max_angular_force: number?): nil
+    -- Resets all Physical Animation settings
+    function ResetPhysicalAnimationSettings(): nil
+    -- Enables/Disables Character's Input
+    function SetInputEnabled(is_enabled: boolean): nil
+    -- Changes the Parachute Texture
+    function SetParachuteTexture(texture: string): nil
+    -- Changes the Pain sound when Character takes damage
+    function SetPainSound(sound_asset: string): nil
+    -- Set the Punch Damage this Character will apply on others
+    function SetPunchDamage(punch_damage: number): nil
+    -- Sets Character Ragdoll Mode
+    function SetRagdollMode(ragdoll_enabled: boolean): nil
+    -- Sets the Character Capsule to simulate physics
+    function SetSimulatePhysics(simulate_physics: boolean): nil
+    -- Sets all speed multiplier
+    function SetSpeedMultiplier(speed_multiplier: number): nil
+    -- Sets the Stance Mode
+    function SetStanceMode(stance_mode: StanceMode): nil
+    -- Sets a Team which will disable damaging same Team Members
+    function SetTeam(team: number): nil
+    -- Sets the View Mode
+    function SetViewMode(view_mode: ViewMode): nil
+    -- Sets the Weapon's Aim Mode
+    function SetWeaponAimMode(aim_mode: AimMode): nil
+    -- UnGrabs/Drops the Prop the Character is holding
+    function UnGrabProp(): nil
+    -- Gets if Character is in ragdoll mode
+    function IsInRagdollMode(): boolean
+    -- Gets if is invulnerable
+    function IsInvulnerable(): boolean
+    -- Gets if has input enabled
+    function IsInputEnabled(): boolean
+    -- Gets the camera mode
+    function GetCameraMode(): CameraMode
+    -- Gets if can drop
+    function GetCanDrop(): boolean
+    -- Gets if can punch
+    function GetCanPunch(): boolean
+    -- Gets if can aim
+    function GetCanAim(): boolean
+    -- Gets if can crouch
+    function GetCanCrouch(): boolean
+    -- Gets if can sprint
+    function GetCanSprint(): boolean
+    -- Gets if can grab props
+    function GetCanGrabProps(): boolean
+    -- Gets if can pickup Pickables (Weapons, Melee, Grenade...)
+    function GetCanPickupPickables(): boolean
+    -- Gets if can use Pickables (Weapons, Melee, Grenade...)
+    function GetCanUsePickables(): boolean
+    -- Gets the Fall Damage
+    function GetFallDamageTaken(): number
+    -- Gets the FallingMode
+    function GetFallingMode(): FallingMode
+    -- Gets the GaitMode
+    function GetGaitMode(): GaitMode
+    -- Gets the Grabbed Prop
+    function GetGrabbedProp(): Prop?
+    -- Gets the impact damage taken
+    function GetImpactDamageTaken(): number
+    -- Gets the Jump Z Velocity
+    function GetJumpZVelocity(): number
+    -- Gets the Pickable if picking up
+    function GetPicked(): Pickable?
+    -- Gets the punch damage
+    function GetPunchDamage(): number
+    -- Gets the speed multiplier
+    function GetSpeedMultiplier(): number
+    -- Gets the Stance Mode
+    function GetStanceMode(): StanceMode
+    -- Gets the Swimming Mode
+    function GetSwimmingMode(): SwimmingMode
+    -- Gets the Team
+    function GetTeam(): number
+    -- Gets the entered Vehicle
+    function GetVehicle(): Vehicle?
+    -- Gets the entered Vehicle seat
+    function GetVehicleSeat(): number
+    -- Gets the View Mode
+    function GetViewMode(): ViewMode
+    -- Gets the Weapon Aim Mode
+    function GetWeaponAimMode(): AimMode
+    -- Sets the Physics Asset for the Character
+    function SetPhysicsAsset(physics_asset: any): nil
+end
+
+-- CharacterSimple is a simpler Character implementation with basic Movement implementation. Aimed for custom NPCs or basic Pawns.
+declare class CharacterSimple extends Entity
+    constructor(location: Vector, rotation: Rotator, mesh: string | string, custom_animation_blueprint: string?, collision_type: CollisionType?, gravity_enabled: boolean?, defer_spawn: boolean?)
+    -- Changes the Character Mesh on the fly
+    function SetMesh(mesh_asset: string | string, adjust_capsule_size: boolean): nil
+    -- Sets the Physics Asset for the Character
+    function SetPhysicsAsset(physics_asset: any): nil
+    -- Plays an Animation Montage on this character
+    function PlayAnimation(animation_path: string, slot_name: string?, loop_indefinitely: boolean?, blend_in_time: number?, blend_out_time: number?, play_rate: number?, stop_all_montages: boolean?): nil
+    -- Sets the max acceleration
+    function SetMaxAcceleration(acceleration: number): nil
+    -- Sets the Spring Arm Settings of this Character
+    function SetSpringArmSettings(relative_location: Vector?, target_arm_length: number?, socket_offset: Vector?, enable_camera_lag: boolean?, camera_lag_speed: number?, camera_lag_max_distance: number?): nil
+    -- Sets the Rotation Settings of this Character
+    function SetRotationSettings(rotation_rate: Rotator, use_controller_desired_rotation: boolean, orient_rotation_to_movement: boolean): nil
+    -- Sets the Speed Settings of this Character
+    function SetSpeedSettings(max_walk_speed: number?, max_walk_speed_crouched: number?, max_fly_speed: number?): nil
+    -- Sets the Pawn Settings of this Character
+    function SetPawnSettings(use_controller_rotation_pitch: boolean, use_controller_rotation_yaw: boolean, use_controller_rotation_roll: boolean): nil
+    -- Sets the amount of movement control allowed when it is in air
+    function SetAirControl(air_control: number?, boost_multiplier: number?, boost_velocity_threshold: number?): nil
+    -- Sets the Animation Blueprint of this Character
+    function SetAnimationBlueprint(custom_animation_blueprint: string): nil
+    -- Calls an Animation Blueprint Event or Function
+    function CallAnimationBlueprintEvent(event_name: string, ...: any): any
+    -- Assigns and Binds an Animation Blueprint Event Dispatcher
+    function BindAnimationBlueprintEventDispatcher(dispatcher_name: string, callback: any): any
+    -- Unbinds an Animation Blueprint Event Dispatcher
+    function UnbindAnimationBlueprintEventDispatcher(dispatcher_name: string, callback: any?): nil
+end
+
+-- The Database entity provides programmers a way to access SQL databases easily through scripting.
+declare class Database
+    constructor(database_engine: string, connection_string: string, pool_size: number?)
+    -- Closes the Database
+    function Close(): nil
+    -- Execute a query asynchronously
+    function ExecuteAsync(query: string, callback: any?, ...: any): nil
+    -- Execute a query synchronously
+    function Execute(query: string, ...: any): (number, string)
+    -- Execute a select query asynchronously
+    function SelectAsync(query: string, callback: any?, ...: any): nil
+    -- Selects a query synchronously
+    function Select(query: string, ...: any): (any[], string)
+end
+
+-- Decals are Materials that are projected onto meshes in your level, including Static Meshes and Skeletal Meshes.
+declare class Decal extends Entity
+    constructor(location: Vector, rotation: Rotator, material_asset: string, size: Vector?, lifespan: number?, fade_screen_size: number?)
+    -- Sets the size of this Decal.
+    function SetSize(size: Vector): nil
+    -- Starts fading in this Decal after a delay.
+    function SetFadeIn(start_delay: number, duration: number): nil
+    -- Starts fading out this Decal after a delay.
+    function SetFadeOut(start_delay: number, duration: number, destroy_after_fade_out: boolean?): nil
+end
+
+-- A File represents an entry to a system file.
+declare class File
+    constructor(file_path: string, truncate: boolean?)
+    -- Closes the file and destroys the entity
+    function Close(): nil
+    -- Flushes content to the file
+    function Flush(): nil
+    -- Checks if the file status is End of File
+    function IsEOF(): boolean
+    -- Checks if the file status is Bad
+    function IsBad(): boolean
+    -- Checks if the file status is Good
+    function IsGood(): boolean
+    -- Checks if the last operation has Failed
+    function HasFailed(): boolean
+    -- Reads characters from the File and returns it. Also moves the file pointer to the latest read position. Pass 0 to read the whole file
+    function Read(length: number?): string
+    -- Reads characters from the File asynchronously.
+    function ReadAsync(length: number?, callback: any): nil
+    -- Reads and returns the next file line
+    function ReadLine(): string
+    -- Reads the whole file as a JSON and returns it.
+    function ReadJSON(): any
+    -- Reads the whole file as a JSON and returns it asynchronously.
+    function ReadJSONAsync(callback: any): nil
+    -- Sets the file pointer to a specific position
+    function Seek(position: number): nil
+    -- Returns the size of the file
+    function Size(): number
+    -- Skips n (amount) positions from the current file pointer position
+    function Skip(amount: number): nil
+    -- Returns the current file pointer position
+    function Tell(): number
+    -- Writes the Data at the current position of the file
+    function Write(data: string): nil
+    -- Returns when a file was last modified in Unix time
+    static function Time(path: string): number
+    -- Creates a Directory (for every folder passed)
+    static function CreateDirectory(path: string): boolean
+    -- Deletes a folder or file
+    static function Remove(path: string): number
+    -- Verifies if a entry exists in the file system
+    static function Exists(path: string): boolean
+    -- Checks if a path is a directory
+    static function IsDirectory(path: string): boolean
+    -- Checks if a path is a file
+    static function IsRegularFile(path: string): boolean
+    -- Gets a list of all directories given a path
+    static function GetDirectories(path_filter: string?, max_depth: number?): string[]
+    -- Gets a list of all files in a directory
+    static function GetFiles(path_filter: string | any?, extension_filter: string?, max_depth: number?): string[]
+    -- Gets the full path given a relative path based on the current side (client or server)
+    static function GetFullPath(path: string): string
+end
+
+-- A tool to transform objects at runtime.
+declare class Gizmo extends Entity
+    constructor()
+    -- Enable the interaction
+    function Activate(location: Vector, rotation: Rotator, scale: Vector): nil
+    -- Disable the interaction
+    function Deactivate(): nil
+    -- Returns if it's currently interacting
+    function IsInteracting(): boolean
+    -- Triggers the press pointer event on it
+    function PressPointer(): nil
+    -- Triggers the release pointer event on it
+    function ReleasePointer(): nil
+    function SetTransformMode(transform_mode: GizmoTransformMode, combine_translate_rotate: boolean): nil
+    function SetAlignSpace(align_space: GizmoAlignSpace): nil
+    function SetSnapSettings(location_grid_size: number, rotation_grid_size: number, scale_grid_size: number): nil
+end
+
+-- Grenades are Pickables which Characters can grab and throw. It explodes after X seconds after thrown, causing damage around.
+declare class Grenade extends Entity
+    constructor(location: Vector, rotation: Rotator, static_mesh_asset: string?, explosion_particles: string?, explosion_sound: string?, collision_type: CollisionType?, gravity_enabled: boolean?, defer_spawn: boolean?)
+    -- Forces this grenade to Explode
+    function Explode(): nil
+    -- Sets Damage parameters of this Grenade
+    function SetDamage(base_damage: number?, minimum_damage: number?, damage_inner_radius: number?, damage_outer_radius: number?, damage_falloff: number?): nil
+    -- Set Time until Explosion after thrown
+    function SetTimeToExplode(time: number): nil
+    -- Set Impulse applied when throwing
+    function SetThrowForce(throw_force: number): nil
+    -- Damage at Inner Radius
+    function GetBaseDamage(): number
+    -- Radius which BaseDamage will apply proportionally
+    function GetDamageFalloff(): number
+    -- Radius which MinimumDamage will apply
+    function GetDamageInnerRadius(): number
+    -- Radius which BaseDamage will apply
+    function GetDamageOuterRadius(): number
+    -- Damage at Outer Radius
+    function GetMinimumDamage(): number
+    -- Time until Explosion
+    function GetTimeToExplode(): number
+    -- Impulse applied when throwing
+    function GetThrowForce(): number
+end
+
+-- An Instanced Static Mesh entity allows spawning a mesh that can have multiple instances efficiently rendered.
+declare class InstancedStaticMesh extends Entity
+    constructor(location: Vector, rotation: Rotator, static_mesh_asset: string, collision_type: CollisionType?, instances: any?, defer_spawn: boolean?)
+    -- Gets the Asset path mesh used
+    function GetMesh(): string
+    -- Add an instance to this component
+    function AddInstance(relative_location: Vector, relative_rotation: Rotator?, scale: Vector?): number
+    -- Add multiple instances to this component. It is way efficient calling this once than AddInstance multiple times
+    function AddInstances(instances: any): nil
+    -- Removes the instance at the given index. This will move the last element to the provided index, reducing the count by 1
+    function RemoveInstance(index: number): nil
+    -- Changes the transform of an existing instance. You can pass all other parameters as nil to modify only a single property
+    function SetInstanceTransform(index: number, relative_location: Vector?, relative_rotation: Rotator?, scale: Vector?): nil
+    -- Returns the current transform of the instance at the given index
+    function GetInstanceTransform(index: number): (Vector, Rotator, Vector)
+    -- Returns the number of instances currently stored
+    function GetInstanceCount(): number
+    -- Removes all instances.
+    function ClearInstances(): nil
+end
+
+-- A Light represents a Lighting source.
+declare class Light extends Entity
+    constructor(location: Vector, rotation: Rotator?, color: Color?, light_type: LightType?, intensity: number?, attenuation_radius: number?, cone_angle: number?, inner_cone_angle_percent: number?, max_draw_distance: number?, use_inverse_squared_falloff: boolean?, cast_shadows: boolean?, visible: boolean?, source_radius: number?, defer_spawn: boolean?)
+    -- Sets the light color
+    function SetColor(color: Color): nil
+    -- Sets the light Texture Profile
+    function SetTextureLightProfile(light_profile: LightProfile): nil
+    function SetCastShadows(is_shadows_enabled: boolean): nil
+    function SetIntensity(intensity: number): nil
+    function SetAttenuationRadius(attenuation_radius: number): nil
+    function GetCastShadows(): boolean
+    function GetIntensity(): number
+    function GetAttenuationRadius(): number
+    function GetColor(): Color
+end
+
+-- A Melee represents an Entity which can be Pickable by a Character and can be used to melee attack, Charactes can hold it with hands with pre-defined handling modes.
+declare class Melee extends Entity
+    constructor(location: Vector, rotation: Rotator, asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, handling_mode: HandlingMode?, crosshair_material: string?, can_use: boolean?, defer_spawn: boolean?)
+    -- Sets an Animation when attacking
+    function AddAnimationCharacterUse(asset_path: string, play_rate: number?, slot_Type: AnimationSlotType?): nil
+    -- Clears the Character Attack Animation list
+    function ClearAnimationsCharacterUse(): nil
+    -- Sets the Sound when hitting something
+    function SetImpactSound(surface_type: SurfaceType, asset_path: string, volume: number?, pitch: number?): nil
+    -- Sets the Sound when attacking
+    function SetSoundUse(asset_path: string): nil
+    -- Sets the Base Damage
+    function SetBaseDamage(damage: number?): nil
+    -- Sets the times when to start applying damage and when to end
+    function SetDamageSettings(damage_start_time: number, damage_duration_time: number): nil
+    -- Sets the cooldown between attacking
+    function SetCooldown(cooldown: number): nil
+    -- Gets the Animations when Character uses it
+    function GetAnimationsCharacterUse(): string[]
+    -- Gets the Sound when Character uses it
+    function GetSoundUse(): string
+    -- Gets the Base Damage
+    function GetBaseDamage(): number
+    -- Gets the Cooldown between usages
+    function GetCooldown(): number
+end
+
+-- Class to spawn Particle Systems used to create effects in the world.
+declare class Particle extends Entity
+    constructor(location: Vector, rotation: Rotator, asset: string, auto_destroy: boolean?, auto_activate: boolean?, defer_spawn: boolean?)
+    -- Activates the Emitter
+    function Activate(should_reset: boolean?): nil
+    -- Deactivate the Emitter
+    function Deactivate(): nil
+    -- Returns if this Particle is active
+    function IsActive(): boolean
+    -- Sets a float parameter in this Particle System
+    function SetParameterFloat(parameter: string, value: number): nil
+    -- Sets an integer parameter in this Particle System
+    function SetParameterInt(parameter: string, value: number): nil
+    -- Sets a boolean parameter in this Particle System
+    function SetParameterBool(parameter: string, value: boolean): nil
+    -- Sets a Vector parameter in this Particle System
+    function SetParameterVector(parameter: string, value: Vector): nil
+    -- Sets a Color parameter in this Particle System
+    function SetParameterColor(parameter: string, value: Color): nil
+    -- Sets a Material parameter in this Particle System
+    function SetParameterMaterial(parameter: string, value: string): nil
+    -- Sets a Material from a Texture parameter in this Particle System
+    function SetParameterMaterialFromTexture(parameter: string, value: string): nil
+    -- Sets a Material from a Canvas parameter in this Particle System
+    function SetParameterMaterialFromCanvas(parameter: string, value: Canvas): nil
+    -- Sets a Material from a Canvas parameter in this Particle System
+    function SetParameterMaterialFromWebUI(parameter: string, value: WebUI): nil
+end
+
+-- Players are Entities that represents the individual behind the mouse and keyboard. Players are spawned automatically when connected to the server.
+declare class Player extends Entity
+    -- Bans the player from the server
+    function Ban(reason: string): nil
+    -- Redirects the player to another server
+    function Connect(IP: string, password: string?): nil
+    -- Kicks the player from the server
+    function Kick(reason: string): nil
+    -- Makes a Player to possess and control a Pawn
+    function Possess(new_pawn: Pawn, blend_time: number?, exp: number?): nil
+    -- Does a camera fade to/from a solid color
+    function StartCameraFade(from_alpha: number, to_alpha: number, duration: number, to_color: Color, should_fade_audio: boolean?, hold_when_finished: boolean?): nil
+    -- Turns on camera fading at the given opacity
+    function SetManualCameraFade(in_fade_amount: number, color: Color, in_fade_audio: boolean): nil
+    -- Stops camera fading.
+    function StopCameraFade(): nil
+    -- Sets the Player's Camera Location (only works if not possessing any Character)
+    function SetCameraLocation(location: Vector): nil
+    -- Sets the Player's Camera Rotation
+    function SetCameraRotation(rotation: Rotator): nil
+    -- Smoothly moves the Player's Camera Location (only works if not possessing any Character)
+    function TranslateCameraTo(location: Vector, time: number, exp: number?): nil
+    -- Smoothly moves the Player's Camera Rotation
+    function RotateCameraTo(rotation: Rotator, time: number, exp: number?): nil
+    -- Sets the Player's Camera Socket Offset (Spring Arm Offset)
+    function SetCameraSocketOffset(socket_offset: Vector): nil
+    -- Sets the Player's Camera Arm Length (Spring Arm length)
+    function SetCameraArmLength(length: number, force: boolean?): nil
+    -- Sets the Player's Camera FOV (if not possessing a Character)
+    function SetCameraFOV(fov: number?): nil
+    -- Sets the Player's Camera Speed Settings (if not possessing a Character)
+    function SetCameraSpeedSettings(max_speed: number?, acceleration: number?, deceleration: number?, turning_boost: number?): nil
+    -- Attaches the Player`s Camera to an Actor
+    function AttachCameraTo(actor: Actor, socket_offset: Vector?, blend_speed: number?): nil
+    -- Resets the Camera to default state (Unspectate and Detaches)
+    function ResetCamera(): nil
+    -- Spectates other Player
+    function Spectate(player: Player, blend_speed: number?): nil
+    -- Sets the player's name
+    function SetName(player_name: string): nil
+    -- Sets the VOIP setting for a specific global channel
+    function SetVOIPGlobalChannelSetting(channel: number, setting: VOIPSetting): nil
+    -- Sets the VOIP setting for all global channels
+    function SetVOIPGlobalAllChannelsSetting(setting: VOIPSetting): nil
+    -- Sets the VOIP setting for the local/proximity
+    function SetVOIPLocalSetting(setting: VOIPSetting): nil
+    -- Sets the local/proximity VOIP max distance. This also affects networking usage
+    function SetVOIPLocalMaxDistance(max_distance: number): nil
+    -- Sets the local/proximity VOIP input/output volume. It only affects the local/proximity channel
+    function SetVOIPLocalVolume(volume: number): nil
+    -- Sets the global VOIP volume. It only affects the global channels
+    function SetVOIPGlobalVolume(volume: number): nil
+    -- Sets the global VOIP high-pass filter threshold frequency
+    function SetVOIPGlobalHighPassFilter(threshold: number): nil
+    -- Sets the global VOIP low-pass filter threshold frequency
+    function SetVOIPGlobalLowPassFilter(threshold: number): nil
+    -- Mutes or unmutes VOIP for this player
+    function SetVOIPMuted(is_muted: boolean): nil
+    -- Returns whether VOIP is muted for this player
+    function IsVOIPMuted(): boolean
+    -- Release the Player from the Character
+    function UnPossess(): nil
+    function GetSteamID(): string
+    function GetAccountID(): string
+    function GetAccountName(): string
+    -- Return a URL which can be used through WebUI and Widgets to display the Player's Steam Avatar (64x64)
+    function GetAccountIconURL(): string
+    function GetCameraLocation(): Vector
+    function GetCameraArmLength(return_base: boolean?): number
+    function GetCameraRotation(): Rotator
+    function GetControlledCharacter(): Character?
+    function GetIP(): string
+    -- Gets this Player's dimension
+    function GetDimension(): number
+    -- Sets this Player's dimension
+    function SetDimension(dimension: number): nil
+    function GetName(): string
+    function GetPing(): number
+    -- Returns a list of VOIP channels this player is listening to
+    function GetVOIPListeningChannels(): number[]
+    -- Returns a list of VOIP channels this player is currently speaking to
+    function GetVOIPSpeakingChannels(): number[]
+    function IsHost(): boolean
+    function IsLocalPlayer(): boolean
+end
+
+-- A Prop represents a Dynamic Mesh which can be spawned in the world, can be grabbed around by characters and have physics.
+declare class Prop extends Entity
+    constructor(location: Vector, rotation: Rotator, asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, grab_mode: GrabMode?, ccd_mode: CCDMode?, defer_spawn: boolean?)
+    -- Sets ability to Characters to Grab this Prop
+    function SetGrabMode(grab_mode: GrabMode): nil
+    -- Sets the interaction tooltip text shown when a Character interacts with this Prop
+    function SetInteractionToolTipText(tool_tip_text: string): nil
+    -- Sets the Physics damping of this Prop
+    function SetPhysicsDamping(linear_damping: number, angular_damping: number): nil
+    -- Changes the mesh in runtime
+    function SetMesh(asset: string): nil
+    -- Gets the Asset name
+    function GetMesh(): string
+    -- Gets the Character (if existing) which is holding this
+    function GetHandler(): Character?
+    -- Gets ability to Grab this Prop
+    function GetGrabMode(): GrabMode
+    -- Override the mass (in Kg) of this Prop
+    function SetMassOverride(mass: number): nil
+    -- Gets the overridden mass
+    function GetMassOverride(): number
+    -- Change the mass scale used to calculate the mass of this Prop
+    function SetMassScale(scale: number): nil
+    -- Gets the mass scale
+    function GetMassScale(): number
+end
+
+-- Scene Capture is an Actor which captures a fully dynamic image of the scene into a Texture. It captures the scene from its view frustum, stores that view as an image, which is then used within a Material.
+declare class SceneCapture extends Entity
+    constructor(location: Vector?, rotation: Rotator?, width: number?, height: number?, render_rate: number?, view_distance: number?, fov_angle: number?, enable_distance_optimization: boolean?)
+    -- Adds an Actor to the Render Only list
+    function AddRenderActor(actor: Actor): nil
+    -- Removes an Actor from the Render Only list
+    function RemoveRenderActor(actor: Actor): nil
+    -- Clears the Render Only list
+    function ClearRenderActors(): nil
+    -- Stops or Restore Capturing
+    function SetFreeze(freeze: boolean): nil
+    -- Takes a snapshot of the SceneCapture and returns a Base64 of it
+    function EncodeToBase64(image_format: ImageFormat?): string
+    -- Takes a snapshot of the SceneCapture and returns a Base64 of it (asynchronously)
+    function EncodeToBase64Async(image_format: ImageFormat?, callback: any): nil
+    -- Sets the FOV
+    function SetFOVAngle(angle: number): nil
+    -- Enables/Disables rendering features from being captured
+    function SetShowFlag(flag: string, enable: boolean): nil
+    -- Change the output Texture size
+    -- Note: too high texture will make the capture slower and will affect game performance
+    function Resize(width: number, height: number): nil
+    -- Set how frequent is the capture
+    -- Note: Set to 0 to capture every frame, or -1 to disable auto-capturing
+    function SetRenderRate(render_rate: number): nil
+    -- Enables or not the rendering frequency optimization if the entities with this Material are too far
+    function SetDistanceOptimizationEnabled(enabled: boolean): nil
+    -- Captures the scene. If deferred is true, performs deferred capture and records the frame; otherwise captures immediately and triggers Capture event
+    function CaptureScene(deferred: boolean?): nil
+end
+
+-- A StaticMesh entity represents a Mesh which can be spawned in the world, can't move and is more optimized for using in decorating the world.
+declare class StaticMesh extends Entity
+    constructor(location: Vector, rotation: Rotator, static_mesh_asset: string, collision_type: CollisionType?, defer_spawn: boolean?)
+    -- Changes the mesh in runtime
+    function SetMesh(static_mesh_asset: string): nil
+    -- Gets the Asset path mesh used
+    function GetMesh(): string
+    -- Gets if this StaticMesh is from the Level
+    function IsFromLevel(): boolean
+end
+
+-- Class for playing in-game 2D and 3D sounds.
+declare class Sound extends Entity
+    constructor(location: Vector, asset: string, is_2D_sound: boolean?, auto_destroy: boolean?, sound_type: SoundType?, volume: number?, pitch: number?, inner_radius: number?, falloff_distance: number?, attenuation_function: AttenuationFunction?, keep_playing_when_silent: boolean?, loop_mode: SoundLoopMode?, auto_play: boolean?)
+    -- Plays the sound with a fade effect
+    function FadeIn(fade_in_duration: number, fade_volume_level: number?, start_time: number?): nil
+    -- Stops the sound with a fade effect
+    function FadeOut(fade_out_duration: number, fade_volume_level: number?, destroy_after_fadeout: boolean?): nil
+    -- Starts the sound
+    function Play(start_time: number?): nil
+    -- If a 3D Sound, sets the distance which the sound is inaudible
+    function SetFalloffDistance(falloff_distance: number): nil
+    -- If a 3D Sound, sets the distance within the volume is 100%
+    function SetInnerRadius(inner_radius: number): nil
+    -- Sets low-pass filter frequency. Sets 0 to disable it.
+    function SetLowPassFilter(frequency: number): nil
+    -- Pauses the sound
+    function SetPaused(pause: boolean?): nil
+    -- Sets the Sound's pitch
+    function SetPitch(new_pitch: number): nil
+    -- Sets the Sound's volume
+    function SetVolume(new_volume: number): nil
+    -- Stops the sound
+    function Stop(): nil
+    -- Stops the sound after the provided delay
+    function StopDelayed(delay: number): nil
+    -- Gets if the sound is 2D
+    function Is2D(): boolean
+    -- Gets if the sound is playing
+    function IsPlaying(): boolean
+    -- Gets the duration of the Sound
+    function GetDuration(): number
+    function GetPitch(): number
+    function GetVolume(): number
+    function GetLowPassFilter(): number
+    function GetInnerRadius(): number
+    function GetFalloffDistance(): number
+    function GetSoundType(): number
+    function GetPath(): string
+end
+
+-- A Text Render class is useful for spawning Texts in 3D world.
+declare class TextRender extends Entity
+    constructor(location: Vector, rotation: Rotator, text: string, word_size: number?, color: Color?, rendering_type: TextRenderRenderingType?, horizontal_alignment: TextRenderHorizontalAlignment?, vertical_alignment: TextRenderVerticalAlignment?, font_asset: string?, cast_shadow: boolean?)
+    -- Gets the current Text
+    function GetText(): string
+    -- Gets the current Text Color
+    function GetTextColor(): Color
+    -- Gets the current Word Size
+    function GetWordSize(): number
+    -- Sets the Font. The font must be pre-cooked as a offline cached, distance field font.
+    function SetFont(font_asset: string): nil
+    -- Sets the Text alignment
+    function SetAlignment(horizontal_alignment: TextRenderHorizontalAlignment, vertical_alignment: TextRenderVerticalAlignment): nil
+    -- Sets the horizontal and vertical spacing adjust values
+    function SetSpacingAdjust(horizontal_spacing: number, vertical_spacing: number): nil
+    -- Sets the Text
+    function SetText(text: string): nil
+    -- Sets the Text Color
+    function SetTextColor(text_color: Color): nil
+    -- Sets the Word Size
+    function SetWordSize(word_size: number): nil
+end
+
+-- Class to create 3D Text with advanced options
+declare class Text3D extends Entity
+    constructor(location: Vector, rotation: Rotator, text: string, scale: Vector?, color: Color?, font_type: FontType?, align_camera: any?)
+    -- Sets the Font
+    function SetFont(font_type: FontType): nil
+    -- Freeze mesh rebuild, to avoid unnecessary mesh rebuilds when setting a few properties together
+    function SetFreeze(freeze: boolean): nil
+    -- Sets the Glyph representation settings to generate the 3D Mesh for this text render
+    function SetGlyphSettings(extrude: number?, level: number?, bevel_type: any?, bevel_segments: number?, outline: boolean?): nil
+    -- Sets the Max Size of the Text3D, optionally scaling it proportionally
+    function SetMaxSize(max_width: number?, max_height: number?, scale_proportionally: boolean?): nil
+    -- Sets the Text
+    function SetText(text: string): nil
+    -- Sets the Text & Font settings for this text render
+    function SetTextSettings(kerning: number?, line_spacing: number?, word_spacing: number?, horizontal_alignment: any?, vertical_alignment: any?): nil
+end
+
+-- A Trigger class is a utility class to trigger events when any Entity enters an Area.
+declare class Trigger extends Entity
+    constructor(location: Vector, rotation: Rotator, extent: Vector | number, trigger_type: TriggerType?, is_visible: boolean?, color: Color?, overlap_only_classes: string[]?)
+    -- Forces a Overlap checking to occur, will immediately trigger overlaps
+    function ForceOverlapChecking(): nil
+    -- Sets the extent size of this trigger (sphere triggers can receive as float for radius)
+    function SetExtent(extent: Vector | number): nil
+    -- Sets the Trigger color (if visible)
+    function SetColor(color: Color): nil
+    -- Sets the filter to Trigger to only overlap specific Classes. Leave it empty for all Classes
+    function SetOverlapOnlyClasses(overlap_only_classes: string[]): nil
+end
+
+-- Vehicles are wheeled entities which Characters can possesses and drive.
+declare class VehicleWheeled extends Entity
+    constructor(location: Vector, rotation: Rotator, asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, auto_unflip: boolean?, engine_sound: string?, horn_sound: string?, brake_sound: string?, engine_start_sound: string?, vehicle_door_sound: string?, auto_start_engine: boolean?, custom_animation_blueprint: string?, defer_spawn: boolean?)
+    -- Starts or stops the vehicles horn
+    function Horn(enable_horn: boolean): nil
+    -- Sets the sound asset used by the vehicle horn
+    function SetHornSound(sound_asset: string): nil
+    -- Sets the Vehicle Camera Offset
+    function SetCameraOffset(offset: Vector): nil
+    -- Sets if the Engine auto starts when the driver enters the Vehicle
+    function SetAutoStartEngine(auto_start: boolean): nil
+    -- Sets if the Engine is turned off/on
+    function SetEngineStarted(started: boolean): nil
+    -- Configures the Vehicle Steering
+    function SetSteeringSetup(steering_type: SteeringType, angle_ratio: number?, steering_curve: any?): nil
+    -- Configures the Vehicle Engine (Torque, RPM, Braking)
+    function SetEngineSetup(max_torque: number?, max_rpm: number?, idle_rpm: number?, brake_effect: number?, rev_up_moi: number?, rev_down_rate: number?, torque_curve: any?): nil
+    -- Configures the Vehicle Aerodynamics Settings
+    function SetAerodynamicsSetup(mass: number?, drag_coefficient: number?, vehicle_chassis_width: number?, vehicle_chassis_height: number?, vehicle_downforce_coefficient: number?, center_of_mass_override: Vector?): nil
+    -- Configures the Vehicle Transmission
+    function SetTransmissionSetup(transmission_final_ratio: number?, transmission_change_up_rpm: number?, transmission_change_down_rpm: number?, transmission_gear_change_time: number?, transmission_efficiency: number?, forward_gear_ratios: number[]?, reverse_gear_ratios: number[]?): nil
+    -- Configures a Vehicle Wheel
+    function SetWheel(index: number, bone_name: string, radius: number?, width: number?, max_steer_angle: number?, offset: Vector?, is_affected_by_engine: boolean?, is_affected_by_brake: boolean?, is_affected_by_handbrake: boolean?, has_abs_enabled: boolean?, has_traction_control_enabled: boolean?, max_brake_torque: number?, max_handbrake_torque: number?, cornering_stiffness: number?, side_slip_modifier: number?, friction_force_multiplier: number?, slip_threshold: number?, skid_threshold: number?, suspension_spring_rate: number?, suspension_spring_preload: number?, suspension_max_raise: number?, suspension_max_drop: number?, suspension_smoothing: number?, suspension_damping_ratio: number?, suspension_wheel_load_ratio: number?, suspension_axis: Vector?, suspension_force_offset: Vector?, suspension_sweep_shape: SuspensionSweepShape?): nil
+    -- Configures the type of Differential
+    function SetDifferentialSetup(differential_type: DifferentialType, front_rear_split: number?): nil
+    -- Configures where the Steering Wheel is located
+    function SetSteeringWheelSetup(relative_location: Vector, radius: number, rotation: Rotator?): nil
+    -- Configures the Headlights Offset and Color.
+    function SetHeadlightsSetup(location: Vector, color: Color?): nil
+    -- Configures the Taillights Offset.
+    function SetTaillightsSetup(location: Vector): nil
+    -- Sets a Tire as Flat or not
+    function SetTireFlat(wheel_index: number, is_flat: boolean): nil
+    -- Gets the current RPM
+    function GetRPM(): number
+    -- Gets the current Gear
+    function GetGear(): number
+    -- Checks if the vehicle is in the air (no wheels touching the ground)
+    function IsInAir(): boolean
+end
+
+-- VehicleWater are entities which Characters can possesses and drive over the water with dynamic physics.
+declare class VehicleWater extends Entity
+    constructor(location: Vector, rotation: Rotator, asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, defer_spawn: boolean?)
+    -- Sets the relative location of the Engine (where the Physics Thruster, sounds and effects are attached)
+    function SetEngineOffset(offset: Vector): nil
+    -- Sets the force of the Engine/Thruster
+    function SetThrustStrength(force: number): nil
+end
+
+-- Weapons are entities with firing, reloading and aiming functionalities.
+-- 
+-- They are fully customizable, all pieces of the weapon can be changed with immense possibility of creation.
+declare class Weapon extends Entity
+    constructor(location: Vector, rotation: Rotator, asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, defer_spawn: boolean?)
+    -- Forces this Weapon to reload
+    function Reload(): nil
+    -- Sets this Weapon's Ammo in the Bag
+    function SetAmmoBag(new_ammo_bag: number): nil
+    -- Sets this Weapon's Ammo in the Clip
+    function SetAmmoClip(new_ammo_clip: number): nil
+    -- Aux for setting and configuring ammo
+    function SetAmmoSettings(ammo_clip: number, ammo_bag: number, ammo_to_reload: number?, clip_capacity: number?): nil
+    -- Animation played by the Weapon when Firing
+    function SetAnimationFire(animation_fire_path: string, play_rate: number?): nil
+    -- Animation played by the Character when Firing
+    function SetAnimationCharacterFire(animation_character_fire_path: string, play_rate: number?): nil
+    -- Animation played by the Character when Reloading
+    function SetAnimationReload(reload_animation_path: string, play_rate: number?): nil
+    -- Gets the reload animation
+    function GetAnimationReload(): string
+    -- If the Character will reload automatically when ammo empties
+    function SetAutoReload(auto_reload: boolean): nil
+    -- Set the Bullet Color
+    function SetBulletColor(bullet_color: Color): nil
+    -- Aux for setting and configuring the Bullet
+    function SetBulletSettings(bullet_count: number, bullet_max_distance: number, bullet_velocity: number, bullet_color: Color): nil
+    -- Speed of shots
+    function SetCadence(cadence: number): nil
+    -- Capacity of the Weapon's clip
+    function SetClipCapacity(clip: number): nil
+    -- Set the Base Weapon's Damage
+    function SetDamage(damage: number): nil
+    -- Sets how the Character grabs this Weapon
+    function SetHandlingMode(handling_mode: HandlingMode): nil
+    -- Left Hand Offset
+    function SetLeftHandTransform(left_hand_location: Vector, left_hand_rotation: Rotator): nil
+    -- Set the mesh used when the Character reloads the weapon
+    function SetMagazineMesh(magazine_mesh: string, magazine_mesh_hide_bone: string?): nil
+    -- Plays an Animation on this Weapon
+    function PlayAnimation(animation_path: string, slot_name: string?, loop_indefinitely: boolean?, blend_in_time: number?, blend_out_time: number?, play_rate: number?, stop_all_montages: boolean?): nil
+    -- Particle of the Bullet flying
+    function SetParticlesBulletTrail(particle_bullet_trail_asset_path: string): nil
+    -- Particle of the Fire Blast in the muzzle
+    function SetParticlesBarrel(particle_asset_path: string): nil
+    -- Particle of the empty bullet flying from the weapon when shooting
+    function SetParticlesShells(particle_shells_asset_path: string): nil
+    -- Set the offset of Right Hand
+    function SetRightHandOffset(right_hand_offset: Vector): nil
+    -- The FOV multiplier when ADS
+    function SetSightFOVMultiplier(sight_fov_multiplier: number): nil
+    -- Offset applied to align player's head to weapon's sight and rotation applied on the weapon when ADS
+    function SetSightTransform(sight_location: Vector, sight_rotation: Rotator): nil
+    -- Sound when weapon has not bullet and try to shoot
+    function SetSoundDry(sound_dry_asset_path: string, volume: number?, pitch: number?): nil
+    -- Sound when Loading a magazine
+    function SetSoundLoad(sound_load_asset_path: string, volume: number?, pitch: number?): nil
+    -- Sound when Unloading a magazine
+    function SetSoundUnload(sound_unload_asset_path: string, volume: number?, pitch: number?): nil
+    -- Sound when Zooming
+    function SetSoundZooming(sound_zooming_asset_path: string, volume: number?, pitch: number?): nil
+    -- Sound when Shooting
+    function SetSoundFire(sound_fire_asset_path: string, volume: number?, pitch: number?): nil
+    -- Sound when Aiming
+    function SetSoundAim(sound_aim_asset_path: string, volume: number?, pitch: number?): nil
+    -- Sound when firing with only having X remaining bullets in the magazine
+    function SetSoundFireLastBullets(sound_asset_path: string, remaining_bullets_count: number?): nil
+    -- Base Weapon's Spread
+    function SetSpread(spread: number): nil
+    -- Base Weapon's Recoil
+    function SetRecoil(recoil: number): nil
+    -- Sets if the Weapon can hold to keep firing and if it needs to release to fire
+    function SetUsageSettings(can_hold_use: boolean, hold_release_use: boolean): nil
+    -- Sets how the bullet will pass through walls
+    function SetWallbangSettings(max_distance: number, damage_multiplier: number): nil
+    -- Gets this Weapon's Ammo Bag
+    function GetAmmoBag(): number
+    -- Gets this Weapon's Ammo Clip
+    function GetAmmoClip(): number
+    function GetAmmoToReload(): number
+    function GetHandlingMode(): HandlingMode
+    function GetAnimationCharacterFire(): string
+    function GetAnimationFire(): string
+    function GetMagazineMesh(): string
+    function GetParticlesBulletTrail(): string
+    function GetParticlesShells(): string
+    function GetSoundDry(): string
+    function GetSoundLoad(): string
+    function GetSoundUnload(): string
+    function GetSoundZooming(): string
+    function GetSoundAim(): string
+    function GetSoundFire(): string
+    function GetCanHoldUse(): boolean
+    function GetHoldReleaseUse(): boolean
+    function GetBulletCount(): number
+    function GetBulletColor(): Color
+    function GetCadence(): number
+    function GetClipCapacity(): number
+    function GetDamage(): number
+    function GetRightHandOffset(): Vector
+    function GetLeftHandLocation(): Vector
+    function GetLeftHandRotation(): Rotator
+    function GetSightLocation(): Vector
+    function GetSightRotation(): Rotator
+    function GetSightFOVMultiplier(): number
+    function GetSpread(): number
+    function GetRecoil(): number
+end
+
+-- Class for spawning a dynamic Web Browser.
+declare class WebUI extends Entity
+    constructor(name: string, path: string, visibility: WidgetVisibility?, is_transparent: boolean?, auto_resize: boolean?, width: number?, height: number?)
+    -- Puts this WebUI in the front of all WebUIs and Widgets
+    function BringToFront(): nil
+    -- Calls an Event on the Browser's JavaScript
+    function CallEvent(event_name: string, ...: any): nil
+    -- Loads a new File/URL in this Browser
+    function LoadURL(url: string): nil
+    -- Loads a pure HTML in this Browser
+    function LoadHTML(html: string): nil
+    -- Gets this WebUI name
+    function GetName(): string
+    -- Executes a JavaScript code in the Browser
+    function ExecuteJavaScript(javascript_code: string): nil
+    -- Enables the focus on this browser (i.e. can receive Keyboard input and will trigger input events)
+    function SetFocus(): nil
+    -- Returns if this WebUI has any DOM Node focused
+    function HasNodeFocus(): nil
+    -- Removes the focus from this WebUI (and sets it back to game viewport)
+    function RemoveFocus(): nil
+    -- Sets the Layout as Canvas on Screen
+    function SetLayout(screen_location_offset_left_top: Vector2D?, size_offset_right_bottom: Vector2D?, anchors_min: Vector2D?, anchors_max: Vector2D?, alignment: Vector2D?): nil
+    -- Freezes the WebUI Rendering to the surface (it will still execute the JS under the hood)
+    function SetFreeze(freeze: boolean): nil
+    -- Sets the visibility in screen
+    function SetVisibility(visibility: WidgetVisibility): nil
+    -- Spawns a Sound entity to plays this WebUI sound
+    function SpawnSound(location: Vector?, is_2d: boolean?, volume: number?, inner_radius: number?, falloff_distance: number?, attenuation_function: AttenuationFunction?): Sound
+    -- Sends a Mouse Event into the WebUI programmatically
+    function SendMouseWheelEvent(mouse_x: number, mouse_y: number, delta_x: number, delta_y: number): nil
+    -- Sends a Key Event into the WebUI programmatically
+    function SendKeyEvent(key_type: WebUIKeyType, key_code: number, modifiers: WebUIModifier?): nil
+    -- Sends a Mouse Move Event into the WebUI programmatically
+    function SendMouseMoveEvent(mouse_x: number, mouse_y: number, modifiers: WebUIModifier?, mouse_leave: boolean?): nil
+    -- Sends a Mouse Click into the WebUI programmatically
+    function SendMouseClickEvent(mouse_x: number, mouse_y: number, mouse_type: WebUIMouseType, is_mouse_up: boolean, modifiers: WebUIModifier?, click_count: number?): nil
+    -- Gets the current size of this WebUI
+    function GetSize(): Vector2D
+    -- Returns the current WebUI visibility
+    function GetVisibility(): WidgetVisibility
+    -- Returns if this WebUI is currently frozen
+    function IsFrozen(): boolean
+    -- Returns if this WebUI is ready
+    function IsReady(): boolean
+    -- Opens the Developer Tools for this WebUI, it only works if the Client.SetDebugEnabled() was not disabled
+    function OpenDevTools(): nil
+    -- Closes the Developer Tools for this WebUI, it only works if the Client.SetDebugEnabled() not disabled
+    function CloseDevTools(): nil
+end
+
+-- The Widget class supports spawning Unreal Widgets classes through scripting and manipulate them such as Blueprints!
+declare class Widget extends Entity
+    -- Spawns a Widget passing a UserWidget blueprint
+    constructor(blueprint_path: string)
+    -- Spawns a Widget passing a NativeWidget enum
+    constructor(native_widget: NativeWidget)
+    -- Spawns a 3D Widget actor rendering this Widget in the world
+    function SpawnWidget3D(location: Vector?, rotation: Rotator?, widget_space: WidgetSpace?, auto_size: boolean?, size: Vector2D?, auto_repaint_rate: number?, pivot: Vector2D?): Widget3D
+    -- Sets the visibility in screen
+    function SetVisibility(visibility: WidgetVisibility): nil
+    -- Returns the current WebUI visibility
+    function GetVisibility(): WidgetVisibility
+    -- Enables the focus on this Widget (i.e. can receive Keyboard input and will trigger input events)
+    function SetFocus(): nil
+    -- Puts this Widget in the front of all WebUIs and Widgets
+    function BringToFront(): nil
+    -- Adds it to the game's viewport and fills the entire screen
+    function AddToViewport(): nil
+    -- Adds a new child widget to this Widget container, if this is a Panel
+    function AddChild(other: WebUI | Widget): nil
+    -- Sets the widget for a given slot by name, if this is a UserWidget
+    function SetContentForSlot(slot_name: string, widget: Widget?): nil
+    -- Sets the Layout as Canvas on Screen
+    function SetSlotCanvasLayout(screen_location_offset_left_top: Vector2D?, size_offset_right_bottom: Vector2D?, anchors_min: Vector2D?, anchors_max: Vector2D?, alignment: Vector2D?): nil
+    -- Calls a Blueprint Event or Function
+    function CallBlueprintEvent(event_name: string, ...: any): any
+    -- Assigns and Binds a Blueprint Event Dispatcher
+    function BindBlueprintEventDispatcher(dispatcher_name: string, callback: any): any
+    -- Unbinds a Blueprint Event Dispatcher
+    function UnbindBlueprintEventDispatcher(dispatcher_name: string, callback: any?): nil
+    -- Sets a Blueprint Property/Variable value directly
+    function SetBlueprintPropertyValue(property_name: string, value: any): nil
+    -- Gets a Blueprint Property/Variable value
+    function GetBlueprintPropertyValue(property_name: string): any
+    -- Sets the slot alignment for horizontal and vertical positioning
+    function SetSlotAlignment(horizontal_alignment: WidgetHorizontalAlignment?, vertical_alignment: WidgetVerticalAlignment?): nil
+    -- Sets the slot padding for horizontal and vertical spacing
+    function SetSlotPadding(padding_horizontal: Vector2D?, padding_vertical: Vector2D?): nil
+    -- Sets the slot size and size rule
+    function SetSlotSize(size: number?, slate_size_rule: WidgetSizeRule?): nil
+end
+
+-- The Widget3D class is the 3D representation of a Widget class spawned in the world.
+declare class Widget3D extends Entity
+    -- Sets the auto repaint rate
+    function SetAutoRepaintRate(rate: number): nil
+    -- Forces this to repaint
+    function Repaint(): nil
+    function GetWidget(): Widget
+end
+
+-- ========================================================================
+-- Utility classes
+-- ========================================================================
+
+-- JSON library.
+declare interface JSON__Static
+    -- Returns a string representing value encoded in JSON
+    function stringify(value: any): string
+    -- Returns a value representing the decoded JSON string
+    function parse(value: string): any
+end
+declare JSON: JSON__Static
+
+-- A table containing useful and aux Math functions.
+declare interface NanosMath__Static
+    -- Rounds a number
+    function Round(value: number): number
+    -- Clamps a number
+    function Clamp(value: number, min: number, max: number): number
+    -- Clamps an angle to the range of [0, 360]
+    function ClampAxis(value: number): number
+    -- Clamps an angle to the range of [-180, 180]
+    function NormalizeAxis(value: number): number
+    -- Calculates the location and rotation relative to an actor
+    function RelativeTo(location: Vector, rotation: Rotator, actor: Actor): (Vector, Rotator)
+    -- Converts a local location and rotation to world coordinates based on an actor's transform
+    function LocalToWorld(local_location: Vector, local_rotation: Rotator, actor: Actor): (Vector, Rotator)
+    -- Returns a random float value
+    function RandomFloat(min: number, max: number): number
+    -- Interpolate number from Current to Target
+    function FInterpTo(current: number, target: number, delta_time: number, interp_speed: number): number
+    -- Interpolate Rotator from Current to Target
+    function RInterpTo(current: Rotator, target: Rotator, delta_time: number, interp_speed: number): Rotator
+    -- Interpolate Rotator from Current to Target with a constant step
+    function RInterpConstantTo(current: Rotator, target: Rotator, delta_time: number, interp_speed: number): Rotator
+    -- Interpolate Vector from Current to Target
+    function VInterpTo(current: Vector, target: Vector, delta_time: number, interp_speed: number): Vector
+    -- Interpolate Vector from Current to Target with a constant step
+    function VInterpConstantTo(current: Vector, target: Vector, delta_time: number, interp_speed: number): Vector
+end
+declare NanosMath: NanosMath__Static
+
+-- A table containing useful and aux functions.
+declare interface NanosUtils__Static
+    -- Returns if an entity is valid
+    function IsEntityValid(entity: any): boolean
+    -- Benchmarks a function performance
+    function Benchmark(name: string, amount: number, func: any, ...: any): number
+end
+declare NanosUtils: NanosUtils__Static
+
+-- A table containing useful and aux table functions.
+declare interface NanosTable__Static
+    -- Dumps a table into a readable text
+    function Dump(table: any): string
+    -- Performs a shallow copy of a table
+    function ShallowCopy(table: any): any
+end
+declare NanosTable: NanosTable__Static
+
+-- TOML library.
+declare interface TOML__Static
+    -- Returns a string representing value encoded in TOML
+    function Dump(value: any): string
+    -- Returns a value representing the decoded TOML string
+    function Parse(value: string): any
+end
+declare TOML: TOML__Static
+
+-- ========================================================================
+-- Static classes
+-- ========================================================================
+
+-- Retrieve Assets Data from Asset Packs.
+declare interface Assets__Static
+    -- Gets a list containing information about all loaded Asset Packs
+    function GetAssetPacks(): any[]
+    -- Gets the file path of an asset
+    function GetAssetPath(asset: string, asset_type: AssetType): string
+    -- Gets a list containing all Animation Assets Keys from an AssetPack
+    function GetAnimations(asset_pack_path: string): any[]
+    -- Gets a list containing all Blueprints Assets Keys from an AssetPack
+    function GetBlueprints(asset_pack_path: string): any[]
+    -- Gets a list containing all Map Asset Keys from an AssetPack
+    function GetMaps(asset_pack_path: string): any[]
+    -- Gets a list containing all Materials Asset Keys from an AssetPack
+    function GetMaterials(asset_pack_path: string): any[]
+    -- Gets a list containing all Particle Assets Keys from an AssetPack
+    function GetParticles(asset_pack_path: string): any[]
+    -- Gets a list containing all Sound Assets Keys from an AssetPack
+    function GetSounds(asset_pack_path: string): any[]
+    -- Gets a list containing all Skeletal Mesh Asset Keys from an AssetPack
+    function GetSkeletalMeshes(asset_pack_path: string): any[]
+    -- Gets a list containing all Static Mesh Assets Keys from an AssetPack
+    function GetStaticMeshes(asset_pack_path: string): any[]
+    -- Gets a list containing all Other Assets Keys from an AssetPack
+    function GetOthers(asset_pack_path: string): any[]
+    -- Manually adds an Asset to be loaded during the Player's loading screen
+    function Precache(asset_path: string, asset_type: AssetType): nil
+end
+declare Assets: Assets__Static
+
+-- Configure, send and intercept chat messages.
+declare interface Chat__Static
+    -- Adds a chat message which will display local only
+    function AddMessage(message: string): nil
+    -- Sends a chat message to a Player only
+    function SendMessage(player: Player, message: string): nil
+    -- Configures the Chat visuals and position
+    function SetConfiguration(screen_location: Vector2D?, size: Vector2D?, anchors_min: Vector2D?, anchors_max: Vector2D?, alignment: Vector2D?, justify: boolean?, show_scrollbar: boolean?): nil
+    -- Sets if the Chat is visible or not
+    function SetVisibility(is_visible: boolean): nil
+    -- Clears all messages
+    function Clear(): nil
+    -- Sends a chat message to all Players
+    function BroadcastMessage(message: string): nil
+end
+declare Chat: Chat__Static
+
+-- Static Class present on Client side.
+declare interface Client__Static
+    -- Disconnects from the server
+    function Disconnect(): nil
+    -- Copies a text to Clipboard
+    function CopyToClipboard(text: string): nil
+    -- Sets the Near Clip Plane
+    function SetNearClipPlane(near_clip_plane: number): nil
+    -- Sets the Escape Menu text
+    function SetEscapeMenuText(text: string): nil
+    -- Shows a notification using the built-in notification system.
+    function ShowNotification(text: string, notification_type: NotificationType?, add_to_notification_list: boolean?, duration: number?): nil
+    -- Gets the Near Clip Plane value
+    function GetNearClipPlane(): number
+    -- Gets the current connected server IP:Port
+    function GetConnectedServerIP(): string
+    -- Enables/Disables Debug settings and Client Console to be used
+    function SetDebugEnabled(enable_debug: boolean): nil
+    -- Overrides the gamma setting and prevents the client from changing it
+    function SetSettingGammaOverride(override_: boolean, new_gamma: number?): nil
+    -- Changes the Highlight Color for highlighted actors at a specific Index
+    function SetHighlightColor(highlight_color: Color, index: number, mode: HighlightMode?): nil
+    -- Changes the Outline Color for outlined actors at a specific Index
+    function SetOutlineColor(outline_color: Color, index: number?, thickness: number?): nil
+    -- Sets a global value in the Client, which can be accessed from anywhere (client side)
+    function SetValue(key: string, value: any): nil
+    -- Subscribes for an Event
+    function Subscribe(event_name: string, callback: any): any
+    -- Unsubscribes from all subscribed Events in this Class and in this Package, optionally passing the function to unsubscribe only that callback
+    function Unsubscribe(event_name: string, callback: any?): nil
+    -- Gets the local Player
+    function GetLocalPlayer(): Player
+    -- Gets the current Frame Time
+    function GetFrameTime(): number
+    -- Gets the Unix Epoch Time in milliseconds
+    function GetTime(): number
+    -- Returns the current log level
+    function GetLogLevel(): number
+    -- Returns the entity with the specified ID
+    function GetEntityByID(entity_id: number): Entity?
+    -- Returns the current Map
+    function GetMap(): string
+    -- Returns if a Package is currently loaded
+    function IsPackageLoaded(package_name: string): boolean
+    -- Returns a list of Packages running
+    function GetPackages(package_type_filter: PackageType?): any[]
+    -- Gets a value given a key
+    function GetValue(key: string, fallback: any): any
+    -- Gets a list of all values keys
+    function GetAllValuesKeys(): string[]
+    -- Opens the escape menu
+    function OpenEscapeMenu(open_settings: boolean?): nil
+    -- Gets the current language of the Client
+    function GetLanguage(): string
+end
+declare Client: Client__Static
+
+-- Exposes access to registering Console Commands and Logging messages.
+declare interface Console__Static
+    -- Logs and formats a message in the console
+    function Log(message: string, ...: any): nil
+    -- Logs an orange warning in the console with stack information
+    function Warn(message: string, ...: any): nil
+    -- Logs a red error in the console with stack information
+    function Error(message: string, ...: any): nil
+    -- Registers a new Console Command
+    function RegisterCommand(command: string, callback: any, description: string?, parameters: string[]?): nil
+    -- Runs a Console Command programmatically (only scripting-registered commands can be triggered)
+    function RunCommand(command: string): nil
+    -- Logs a debug message in the console, with formatted arguments. Outputted only when the current log level is Debug or Verbose
+    function Debug(message: string, ...: any): nil
+end
+declare Console: Console__Static
+
+-- Draws Debug shapes in the world.
+declare interface Debug__Static
+    -- Draws a Debug box in the world
+    function DrawBox(location: Vector, extent: Vector, rotation: Rotator, color: Color, life_time: number?, thickness: number?): nil
+    -- Draws a Debug coordinate system in the world
+    function DrawCoordinateSystem(location: Vector, rotation: Rotator, size: number?, life_time: number?, thickness: number?): nil
+    -- Draws a Debug crosshair in the world
+    function DrawCrosshairs(location: Vector, rotation: Rotator, size: number?, color: Color?, life_time: number?, thickness: number?): nil
+    -- Draws a Debug cylinder in the world
+    function DrawCylinder(start_location: Vector, end_location: Vector, radius: number, segments: number, color: Color?, life_time: number?, thickness: number?): nil
+    -- Draws a Debug directional arrow in the world
+    function DrawDirectionalArrow(start_location: Vector, end_location: Vector, arrow_size: number?, color: Color?, life_time: number?, thickness: number?): nil
+    -- Draws a Debug Line in the World
+    function DrawLine(start_position: Vector, end_position: Vector, color: Color?, life_time: number?, thickness: number?): nil
+    -- Draws a Debug Point in the World
+    function DrawPoint(start_position: Vector, color: Color?, life_time: number?, size: number?): nil
+    -- Draws a Debug sphere in the World
+    function DrawSphere(start_location: Vector, radius: number, segments: number, color: Color?, life_time: number?, thickness: number?): nil
+    -- Draws a Debug string in the world
+    function DrawString(location: Vector, text: string, color: Color?, life_time: number?, draw_shadow: boolean?, font_scale: number?): nil
+end
+declare Debug: Debug__Static
+
+-- Initialize and set Discord activity.
+declare interface Discord__Static
+    -- Initializes the Discord Integration with your custom client_id
+    function Initialize(client_id: number): nil
+    -- Communicates with Discord and sets a custom user status
+    function SetActivity(state: string, details: string, large_image: string, large_text: string, reset_time: boolean?): nil
+end
+declare Discord: Discord__Static
+
+-- Subscribe for user-defined Events.
+declare interface Events__Static
+    -- Calls an Event which will be triggered in all Local Packages
+    function Call(event_name: string, ...: any): nil
+    -- Calls an Event if on Client which will be triggered in all Server Packages
+    function CallRemote(event_name: string, ...: any): nil
+    -- Calls an Event if on Server which will be triggered in all Client's Packages of a specific Player
+    function CallRemote(event_name: string, player: Player, ...: any): nil
+    -- Calls an Event if on Server which will be triggered in all Client's Packages of all specified Player. This is more efficient than calling CallRemote multiple times for each player
+    function CallRemotePlayers(event_name: string, players: Player[], ...: any): nil
+    -- Calls an Event on Server which will be triggered in all Client's Packages of all Players
+    function BroadcastRemote(event_name: string, ...: any): nil
+    -- Calls an Event on Server which will be triggered in all Client's Packages of all Players in that dimension
+    function BroadcastRemoteDimension(dimension: number, event_name: string, ...: any): nil
+    -- Subscribes for an user-created event which will be triggered for only local called events
+    function Subscribe(event_name: string, callback: any): any
+    -- Subscribes for an user-created event which will be triggered for only remote called events
+    function SubscribeRemote(event_name: string, callback: any): any
+    -- Unsubscribes from all subscribed events in this Package with that event name, optionally passing the function to unsubscribe only that callback
+    function Unsubscribe(event_name: string, callback: any?): nil
+    -- Unsubscribes from all subscribed remote events in this Package with that event name, optionally passing the function to unsubscribe only that callback
+    function UnsubscribeRemote(event_name: string, callback: any?): nil
+end
+declare Events: Events__Static
+
+-- HTTP Requests Interface.
+declare interface HTTP__Static
+    -- Makes an asynchronous HTTP Request
+    function RequestAsync(uri: string, endpoint: string?, method: HTTPMethod?, data: string?, content_type: string?, compress: boolean?, headers: any?, callback: any?): nil
+    -- Makes a synchronous HTTP Request.
+    -- 
+    -- The request will be made synchronously and will freeze the server until it's done.
+    function Request(uri: string, endpoint: string?, method: HTTPMethod?, data: string?, content_type: string?, compress: boolean?, headers: any?): any
+    -- Sets the global Connection Timeout in seconds
+    function SetConnectionTimeout(connection_timeout: number): nil
+    -- Sets the global Read and Write Timeout in seconds
+    function SetReadWriteTimeout(read_write_timeout: number): nil
+end
+declare HTTP: HTTP__Static
+
+-- Create custom keybindings and retrieve input information.
+declare interface Input__Static
+    -- Binds a function to an Input defined using `Register` or from the game
+    function Bind(binding_name: string, input_event: InputEvent, callback: any): nil
+    -- Unbinds an Input function
+    function Unbind(binding_name: string, input_event: InputEvent, callback: any?): nil
+    -- Registers a keybinding to a default key
+    function Register(binding_name: string, key_name: string, description: string?): nil
+    -- Unregisters a keybinding
+    function Unregister(binding_name: string, key_name: string): nil
+    -- Gets the icon path of a key
+    function GetKeyIcon(key_name: string, dark_mode: boolean?): string
+    -- Gets the key code of a key
+    function GetKeyCode(key_name: string): number
+    -- Gets the currently pressed modifier keys
+    function GetModifierKeys(): KeyModifier
+    -- Returns the keys bound to a keybinding
+    function GetMappedKeys(binding_name: string): string[]
+    -- Resets all bound functions by this Package
+    function ResetBindings(): nil
+    -- Returns a table with all Scripting KeyBindings
+    function GetScriptingKeyBindings(): any
+    -- Returns a table with all Game KeyBindings
+    function GetGameKeyBindings(): any
+    -- Toggles Local Player input
+    function SetInputEnabled(enable_input: boolean): nil
+    -- Displays/Hides Mouse Cursor
+    function SetMouseEnabled(is_enabled: boolean): nil
+    -- Sets the current Mouse Cursor type
+    function SetMouseCursor(cursor_type: CursorType): nil
+    -- Forces an Input Key event on Local Player
+    function InputKey(key_name: string, input_event: InputEvent, amount_depressed: number?): nil
+    -- Returns if a key is being pressed
+    function IsKeyDown(key_name: string): boolean
+    function IsMouseEnabled(): boolean
+    function IsInputEnabled(): boolean
+end
+declare Input: Input__Static
+
+-- Work with Unreal level in runtime.
+declare interface Level__Static
+    -- Loads a Level in runtime
+    function LoadStreamLevel(level_name: string, should_block_on_load: boolean?, make_visible_after_load: boolean?): nil
+    -- Unloads a Level in runtime
+    function UnloadStreamLevel(level_name: string, should_block_on_unload: boolean?): nil
+    -- Sets a Stream Level visibility
+    function SetStreamLevelVisibility(level_name: string, visibility: boolean): nil
+    -- Gets a list of all Stream Levels
+    function GetStreamLevels(): any[]
+    -- Calls a Level Blueprint custom event (which can be added when creating levels through Unreal Engine)
+    function CallLevelBlueprintEvent(event_name: string, ...: any): any
+end
+declare Level: Level__Static
+
+-- Creates a reachable path into navigable space.
+declare interface Navigation__Static
+    -- Finds random, reachable point in navigable space restricted to radius around origin
+    function GetRandomReachablePointInRadius(origin: Vector, radius: number): Vector
+    -- Finds random, point in navigable space restricted to Radius around Origin. Resulting location is not tested for reachability from the Origin
+    function GetRandomPointInNavigableRadius(origin: Vector, radius: number): Vector
+    -- Finds a Path given Start and End location
+    function FindPathToLocation(start_location: Vector, end_location: Vector): any
+end
+declare Navigation: Navigation__Static
+
+-- Class which represents the current Package
+declare interface Package__Static
+    -- Makes any variable available in the global scope
+    function Export(variable_name: string, value: any): nil
+    -- Includes new .lua files
+    function Require(script_file: string, force_load: boolean?): any
+    -- Subscribes to an Event
+    function Subscribe(event_name: string, callback: any): any
+    -- Unsubscribes from all subscribed Events in this Class and in this Package, optionally passing the function to unsubscribe only that callback
+    function Unsubscribe(event_name: string, callback: any?): nil
+    -- Sets a Persistent Value which will be saved to disk
+    function SetPersistentData(key: string, value: any): nil
+    -- Gets a list of all directories in this package
+    function GetDirectories(path_filter: string?): string[]
+    -- Gets a list of all files in this package
+    function GetFiles(path_filter: string | any?, extension_filter: string?): string[]
+    -- Returns the package name/path
+    function GetName(): string
+    -- Returns the package title
+    function GetTitle(): string
+    -- Returns the package version
+    function GetVersion(): string
+    -- Returns the package compatibility version
+    function GetCompatibilityVersion(): string
+    -- Gets the Persistent Value from the disk
+    function GetPersistentData(key: string?): any
+    -- Flushes the Persistent Data pending changes to disk immediately
+    function FlushPersistentData(): nil
+    -- Returns whether this package is currently unloading
+    function IsUnloading(): boolean
+end
+declare Package: Package__Static
+
+-- Interaction with Post Process effects.
+declare interface PostProcess__Static
+    -- Set Post Process Bloom Settings
+    function SetBloom(intensity: number?, threshold: number?): nil
+    -- Set Post Process Chromatic Aberration Settings
+    function SetChromaticAberration(intensity: number?, start_offset: number?): nil
+    -- Set Post Process Image Effect Settings
+    function SetImageEffects(vignette_intensity: number?, film_grain_intensity: number?): nil
+    -- Set Post Process Exposure Settings
+    function SetExposure(exposure_compensation: number?, min_ev100: number?, max_ev100: number?, low_percent: number?, high_percent: number?): nil
+    -- Set Post Process Film Settings
+    function SetFilm(slope: number?, toe: number?, shoulder: number?, black_clip: number?, white_clip: number?): nil
+    -- Set Post Process Saturation Colors. Use Alpha for overall Saturation intensity
+    function SetGlobalSaturation(color: Color): nil
+    -- Set Post Process Global Gain
+    function SetGlobalGain(gain: Color): nil
+    -- Set Post Process Global Gamma
+    function SetGlobalGamma(gamma: Color): nil
+    -- Set Post Process Global Contrast
+    function SetGlobalContrast(contrast: Color): nil
+    -- Set Post Process Global Offset
+    function SetGlobalOffset(offset: Color): nil
+    -- Set Post Process Lookup Table (LUT) Texture
+    function SetLookupTable(texture_path: string): nil
+    -- Sets a Post Process Material
+    function SetMaterial(material_path: string): nil
+    -- Removes the current Post Process Material
+    function RemoveMaterial(): nil
+end
+declare PostProcess: PostProcess__Static
+
+-- Server represents all Server controls in the Server side.
+declare interface Server__Static
+    -- Restarts the server in a new Map, restarts all packages and reconnects all players
+    function ChangeMap(map_path: string): nil
+    -- Loads a Package
+    function LoadPackage(package_folder_name: string): boolean
+    -- Reloads a Package
+    -- Note: the package is effectively reloaded in the next server tick
+    function ReloadPackage(package_folder_name: string): boolean
+    -- Unloads a Package
+    function UnloadPackage(package_folder_name: string): boolean
+    -- Sets the description of the server, optionally overrides Config.toml
+    function SetDescription(description: string, persist_to_config_file: boolean?): nil
+    -- Sets the logo of the server, optionally overrides Config.toml
+    function SetLogo(logo_url: string, persist_to_config_file: boolean?): nil
+    -- Sets the maximum player slots of the server, optionally overrides Config.toml
+    function SetMaxPlayers(max_players: number, persist_to_config_file: boolean?): nil
+    -- Sets the name of the server, optionally overrides Config.toml
+    function SetName(name: string, persist_to_config_file: boolean?): nil
+    -- Sets the password of the server, optionally overrides Config.toml
+    function SetPassword(password: string, persist_to_config_file: boolean?): nil
+    -- Sets the default server dimension that players will spawn in
+    function SetDefaultPlayerDimension(default_dimension: number): nil
+    -- Sets the default server dimension that entities will spawn in
+    function SetDefaultEntityDimension(default_dimension: number): nil
+    -- Returns the default player dimension
+    function GetDefaultPlayerDimension(): number
+    -- Returns the default entity dimension
+    function GetDefaultEntityDimension(): number
+    -- Returns the number of connected players (including players in the process of connecting)
+    function GetConnectionCount(): number
+    -- Sets a global value in the Server, which can be accessed from anywhere (server side)
+    function SetValue(key: string, value: any, sync_on_client: boolean?): nil
+    -- Gets a value given a key
+    function GetValue(key: string, fallback: any): any
+    -- Gets a list of all values keys
+    function GetAllValuesKeys(): string[]
+    -- Kicks the player from the server by it's Account ID, ideal for kicking from inside PlayerConnect event
+    function KickByAccountID(player_account_id: string, reason: string): nil
+    -- Ban the player from the server by it's Account ID, ideal for banning from inside PlayerConnect event
+    function BanByAccountID(player_account_id: string, reason: string): nil
+    -- Unbans a Player by it's account ID
+    function Unban(account_id: string): nil
+    -- Stops the server
+    function Stop(): nil
+    -- Restarts the server, reloading all Packages and reconnecting all Players
+    function Restart(): nil
+    -- Subscribes for an Event
+    function Subscribe(event_name: string, function_: any): any
+    -- Unsubscribes from all subscribed Events in this Class and in this Package, optionally passing the function to unsubscribe only that callback
+    function Unsubscribe(event_name: string, function_: any?): nil
+    -- Returns the current Map Package name
+    function GetMap(): string
+    -- Returns the current Map Asset reference
+    function GetMapAsset(): string
+    -- Returns a list of the Custom Config of the current map (stored in the MAP_NAME.toml)
+    function GetMapConfig(): any
+    -- Returns a list of the Spawn Points of the current map (stored in the MAP_NAME.toml)
+    function GetMapSpawnPoints(): any[]
+    -- Adds a spawn point to the current map's spawn points list
+    function AddMapSpawnPoint(location: Vector, rotation: Rotator?): nil
+    -- Returns if a Package is currently loaded
+    function IsPackageLoaded(package_name: string): boolean
+    -- Returns a list of Packages running, optionally returns all Packages installed in the server
+    function GetPackages(only_loaded: boolean?, package_type_filter: PackageType?): any[]
+    -- Returns the server version
+    function GetVersion(): string
+    -- Returns the server Public IP
+    function GetIP(): string
+    -- Returns the server Port
+    function GetPort(): number
+    -- Returns the current log level
+    function GetLogLevel(): number
+    -- Returns the entity with the specified ID
+    function GetEntityByID(entity_id: number): Entity?
+    -- Returns the server QueryPort
+    function GetQueryPort(): number
+    -- Returns the server Compression Level being used
+    function GetCompressionLevel(): number
+    -- Returns the Max Players configured
+    function GetMaxPlayers(): number
+    -- Returns the Server Description
+    function GetDescription(): string
+    -- Returns the Server Name
+    function GetName(): string
+    -- Returns the Server Custom Settings passed as parameter or New Game screen
+    function GetCustomSettings(): any[]
+    -- Returns the Configured Tick Rate
+    function GetTickRate(): number
+    -- Gets the Unix Epoch Time in milliseconds
+    function GetTime(): number
+    -- Returns if the Server is announced in the Master List
+    function IsAnnounced(): boolean
+end
+declare Server: Server__Static
+
+-- Interact with built-in Sky & Weather system.
+declare interface Sky__Static
+    -- Replaces all Sky/Sun actors with the Ultra Dynamic Sky Actor, to be able to use the functions from this page
+    function Spawn(spawn_weather: boolean?, find_existing: boolean?): boolean
+    -- Destroys all Directional Lights, Sky Lights, Exponential Height Fogs, Volumetric Clouds, Sky Atmosphere, Ultra Dynamic Sky Actors and all Actors with the `Sun` Actor Tag from the Level
+    function DestroyAllSky(): nil
+    -- Reconstruct the Ultra Dynamic Sky Actor, forces most of the changes to be applied
+    function Reconstruct(): nil
+    -- Sets the Moon Texture
+    function SetMoonTexture(texture: string): nil
+    -- Sets the Moon Texture Rotation
+    function SetMoonTextureRotation(rotation: number): nil
+    -- Sets the Moon Vertical Offset
+    function SetMoonVerticalOffset(offset: number): nil
+    -- Sets the Moon Scale
+    function SetMoonScale(scale: number): nil
+    -- Sets the Moon Angle
+    function SetMoonAngle(yaw: number, pitch: number): nil
+    -- Sets the Moon Phase
+    function SetMoonPhase(phase: number): nil
+    -- Sets the Moon Glow Intensity
+    function SetMoonGlowIntensity(glow_intensity: number): nil
+    -- Sets the Moon Light Intensity
+    function SetMoonLightIntensity(intensity: number): nil
+    -- Sets the Sun Angle
+    function SetSunAngle(yaw: number, pitch: number): nil
+    -- Sets the Sun Scale
+    function SetSunScale(radius: number): nil
+    -- Sets the Sun Light Intensity
+    function SetSunLightIntensity(intensity: number): nil
+    -- Sets the Sky Mode
+    function SetSkyMode(sky_mode: SkyMode): nil
+    -- Sets the Volumetric Cloud Color
+    function SetVolumetricCloudColor(color: Color): nil
+    -- The amount of coverage for the cloud layer, from a clear sky to overcast
+    function SetCloudCoverage(cloud_coverage: number): nil
+    -- The fogginess of the scene. The impact this has on fog density is scaled from the Fog Density category
+    function SetFog(fog_percentage: number): nil
+    -- A simple contrast boost for the sky material. Cannot affect volumetric clouds
+    function SetContrast(contrast: number): nil
+    -- The overall brightness of the shader
+    function SetOverallIntensity(intensity: number): nil
+    -- Can be used to scale the brightness of the sky and lighting, at night
+    function SetNightBrightness(brightness: number): nil
+    -- Sets whether or not to animate the time of day
+    function SetAnimateTimeOfDay(animate: boolean, day_length: number?, night_length: number?): nil
+    -- Sets the current time
+    function SetTimeOfDay(hours: number, minutes: number, transition_time: number?): nil
+    -- Gets the current time
+    function GetTimeOfDay(): (number, number, number)
+    -- Returns if the Ultra Dynamic Sky was spawned
+    function IsSpawned(including_weather: boolean): boolean
+    -- Gets the current weather
+    function GetWeather(): WeatherType
+    -- Changes the Weather
+    function ChangeWeather(weather: WeatherType, transition_time: number): nil
+end
+declare Sky: Sky__Static
+
+-- Interact with Steam APIs.
+declare interface Steam__Static
+    -- Sets Steam Rich Presence text
+    function SetRichPresence(text: string): nil
+    -- Triggers a Steam screenshot
+    function TriggerScreenshot(): nil
+end
+declare Steam: Steam__Static
+
+-- Execute code at specified time intervals.
+declare interface Timer__Static
+    -- Executes a function, after waiting a specified number of milliseconds
+    function SetTimeout(callback: any, milliseconds: number?, ...: any): number
+    -- Same as SetTimeout(), but repeats the execution of the function continuously
+    function SetInterval(callback: any, milliseconds: number?, ...: any): number
+    -- Stops the execution of the function specified in SetTimeout()
+    function ClearTimeout(timeout_id: number): nil
+    -- Stops the execution of the function specified in SetInterval()
+    function ClearInterval(interval_id: number): nil
+    -- Binds a Timer to any Actor. The timer will be automatically cleared when the Actor is destroyed
+    function Bind(timer_id: number, actor: Actor): nil
+    -- Checks if a Timer is currently active or waiting to be triggered
+    function IsValid(timer_id: number): boolean
+    -- Returns the time elapsed since the last tick
+    function GetElapsedTime(timer_id: number): number
+    -- Returns the time remaining to the next tick
+    function GetRemainingTime(timer_id: number): number
+    -- Pauses the Timer
+    function Pause(timer_id: number): nil
+    -- Resumes the Timer
+    function Resume(timer_id: number): nil
+    -- Resets a Timer to restart from beginning
+    function ResetElapsedTime(timer_id: number): nil
+end
+declare Timer: Timer__Static
+
+-- Trace a ray against the world and get collided objects information.
+declare interface Trace__Static
+    -- Trace a ray against the world and returns a table with the first blocking hit information
+    function LineSingle(start_location: Vector, end_location: Vector, collision_channel: CollisionChannel | number?, trace_mode: TraceMode | number?, ignored_actors: Actor[]?): any
+    -- Trace a ray against the world using object types and return overlapping hits and then first blocking hit
+    function LineMulti(start_location: Vector, end_location: Vector, collision_channel: CollisionChannel | number?, trace_mode: TraceMode | number?, ignored_actors: Actor[]?): any[]
+    -- Trace a sphere against the world and returns a table with the first blocking hit information
+    function SphereSingle(start_location: Vector, end_location: Vector, radius: number, collision_channel: CollisionChannel | number?, trace_mode: TraceMode | number?, ignored_actors: Actor[]?): any
+    -- Trace a sphere against the world using object types and return overlapping hits and then first blocking hit
+    function SphereMulti(start_location: Vector, end_location: Vector, radius: number, collision_channel: CollisionChannel | number?, trace_mode: TraceMode | number?, ignored_actors: Actor[]?): any[]
+    -- Trace a box against the world and returns a table with the first blocking hit information
+    function BoxSingle(start_location: Vector, end_location: Vector, half_size: Vector, orientation: Rotator, collision_channel: CollisionChannel | number?, trace_mode: TraceMode | number?, ignored_actors: Actor[]?): any
+    -- Trace a box against the world using object types and return overlapping hits and then first blocking hit
+    function BoxMulti(start_location: Vector, end_location: Vector, half_size: Vector, orientation: Rotator, collision_channel: CollisionChannel | number?, trace_mode: TraceMode | number?, ignored_actors: Actor[]?): any[]
+    -- Trace a capsule against the world and returns a table with the first blocking hit information
+    function CapsuleSingle(start_location: Vector, end_location: Vector, radius: number, half_height: number, collision_channel: CollisionChannel | number?, trace_mode: TraceMode | number?, ignored_actors: Actor[]?): any
+    -- Trace a capsule against the world using object types and return overlapping hits and then first blocking hit
+    function CapsuleMulti(start_location: Vector, end_location: Vector, radius: number, half_height: number, collision_channel: CollisionChannel | number?, trace_mode: TraceMode | number?, ignored_actors: Actor[]?): any[]
+end
+declare Trace: Trace__Static
+
+-- Work with screen properties and effects.
+declare interface Viewport__Static
+    -- Transforms a 3D world-space vector into 2D screen coordinates
+    function ProjectWorldToScreen(world_position: Vector): Vector2D
+    -- Transforms a 2D screen coordinates into 3D world-space location
+    function DeprojectScreenToWorld(screen_position: Vector2D): any
+    -- Loads and sets a hardware cursor in the game from a PNG image
+    function SetHardwareCursor(cursor_shape: CursorType, cursor_path: string, hotspot: Vector2D?): nil
+    -- Gets the size of viewport
+    function GetViewportSize(): Vector2D
+    -- Gets the scale of viewport
+    function GetViewportScale(): number
+    -- Sets the mouse position
+    function SetMousePosition(new_position: Vector2D): nil
+    -- Gets the current mouse screen location
+    function GetMousePosition(): Vector2D
+    -- Enables/Disables the Crosshair
+    function SetCrosshairEnabled(is_enabled: boolean): nil
+    -- Enables/Disables the Interaction ToolTip
+    function SetInteractionToolTipEnabled(is_enabled: boolean): nil
+    -- Enables/Disables the Blood Screen effect
+    function SetBloodScreenEnabled(is_enabled: boolean): nil
+    -- Manually sets the Blood Screen intensity
+    function SetBloodScreenIntensity(intensity: number): nil
+    -- Sets the Branding Bar settings (the bar with 'nanos world - closed alpha ver...')
+    function SetBrandingBarSettings(horizontal_alignment: WidgetHorizontalAlignment, vertical_alignment: WidgetVerticalAlignment, is_lean: boolean?): nil
+end
+declare Viewport: Viewport__Static

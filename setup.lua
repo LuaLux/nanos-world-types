@@ -40,7 +40,7 @@ project.writeConfig("lux.toml", {
     code = {
         -- Nanos's loader uses `Package.Require("path/to/module")` instead of
         -- plain `require`. Compile every `import` into that form.
-        import_statement = 'Package.Require("%s")',
+        import_statement = 'Package.Require(%s)',
         -- Annotation IR helpers use Lua's native 1-based indexing; keep the
         -- consumer side aligned so `array[1]` means "first element" the way
         -- a Lua dev expects.

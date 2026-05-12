@@ -38,9 +38,11 @@ project.writeConfig("lux.toml", {
     -- nanos-world-types ships its own annotations/ directory which is
     -- auto-discovered from `lux_modules/`. No explicit entry needed here.
     code = {
-        -- Nanos's loader uses `Package.Require("path/to/module")` instead of
-        -- plain `require`. Compile every `import` into that form.
+        -- Nanos's loader uses `Package.Require("path/to/module.lua")` — the
+        -- `.lua` suffix is required by the runtime. Lux strips any `.lux`
+        -- from the source path, then `import_extension` appends `.lua`.
         import_statement = 'Package.Require(%s)',
+        import_extension = ".lua",
         -- Annotation IR helpers use Lua's native 1-based indexing; keep the
         -- consumer side aligned so `array[1]` means "first element" the way
         -- a Lua dev expects.

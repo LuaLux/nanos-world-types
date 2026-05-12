@@ -9,7 +9,7 @@
 -- annotations, and writes a tiny Index.lux in each side folder.
 
 local function projectNameFromCwd()
-    local cwd = os.getenv("PWD") or "."
+    local cwd = project.cwd() or "."
     if cwd:sub(-1) == "/" then cwd = cwd:sub(1, -2) end
     local name = cwd:match("([^/\\]+)$") or "nanos-package"
     return (name:gsub("[^%w%-_]", "-"))

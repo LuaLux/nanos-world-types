@@ -1,0 +1,26 @@
+--- @EntityEvent("Destroy") — subscribes to a nanos `Entity.Subscribe(...)`
+--- static-class event. Works on both top-level functions and class methods.
+
+export local annotation = {
+    targets = { "Function", "ClassMethod" },
+    params = {
+        name = { type = "string", required = true }
+    }
+}
+
+export function apply(target, args)
+    if target.__kind == "FunctionDecl" then
+        local fnName = target.namePath[1].name
+        local subscribe = ir.exprStmt(ir.call(
+            ir.dotAccess(ir.nameExpr("Entity"), "Subscribe"),
+            { ir.stringLiteral(args.name), ir.nameExpr(fnName) }
+        ))
+        return { target, subscribe }
+    end
+
+    if not target.annotations then target.annotations = {} end
+    table.insert(target.annotations, ir.annotation("EntityEvent", {
+        ir.stringLiteral(args.name)
+    }))
+    return target
+end

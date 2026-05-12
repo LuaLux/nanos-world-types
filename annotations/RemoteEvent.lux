@@ -1,0 +1,43 @@
+--- @RemoteEvent("event-name") — subscribes to a nanos
+--- `Events.SubscribeRemote(...)` event.
+---
+--- Two flavours:
+---
+--- 1) On a top-level function — emits the Subscribe call right after the
+---    function. The function is passed by reference, so it receives the
+---    event args directly:
+---
+---        @RemoteEvent("ClientHello")
+---        function OnHello(player, msg) ... end
+---
+---        -- lowers to:
+---        function OnHello(player, msg) ... end
+---        Events.SubscribeRemote("ClientHello", OnHello)
+---
+--- 2) On a class method — only re-adds the marker so the surrounding
+---    [[nanosPackage]] class annotation can collect it and emit a Subscribe
+---    call that dispatches through the auto-created instance.
+
+export local annotation = {
+    targets = { "Function", "ClassMethod" },
+    params = {
+        name = { type = "string", required = true }
+    }
+}
+
+export function apply(target, args)
+    if target.__kind == "FunctionDecl" then
+        local fnName = target.namePath[1].name
+        local subscribe = ir.exprStmt(ir.call(
+            ir.dotAccess(ir.nameExpr("Events"), "SubscribeRemote"),
+            { ir.stringLiteral(args.name), ir.nameExpr(fnName) }
+        ))
+        return { target, subscribe }
+    end
+
+    if not target.annotations then target.annotations = {} end
+    table.insert(target.annotations, ir.annotation("RemoteEvent", {
+        ir.stringLiteral(args.name)
+    }))
+    return target
+end

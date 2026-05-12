@@ -34,6 +34,34 @@ const PRIMITIVE_MAP = {
 // Asset-path "types" exposed by the nanos docs are really just strings.
 const STRING_ALIASES = /(Path|Asset|Engine|Permission|Authority)$/;
 
+// nanos's per-member `authority` field maps onto Lux's @side annotation:
+//   - "server" / "client" → matching side
+//   - "both"              → `shared` (Lux models shared as its own bit, not the union of client+server)
+//   - "both-net-authority-first" → also shared (still callable on both, just with auth precedence)
+//   - "authority" / "network-authority" → null (ambiguous — whoever owns the entity);
+//     members carrying this stay unannotated so they remain reachable.
+const AUTHORITY_TO_SIDE = {
+    'server': 'server',
+    'client': 'client',
+    'both': 'shared',
+    'both-net-authority-first': 'shared',
+    'authority': null,
+    'network-authority': null,
+};
+
+function authoritySide(authority) {
+    if (authority == null || authority === '') return null;
+    if (!(authority in AUTHORITY_TO_SIDE)) return null;
+    return AUTHORITY_TO_SIDE[authority];
+}
+
+// Emits an indented `@side(...)` line for an authority, or empty string when
+// authority is missing / ambiguous (leaves the member as unrestricted "any").
+function memberSideLine(indent, authority) {
+    const side = authoritySide(authority);
+    return side ? `${indent}@side(${side})\n` : '';
+}
+
 function loadJson(rel) {
     return JSON.parse(fs.readFileSync(path.join(API_DIR, rel), 'utf8'));
 }
@@ -128,6 +156,9 @@ function emitFunction(indent, fn, { isStatic = false, inModule = false } = {}) {
     const doc = emitDoc(indent, fn.description || fn.description_long);
     if (doc) out.push(doc.trimEnd());
 
+    const sideLine = memberSideLine(indent, fn.authority);
+    if (sideLine) out.push(sideLine.trimEnd());
+
     const sig = paramSignature(fn.parameters);
     const ret = returnSignature(fn.return);
     const prefix = inModule ? '' : (isStatic ? 'static ' : '');
@@ -139,6 +170,8 @@ function emitConstructor(indent, ctor) {
     const out = [];
     const doc = emitDoc(indent, ctor.description);
     if (doc) out.push(doc.trimEnd());
+    const sideLine = memberSideLine(indent, ctor.authority);
+    if (sideLine) out.push(sideLine.trimEnd());
     out.push(`${indent}constructor(${paramSignature(ctor.parameters)})`);
     return out.join('\n');
 }
@@ -165,6 +198,8 @@ function emitOperator(indent, op) {
     const out = [];
     const doc = emitDoc(indent, op.description);
     if (doc) out.push(doc.trimEnd());
+    const sideLine = memberSideLine(indent, op.authority);
+    if (sideLine) out.push(sideLine.trimEnd());
     out.push(`${indent}operator ${sym} (${rhsParam}): ${ret}`);
     return out.join('\n');
 }
@@ -173,6 +208,8 @@ function emitProperty(indent, prop, { isStatic = false } = {}) {
     const out = [];
     const doc = emitDoc(indent, prop.description);
     if (doc) out.push(doc.trimEnd());
+    const sideLine = memberSideLine(indent, prop.authority);
+    if (sideLine) out.push(sideLine.trimEnd());
     const prefix = isStatic ? 'static ' : '';
     out.push(`${indent}${prefix}${safeIdent(prop.name)}: ${mapType(prop.type)}`);
     return out.join('\n');
@@ -183,6 +220,10 @@ function emitClass(klass) {
     const doc = emitDoc('', klass.description);
     if (doc) out.push(doc.trimEnd());
 
+    // Per-member @side is emitted inside emitFunction / emitProperty /
+    // emitConstructor / emitOperator below. The class type itself stays
+    // unannotated so a `Player` reference is reachable from any side — only
+    // calls into individual server-only / client-only methods raise an error.
     let header = `declare class ${klass.name}`;
     const parents = klass.inheritance || [];
     if (parents.length > 0) {
@@ -217,17 +258,30 @@ function emitStaticClass(sc, { iface = null } = {}) {
     const doc = emitDoc('', sc.description);
     if (doc) out.push(doc.trimEnd());
 
+    // StaticClasses are singleton APIs — their top-level authority is the side
+    // the whole API is reachable from. Both the wrapper interface AND the
+    // declare-var binding get the same @side so the API is unreachable from
+    // disallowed sides regardless of how it is referenced.
+    const side = sc.authority ? AUTHORITY_TO_SIDE[sc.authority] : null;
+    if (side) out.push(`@side(${side})`);
+
     out.push(`declare interface ${ifname}`);
     for (const p of sc.static_properties || []) out.push(emitProperty('    ', p));
     for (const f of sc.static_functions || []) {
         // Inside an interface, methods are written without the `function`
         // body — but Lux supports `function name(...)` form for members of
-        // declare interface, same as the stdlib uses.
+        // declare interface, same as the stdlib uses. We also emit per-method
+        // @side when the method's authority differs from the class default,
+        // so e.g. Chat.* (top-level `both` ⇒ shared) still gates its
+        // client-only / server-only methods.
         const doc = emitDoc('    ', f.description || f.description_long);
         if (doc) out.push(doc.trimEnd());
+        const memberSide = memberSideLine('    ', f.authority);
+        if (memberSide && authoritySide(f.authority) !== side) out.push(memberSide.trimEnd());
         out.push(`    function ${safeIdent(f.name)}(${paramSignature(f.parameters)}): ${returnSignature(f.return)}`);
     }
     out.push('end');
+    if (side) out.push(`@side(${side})`);
     out.push(`declare ${safeIdent(sc.name)}: ${ifname}`);
     return out.join('\n');
 }

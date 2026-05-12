@@ -1,0 +1,84 @@
+--- @nanosPackage — class-level annotation that wires a handler class into
+--- the nanos event system. Walks the class's methods, finds the marker
+--- annotations placed by [[Event]], [[RemoteEvent]], [[PlayerEvent]],
+--- [[CharacterEvent]], [[EntityEvent]], [[Command]] and [[ConsoleCommand]],
+--- and emits the corresponding `Subscribe` / `RegisterCommand` calls right
+--- after the class.
+---
+--- A singleton instance of the class is auto-created at file scope
+--- (`local __nanos_<ClassName> = new <ClassName>()`) so the generated
+--- callbacks can dispatch via `instance:Method(...)`. If the class has
+--- side-effectful initialisation it should live in the constructor — it
+--- will fire exactly once when the package file loads.
+
+export local annotation = {
+    target = "Class",
+    params = {}
+}
+
+local DISPATCH = {
+    Event           = { object = "Events",  method = "Subscribe"        },
+    RemoteEvent     = { object = "Events",  method = "SubscribeRemote"  },
+    PlayerEvent     = { object = "Player",  method = "Subscribe"        },
+    CharacterEvent  = { object = "Character", method = "Subscribe"      },
+    EntityEvent     = { object = "Entity",  method = "Subscribe"        },
+    Command         = { object = "Chat",    method = "Subscribe"        },
+    ConsoleCommand  = { object = "Console", method = "RegisterCommand"  },
+}
+
+local function firstStringArg(ann)
+    local args = ann.args or {}
+    if #args == 0 then return nil end
+    local val = args[1].value
+    if val and val.__kind == "StringLiteralExpr" then
+        return val.value
+    end
+    return nil
+end
+
+local function buildSubscribe(dispatch, eventName, instExpr, methodName, markerName)
+    local actualEvent = eventName
+    if markerName == "Command" then
+        actualEvent = "PlayerSubmit"
+    end
+
+    local args = {
+        ir.stringLiteral(actualEvent),
+        ir.varargMethodCallClosure(instExpr, methodName),
+    }
+
+    if markerName == "ConsoleCommand" then
+        args = {
+            ir.stringLiteral(eventName),
+            ir.varargMethodCallClosure(instExpr, methodName),
+        }
+    end
+
+    return ir.exprStmt(ir.call(
+        ir.dotAccess(ir.nameExpr(dispatch.object), dispatch.method),
+        args
+    ))
+end
+
+export function apply(target, _args)
+    local className = target.name.name
+    local instName = "__nanos_" .. className
+    local instExpr = ir.nameExpr(instName)
+
+    local stmts = { target }
+    stmts[#stmts + 1] = ir.localDecl(instName, ir.newExpr(className, {}))
+
+    for _, method in ipairs(target.methods or {}) do
+        local methodName = method.name.name
+        for _, ann in ipairs(method.annotations or {}) do
+            local markerName = ann.name and ann.name.name or nil
+            local dispatch = markerName and DISPATCH[markerName] or nil
+            if dispatch then
+                local eventName = firstStringArg(ann) or ""
+                stmts[#stmts + 1] = buildSubscribe(dispatch, eventName, instExpr, methodName, markerName)
+            end
+        end
+    end
+
+    return stmts
+end

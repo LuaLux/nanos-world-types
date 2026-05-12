@@ -1,0 +1,36 @@
+--- @Command("heal") — subscribes the function/method to nanos chat's
+--- `PlayerSubmit` event. The handler receives every chat message — filter
+--- by inspecting the second argument (`text`) inside the body.
+---
+--- The command name parameter is currently metadata only; it does not
+--- auto-filter the event stream. Pattern:
+---
+---     @Command("heal")
+---     function OnHeal(player, text)
+---         if text:sub(1, 5) ~= "/heal" then return end
+---         -- handle...
+---     end
+
+export local annotation = {
+    targets = { "Function", "ClassMethod" },
+    params = {
+        name = { type = "string", required = true }
+    }
+}
+
+export function apply(target, args)
+    if target.__kind == "FunctionDecl" then
+        local fnName = target.namePath[1].name
+        local subscribe = ir.exprStmt(ir.call(
+            ir.dotAccess(ir.nameExpr("Chat"), "Subscribe"),
+            { ir.stringLiteral("PlayerSubmit"), ir.nameExpr(fnName) }
+        ))
+        return { target, subscribe }
+    end
+
+    if not target.annotations then target.annotations = {} end
+    table.insert(target.annotations, ir.annotation("Command", {
+        ir.stringLiteral(args.name)
+    }))
+    return target
+end

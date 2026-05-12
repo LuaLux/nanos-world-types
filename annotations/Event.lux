@@ -1,0 +1,27 @@
+--- @Event("event-name") — subscribes to a nanos `Events.Subscribe(...)`
+--- event. Works on both top-level functions (emits the Subscribe call
+--- inline) and class methods (collected by [[nanosPackage]]).
+
+export local annotation = {
+    targets = { "Function", "ClassMethod" },
+    params = {
+        name = { type = "string", required = true }
+    }
+}
+
+export function apply(target, args)
+    if target.__kind == "FunctionDecl" then
+        local fnName = target.namePath[1].name
+        local subscribe = ir.exprStmt(ir.call(
+            ir.dotAccess(ir.nameExpr("Events"), "Subscribe"),
+            { ir.stringLiteral(args.name), ir.nameExpr(fnName) }
+        ))
+        return { target, subscribe }
+    end
+
+    if not target.annotations then target.annotations = {} end
+    table.insert(target.annotations, ir.annotation("Event", {
+        ir.stringLiteral(args.name)
+    }))
+    return target
+end

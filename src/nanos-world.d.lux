@@ -834,60 +834,87 @@ end
 -- Entity is the base for all Classes, and all those entities share the same Methods and Events described in this page.
 declare class Entity
     -- Finish the spawning process and send the entity to clients if it was spawned with `defer_spawn`
+    @side(server)
     function FinishSpawn(): nil
     -- Gets the universal network ID of this Entity (same on both client and server)
+    @side(shared)
     function GetID(): number
     -- Returns true if this Entity is being destroyed
+    @side(shared)
     function IsBeingDestroyed(): boolean
     -- Gets if this Entity was spawned by the client side
+    @side(client)
     function HasAuthority(): boolean
     -- Gets the class of this entity
+    @side(shared)
     function GetClass(): any
     -- Recursively checks if this entity is inherited from a Class
+    @side(shared)
     function IsA(class_: any): boolean
     -- Subscribes to an Event on this specific entity
+    @side(shared)
     function Subscribe(event_name: string, callback: any): any
     -- Subscribes to a custom event called from server on this specific entity
+    @side(shared)
     function SubscribeRemote(event_name: string, callback: any): any
     -- Unsubscribes all callbacks from this Event in this Entity within this Package, or only the callback passed
+    @side(shared)
     function Unsubscribe(event_name: string, callback: any?): nil
     -- Sets a Value in this Entity
+    @side(shared)
     function SetValue(key: string, value: any, sync_on_clients: boolean?): nil
     -- Gets a Value stored on this Entity at the given key
+    @side(shared)
     function GetValue(key: string, fallback: any): any
     -- Gets a list of all values keys
+    @side(server)
     function GetAllValuesKeys(): string[]
     -- Destroys this Entity
     function Destroy(): nil
     -- Returns true if this Entity is valid (i.e. wasn't destroyed and points to a valid Entity)
+    @side(shared)
     function IsValid(): boolean
     -- Calls a custom remote event directly on this entity to a specific Player
+    @side(server)
     function CallRemoteEvent(event_name: string, player: Player, ...: any): nil
     -- Calls a custom remote event directly on this entity
+    @side(client)
     function CallRemoteEvent(event_name: string, ...: any): nil
     -- Calls a custom remote event directly on this entity to all Players
+    @side(server)
     function BroadcastRemoteEvent(event_name: string, ...: any): nil
     -- Returns a table containing all Entities of the class this is called on
+    @side(shared)
     static function GetAll(): Entity[]
     -- Returns a specific Entity of this class at an index
+    @side(shared)
     static function GetByIndex(index: number): Entity
     -- Returns how many Entities of this class exist
+    @side(shared)
     static function GetCount(): number
     -- Returns an iterator with all Entities of this class to be used with `pairs()`
+    @side(shared)
     static function GetPairs(): any
     -- Inherits this class with the Inheriting System
+    @side(shared)
     static function Inherit(name: string, custom_values: any?): any
     -- Gets a list of all directly inherited classes from this Class created with the Inheriting System
+    @side(shared)
     static function GetInheritedClasses(recursively: boolean?): any[]
     -- Gets the parent class if this Class was created with the Inheriting System
+    @side(shared)
     static function GetParentClass(): any?
     -- Gets if this Class is child of another class if this Class was created with the Inheriting System
+    @side(shared)
     static function IsChildOf(class_: any): boolean
     -- Subscribes to an Event for all entities of this Class
+    @side(shared)
     static function Subscribe(event_name: string, callback: any): any
     -- Subscribes to a custom event called from server
+    @side(shared)
     static function SubscribeRemote(event_name: string, callback: any): any
     -- Unsubscribes all callbacks from this Event in this Class within this Package, or only the callback passed
+    @side(shared)
     static function Unsubscribe(event_name: string, callback: any?): nil
 end
 
@@ -907,6 +934,7 @@ declare class Actor extends Entity
     -- Sets this Actor's collision type
     function SetCollision(collision_type: CollisionType): nil
     -- Sets this Actor's Dimension
+    @side(server)
     function SetDimension(dimension: number): nil
     -- Adds a permanent force to this Actor, set to Vector(0, 0, 0) to cancel
     function SetForce(force: Vector, is_local: boolean?): nil
@@ -915,12 +943,16 @@ declare class Actor extends Entity
     -- Sets whether gravity is enabled on this Actor
     function SetGravityEnabled(gravity_enabled: boolean): nil
     -- Sets whether the actor is visible or not
+    @side(shared)
     function SetVisibility(is_visible: boolean): nil
     -- Gets a Socket Transform in world space given a bone or socket name
+    @side(client)
     function GetSocketTransform(socket_name: string): any
     -- Sets whether the highlight is enabled on this Actor, and which highlight index to use
+    @side(client)
     function SetHighlightEnabled(is_enabled: boolean, index: number?): nil
     -- Sets whether the outline is enabled on this Actor, and which outline index to use
+    @side(client)
     function SetOutlineEnabled(is_enabled: boolean, index: number?): nil
     -- Sets the time (in seconds) before this Actor is destroyed. After this time has passed, the actor will be automatically destroyed.
     function SetLifeSpan(seconds: number): nil
@@ -935,228 +967,328 @@ declare class Actor extends Entity
     -- Sets this Actor's scale
     function SetScale(scale: Vector): nil
     -- Sets this Actor's render cull distance
+    @side(shared)
     function SetRenderCullDistance(max_distance: number): nil
     -- Sets this Actor's to cast shadows or not
+    @side(shared)
     function SetCastShadow(cast_shadow: boolean): nil
     -- Sets the Player to have network authority over this Actor
+    @side(server)
     function SetNetworkAuthority(player: Player?): nil
     -- Sets if this Actor will auto distribute the network authority between players
+    @side(server)
     function SetNetworkAuthorityAutoDistributed(auto_distribute: boolean): nil
     -- Smoothly moves this actor to a location over a certain time
     function TranslateTo(location: Vector, time: number, exp: number?): nil
     -- Smoothly rotates this actor to an angle over a certain time
     function RotateTo(rotation: Rotator, time: number, exp: number?): nil
     -- Returns true if this Actor is visible
+    @side(shared)
     function IsVisible(): boolean
     -- Returns true if gravity is enabled on this Actor
+    @side(shared)
     function IsGravityEnabled(): boolean
     -- Returns true if this Actor is in water
+    @side(shared)
     function IsInWater(): boolean
     -- Returns true if this Actor is currently network distributed
+    @side(shared)
     function IsNetworkDistributed(): boolean
     -- Gets all Actors attached to this Actor
+    @side(shared)
     function GetAttachedEntities(): Actor[]
     -- Gets the Actor this Actor is attached to
+    @side(shared)
     function GetAttachedTo(): Actor?
     -- Gets this Actor's bounds
+    @side(client)
     function GetBounds(): any
     -- Gets this Actor's collision type
+    @side(shared)
     function GetCollision(): CollisionType
     -- Gets this Actor's location in the game world
+    @side(shared)
     function GetLocation(): Vector
     -- Gets this Actor's Relative Location if it's attached
+    @side(shared)
     function GetRelativeLocation(): Vector
     -- Gets this Actor's Network Authority Player
+    @side(server)
     function GetNetworkAuthority(): Player?
     -- Gets this Actor's angle in the game world
+    @side(shared)
     function GetRotation(): Rotator
     -- Gets this Actor's Relative Rotation if it's attached
+    @side(shared)
     function GetRelativeRotation(): Rotator
     -- Gets this Actor's force (set by `SetForce()`)
+    @side(shared)
     function GetForce(): Vector
     -- Gets this Actor's angular force (set by `SetAngularForce()`)
+    @side(shared)
     function GetAngularForce(): Vector
     -- Gets this Actor's dimension
+    @side(shared)
     function GetDimension(): number
     -- Returns true if the local Player is currently the Network Authority of this Actor
+    @side(client)
     function HasNetworkAuthority(): boolean
     -- Gets this Actor's scale
+    @side(shared)
     function GetScale(): Vector
     -- Gets this Actor's current velocity
+    @side(shared)
     function GetVelocity(): Vector
     -- Adds an Unreal Actor Tag to this Actor
+    @side(client)
     function AddActorTag(tag: string): nil
     -- Removes an Unreal Actor Tag from this Actor
+    @side(client)
     function RemoveActorTag(tag: string): nil
     -- Gets all Unreal Actor Tags on this Actor
+    @side(client)
     function GetActorTags(): string[]
     -- Gets if this Actor was recently rendered on screen
+    @side(client)
     function WasRecentlyRendered(): boolean
     -- Gets the distance of this Actor from the Camera
+    @side(client)
     function GetDistanceFromCamera(): number
     -- Gets the percentage of this Actor size in the screen
+    @side(client)
     function GetScreenPercentage(): number
 end
 
 -- Pickables are special Actors which can be grabbed, held and used by Characters.
 declare class Pickable extends Entity
     -- Attaches a Skeletal Mesh as master pose to this entity
+    @side(shared)
     function AddSkeletalMeshAttached(id: string, skeletal_mesh_path: string, use_parent_bounds: boolean?, use_base_leader_pose_component: boolean?, attachable_id: string?): nil
     -- Attaches a Static Mesh to this entity
+    @side(shared)
     function AddStaticMeshAttached(id: string, static_mesh_path: string, socket: string?, relative_location: Vector?, relative_rotation: Rotator?, use_parent_bounds: boolean?, attachable_id: string?): nil
     -- Gets all Static Meshes attached to this entity
+    @side(shared)
     function GetAllStaticMeshAttached(): string[]
     -- Gets all Skeletal Meshes attached to this entity
+    @side(shared)
     function GetAllSkeletalMeshAttached(): string[]
     -- Removes, if it exists, a SkeletalMesh from this Pickable given its custom ID
+    @side(shared)
     function RemoveSkeletalMeshAttached(id: string): nil
     -- Sets a Static Mesh Attached location and rotation
+    @side(shared)
     function SetStaticMeshAttachedTransform(id: string, relative_location: Vector, relative_rotation: Rotator): nil
     -- Removes, if it exists, a StaticMesh from this Pickable given its custom ID
+    @side(shared)
     function RemoveStaticMeshAttached(id: string): nil
     -- Removes all StaticMeshes attached
+    @side(shared)
     function RemoveAllStaticMeshesAttached(): nil
     -- Removes all SkeletalMeshes attached
+    @side(shared)
     function RemoveAllSkeletalMeshesAttached(): nil
     -- Pulls the usage of this Pickable (will start firing if this is a weapon)
+    @side(server)
     function PullUse(release_use_after: number?): nil
     -- Releases the usage of this Pickable (will stop firing if this is a weapon)
+    @side(server)
     function ReleaseUse(): nil
     -- Sets the Attachment Settings for this Pickable (how it attaches to the Character when Picking up)
+    @side(server)
     function SetAttachmentSettings(relative_location: Vector, relative_rotation: Rotator?, socket: string?): nil
     -- Sets the crosshair material for this Pickable
+    @side(server)
     function SetCrosshairMaterial(material_asset: string): nil
     -- Sets if this Pickable can be picked up from ground by the player
+    @side(server)
     function SetPickable(is_pickable: boolean): nil
     -- Sets if this Pickable can be used by the player when held
+    @side(server)
     function SetCanUse(can_use: boolean): nil
     -- Gets the name of the asset this Pickable uses
+    @side(shared)
     function GetMesh(): string
     -- Gets the Character, if it exists, that's holding this Pickable
+    @side(shared)
     function GetHandler(): Character?
     -- Gets the Handling Mode of this Pickable
+    @side(shared)
     function GetHandlingMode(): HandlingMode
 end
 
 -- Base class for all Paintable entities. This class provides customization for materials, exposing common functions to allow you to set custom material parameters, including loading textures from disk.
 declare class Paintable extends Entity
     -- Sets the material at the specified index of this Actor
+    @side(shared)
     function SetMaterial(material_path: string, index: number?, attachable_id: string?): nil
     -- Sets the material at the specified index of this Actor to a Canvas object
+    @side(client)
     function SetMaterialFromCanvas(canvas: Canvas, index: number?): nil
     -- Sets the material at the specified index of this Actor to a SceneCapture object
+    @side(client)
     function SetMaterialFromSceneCapture(scene_capture: SceneCapture, index: number?): nil
     -- Sets the material at the specified index of this Actor to a WebUI object
+    @side(client)
     function SetMaterialFromWebUI(webui: WebUI, index: number?): nil
     -- Resets the material from the specified index to the original one
+    @side(shared)
     function ResetMaterial(index: number?, attachable_id: string?): nil
     -- Sets a Color parameter in this Actor's material
+    @side(shared)
     function SetMaterialColorParameter(parameter_name: string, color: Color, index: number?, attachable_id: string?): nil
     -- Sets a Scalar parameter in this Actor's material
+    @side(shared)
     function SetMaterialScalarParameter(parameter_name: string, scalar: number, index: number?, attachable_id: string?): nil
     -- Sets a texture parameter in this Actor's material to an image
+    @side(shared)
     function SetMaterialTextureParameter(parameter_name: string, texture_path: string, index: number?, attachable_id: string?): nil
     -- Sets a Vector parameter in this Actor's material
+    @side(shared)
     function SetMaterialVectorParameter(parameter_name: string, vector: Vector, index: number?, attachable_id: string?): nil
     -- Gets a Color parameter from this Actor's material
+    @side(shared)
     function GetMaterialColorParameter(parameter_name: string, index: number?, attachable_id: string?): Color
     -- Gets a Vector parameter from this Actor's material
+    @side(shared)
     function GetMaterialVectorParameter(parameter_name: string, index: number?, attachable_id: string?): Vector
     -- Gets a Texture parameter from this Actor's material
+    @side(shared)
     function GetMaterialTextureParameter(parameter_name: string, index: number?, attachable_id: string?): string
     -- Gets a Scalar parameter from this Actor's material
+    @side(shared)
     function GetMaterialScalarParameter(parameter_name: string, index: number?, attachable_id: string?): number
     -- Overrides this Actor's Physical Material with a new one
+    @side(shared)
     function SetPhysicalMaterial(physical_material_path: string): nil
 end
 
 -- Base class for all Damageable entities. It provides Health and Damage related methods and events.
 declare class Damageable extends Entity
     -- Do damage to this entity
+    @side(server)
     function ApplyDamage(damage: number, bone_name: string?, damage_type: DamageType?, from_direction: Vector?, instigator: Player?, causer: any?): number
     -- Gets the current health
+    @side(shared)
     function GetHealth(): number
     -- Gets the Max Health
+    @side(shared)
     function GetMaxHealth(): number
     -- Returns if the entity is dead
+    @side(shared)
     function IsDead(): boolean
     -- Respawns the Entity, fullying it's Health and moving it to it's Initial Location
+    @side(server)
     function Respawn(location: Vector?, rotation: Rotator?): nil
     -- Sets the Health of this Entity
+    @side(server)
     function SetHealth(new_health: number): nil
     -- Sets the MaxHealth of this Entity
+    @side(server)
     function SetMaxHealth(max_health: number): nil
     -- Changes how much damage this entity takes on specific bones
+    @side(server)
     function SetDamageMultiplier(bone_name: string, multiplier: number): nil
     -- Gets the Damage Multiplier of a bone
+    @side(shared)
     function GetDamageMultiplier(bone_name: string): number
 end
 
 -- Base class for all Vehicle entities.
 declare class Vehicle extends Entity
     -- Attaches a Skeletal Mesh as master pose to this entity
+    @side(shared)
     function AddSkeletalMeshAttached(id: string, skeletal_mesh_path: string, use_parent_bounds: boolean?, use_base_leader_pose_component: boolean?, attachable_id: string?): nil
     -- Attaches a Static Mesh to this entity
+    @side(shared)
     function AddStaticMeshAttached(id: string, static_mesh_path: string, socket: string?, relative_location: Vector?, relative_rotation: Rotator?, use_parent_bounds: boolean?, attachable_id: string?): nil
     -- Gets all Static Meshes attached to this entity
+    @side(shared)
     function GetAllStaticMeshAttached(): string[]
     -- Gets all Skeletal Meshes attached to this entity
+    @side(shared)
     function GetAllSkeletalMeshAttached(): string[]
     -- Removes, if it exists, a SkeletalMesh from this Pickable given its custom ID
+    @side(shared)
     function RemoveSkeletalMeshAttached(id: string): nil
     -- Sets a Static Mesh Attached location and rotation
+    @side(shared)
     function SetStaticMeshAttachedTransform(id: string, relative_location: Vector, relative_rotation: Rotator): nil
     -- Removes, if it exists, a StaticMesh from this Pickable given its custom ID
+    @side(shared)
     function RemoveStaticMeshAttached(id: string): nil
     -- Removes all StaticMeshes attached
+    @side(shared)
     function RemoveAllStaticMeshesAttached(): nil
     -- Removes all SkeletalMeshes attached
+    @side(shared)
     function RemoveAllSkeletalMeshesAttached(): nil
     -- Adds a Door to the Vehicle
+    @side(server)
     function SetDoor(seat_index: number, offset_location: Vector, seat_location: Vector, seat_rotation: Rotator, trigger_radius: number, leave_lateral_offset: number): nil
     -- Plays an Animation on this Vehicle
+    @side(shared)
     function PlayAnimation(animation_path: string, slot_name: string?, loop_indefinitely: boolean?, blend_in_time: number?, blend_out_time: number?, play_rate: number?, stop_all_montages: boolean?): nil
     -- Gets the Asset name
+    @side(shared)
     function GetMesh(): string
     -- Gets all configured Doors
+    @side(shared)
     function GetDoors(): any
     -- Gets a passenger from a seat
+    @side(shared)
     function GetPassenger(seat: number): Character
     -- Gets all passengers
+    @side(shared)
     function GetPassengers(): Character[]
     -- Configures the Explosion Settings when health reaches zero
+    @side(server)
     function SetExplosionSettings(engine_relative_location: Vector, materials_index_burnt_override: any, materials_index_burnt_invisible: any): nil
 end
 
 -- Base class for all Character entities.
 declare class Pawn extends Entity
     -- Attaches a Skeletal Mesh as master pose to this entity
+    @side(shared)
     function AddSkeletalMeshAttached(id: string, skeletal_mesh_path: string, use_parent_bounds: boolean?, use_base_leader_pose_component: boolean?, attachable_id: string?): nil
     -- Attaches a Static Mesh to this entity
+    @side(shared)
     function AddStaticMeshAttached(id: string, static_mesh_path: string, socket: string?, relative_location: Vector?, relative_rotation: Rotator?, use_parent_bounds: boolean?, attachable_id: string?): nil
     -- Gets all Static Meshes attached to this entity
+    @side(shared)
     function GetAllStaticMeshAttached(): string[]
     -- Gets all Skeletal Meshes attached to this entity
+    @side(shared)
     function GetAllSkeletalMeshAttached(): string[]
     -- Removes, if it exists, a SkeletalMesh from this entity given its custom ID
+    @side(shared)
     function RemoveSkeletalMeshAttached(id: string): nil
     -- Sets a Static Mesh Attached location and rotation
+    @side(shared)
     function SetStaticMeshAttachedTransform(id: string, relative_location: Vector, relative_rotation: Rotator): nil
     -- Removes, if it exists, a StaticMesh from this enitity given its custom ID
+    @side(shared)
     function RemoveStaticMeshAttached(id: string): nil
     -- Removes all StaticMeshes attached
+    @side(shared)
     function RemoveAllStaticMeshesAttached(): nil
     -- Removes all SkeletalMeshes attached
+    @side(shared)
     function RemoveAllSkeletalMeshesAttached(): nil
     -- Stops an Animation Montage on this character
+    @side(shared)
     function StopAnimation(animation_asset: string): nil
     -- Gets the base Mesh Asset
+    @side(shared)
     function GetMesh(): string
     -- Sets the Flying Mode
+    @side(server)
     function SetFlyingMode(flying_mode: boolean): nil
     -- Gets if it's in Flying mode
+    @side(shared)
     function GetFlyingMode(): boolean
     -- Gets the Moving To location
+    @side(shared)
     function GetMovingTo(): Vector
     -- AI: Configures the RVO (Reciprocal Velocity Obstacles) Avoidance system used by the AIs when moving
     function SetAIAvoidanceSettings(enabled: boolean, avoidance_consideration_radius: number?): nil
@@ -1167,20 +1299,27 @@ declare class Pawn extends Entity
     -- AI: Stops the movement, optionally zeroing the velocity as well
     function StopMovement(stops_velocity: boolean?): nil
     -- Gets the possessing Player
+    @side(shared)
     function GetPlayer(): Player?
     -- Gets the Control Rotation
+    @side(shared)
     function GetControlRotation(): Rotator
     -- Sets the Control Rotation
     function SetControlRotation(control_rotation: Rotator): nil
     -- Sets if the character will react to damage by applying small dynamic ragdoll effect to local bones damaged
+    @side(server)
     function SetHitReactionEnabled(is_enabled: boolean): nil
     -- Sets if the character will enter ragdoll mode when it dies. You can set it to false to apply custom Death animations
+    @side(server)
     function SetRagdollOnDeathEnabled(is_enabled: boolean): nil
     -- Hides a bone of this Character
+    @side(shared)
     function HideBone(bone_name: string?): nil
     -- UnHide a bone of this Character
+    @side(shared)
     function UnHideBone(bone_name: string): nil
     -- Gets if a bone is hidden
+    @side(shared)
     function IsBoneHidden(bone_name: string): boolean
     -- Triggers this Character to jump
     function Jump(): nil
@@ -1189,10 +1328,12 @@ declare class Pawn extends Entity
     -- Sets this Character's Capsule size
     function SetCapsuleSize(radius: number, half_height: number): nil
     -- Gets the Capsule Size
+    @side(shared)
     function GetCapsuleSize(): any
     -- Changes the Gravity Scale
     function SetGravityScale(gravity_scale: number): nil
     -- Gets the gravity scale
+    @side(shared)
     function GetGravityScale(): number
     -- Sets if this Character is allowed to Jump
     function SetCanJump(can_jump: boolean): nil
@@ -1211,14 +1352,19 @@ end
 declare class Blueprint extends Entity
     constructor(location: Vector, rotation: Rotator, blueprint_asset: string, collision_type: CollisionType?)
     -- Calls a Blueprint Event or Function
+    @side(shared)
     function CallBlueprintEvent(event_name: string, ...: any): any
     -- Assigns and Binds a Blueprint Event Dispatcher
+    @side(client)
     function BindBlueprintEventDispatcher(dispatcher_name: string, callback: any): any
     -- Unbinds a Blueprint Event Dispatcher
+    @side(client)
     function UnbindBlueprintEventDispatcher(dispatcher_name: string, callback: any?): nil
     -- Sets a Blueprint Property/Variable value directly
+    @side(client)
     function SetBlueprintPropertyValue(property_name: string, value: any): nil
     -- Gets a Blueprint Property/Variable value
+    @side(client)
     function GetBlueprintPropertyValue(property_name: string): any
 end
 
@@ -1226,40 +1372,58 @@ end
 declare class Cable extends Entity
     constructor(location: Vector, enable_visuals: boolean?, defer_spawn: boolean?)
     -- Attaches the beginning of this cable to another Actor at a specific bone or relative location
+    @side(server)
     function AttachStartTo(other: Actor, relative_location: Vector?, bone_name: string?): boolean
     -- Attaches the end of this cable to another Actor at a specific bone or relative location
+    @side(server)
     function AttachEndTo(other: Actor, relative_location: Vector?, bone_name: string?, constraint_offset: Vector?): boolean
     -- Detaches the End of this Cable
+    @side(server)
     function DetachEnd(): nil
     -- Detaches the Start of this Cable
+    @side(server)
     function DetachStart(): nil
     -- Set the overall settings for this cable (visuals only)
+    @side(shared)
     function SetCableSettings(length: number, num_segments: number?, solver_iterations: number?, enable_stiffness: boolean?): nil
     -- Set the forces the cable has applied (visuals only)
+    @side(shared)
     function SetForces(force: Vector, gravity_scale: number?): nil
     -- Set the Physics Constraint related settings for this cable
+    @side(server)
     function SetPhysicsConstraintSettings(disable_collision: boolean): nil
     -- Sets the Physics Angular Limits of this cable
+    @side(server)
     function SetAngularLimits(swing_1_motion: ConstraintMotion, swing_2_motion: ConstraintMotion, twist_motion: ConstraintMotion, swing_1_limit: number?, swing_2_limit: number?, twist_limit: number?): nil
     -- Sets the Physics Linear Limits of this cable
+    @side(server)
     function SetLinearLimits(x_motion: ConstraintMotion, y_motion: ConstraintMotion, z_motion: ConstraintMotion, limit: number?, restitution: number?, use_soft_constraint: boolean?, stiffness: number?, damping: number?): nil
     -- Sets which linear position drives are enabled and the target position
+    @side(server)
     function SetLinearMotorPositionSettings(enable_drive_x: boolean?, enable_drive_y: boolean?, enable_drive_z: boolean?, strength: number?, target: Vector?): nil
     -- Sets which linear velocity drives are enabled and the target velocity
+    @side(server)
     function SetLinearMotorVelocitySettings(enable_drive_x: boolean?, enable_drive_y: boolean?, enable_drive_z: boolean?, strength: number?, target: Vector?): nil
     -- Sets whether the SLERP angular orientation drive is enabled and the target orientation
+    @side(server)
     function SetAngularMotorSLERPOrientationSettings(enable_drive_slerp: boolean?, strength: number?, target: Rotator?): nil
     -- Sets whether the SLERP angular velocity drive is enabled and the target angular velocity
+    @side(server)
     function SetAngularMotorSLERPVelocitySettings(enable_drive_slerp: boolean?, strength: number?, target: Vector?): nil
     -- Sets which twist and swing angular orientation drives are enabled and the target orientation
+    @side(server)
     function SetAngularMotorTwistAndSwingOrientationSettings(enable_drive_twist: boolean?, enable_drive_swing: boolean?, strength: number?, target: Rotator?): nil
     -- Sets which twist and swing angular velocity drives are enabled and the target angular velocity
+    @side(server)
     function SetAngularMotorTwistAndSwingVelocitySettings(enable_drive_twist: boolean?, enable_drive_swing: boolean?, strength: number?, target: Vector?): nil
     -- Set the rendering settings of this cable (visuals only)
+    @side(shared)
     function SetRenderingSettings(width: number, num_sides: number, tile_material: number): nil
     -- Gets the Actor attached to Start
+    @side(shared)
     function GetAttachedStartTo(): Actor?
     -- Gets the Actor attached to End
+    @side(shared)
     function GetAttachedEndTo(): Actor?
 end
 
@@ -1267,38 +1431,55 @@ end
 declare class Canvas
     constructor(is_visible: boolean?, clear_color: Color?, auto_repaint_rate: number?, should_clear_before_update: boolean?, auto_resize: boolean?, width: number?, height: number?, screen_position: Vector2D?)
     -- Draws an unfilled box on the Canvas
+    @side(client)
     function DrawBox(screen_position: Vector2D, screen_size: Vector2D, thickness: number, render_color: Color?, blend_mode: BlendMode?): nil
     -- Draws a line on the Canvas
+    @side(client)
     function DrawLine(screen_position_a: Vector2D, screen_position_b: Vector2D, thickness: number, render_color: Color, blend_mode: BlendMode?): nil
     -- Draws a Material on the Canvas
+    @side(client)
     function DrawMaterial(material_path: string, screen_position: Vector2D, screen_size: Vector2D, coordinate_position: Vector2D, coordinate_size: Vector2D?, rotation: number?, pivot_point: Vector2D?, blend_mode: BlendMode?): nil
     -- Draws a WebUI on the Canvas
+    @side(client)
     function DrawMaterialFromWebUI(webui_entity: WebUI, screen_position: Vector2D, screen_size: Vector2D, coordinate_position: Vector2D, coordinate_size: Vector2D?, rotation: number?, pivot_point: Vector2D?, blend_mode: BlendMode?): nil
     -- Draws a SceneCapture on the Canvas
+    @side(client)
     function DrawMaterialFromSceneCapture(scenecapture_entity: SceneCapture, screen_position: Vector2D, screen_size: Vector2D, coordinate_position: Vector2D, coordinate_size: Vector2D?, rotation: number?, pivot_point: Vector2D?, blend_mode: BlendMode?): nil
     -- Draws a Text on the Canvas
+    @side(client)
     function DrawText(text: string, screen_position: Vector2D, font_type: FontType?, font_size: number?, text_color: Color?, kerning: number?, center_x: boolean?, center_y: boolean?, shadow_color: Color?, shadow_offset: Vector2D?, outlined: boolean?, outline_color: Color?): nil
     -- Draws a Texture on the Canvas
+    @side(client)
     function DrawTexture(texture_path: string, screen_position: Vector2D, screen_size: Vector2D, coordinate_position: Vector2D, coordinate_size: Vector2D?, render_color: Color?, blend_mode: BlendMode?, rotation: number?, pivot_point: Vector2D?): nil
     -- Draws a N-Polygon on the Canvas
+    @side(client)
     function DrawPolygon(texture_path: string, screen_position: Vector2D, radius: Vector2D?, number_of_sides: number?, render_color: Color?, blend_mode: BlendMode?): nil
     -- Draws a filled Rect on the Canvas
+    @side(client)
     function DrawRect(texture_path: string, screen_position: Vector2D, screen_size: Vector2D, render_color: Color?, blend_mode: BlendMode?): nil
     -- Sets the repaint rate
+    @side(client)
     function SetAutoRepaintRate(auto_repaint_rate: boolean): nil
     -- Gets the Canvas Size
+    @side(client)
     function GetSize(): Vector2D
     -- Resizes the Canvas if not using auto_resize
+    @side(client)
     function Resize(width: number, height: number): nil
     -- Sets the Canvas Screen Position offset
+    @side(client)
     function SetScreenPosition(screen_position: Vector2D): nil
     -- Sets if the canvas should auto resize to screen size
+    @side(client)
     function SetAutoResize(auto_resize: boolean): nil
     -- Sets if it's visible on screen
+    @side(client)
     function SetVisibility(visible: boolean): nil
     -- Forces the repaint
+    @side(client)
     function Repaint(): nil
     -- Clear the Canvas with a specific Color
+    @side(client)
     function Clear(clear_color: Color): nil
 end
 
@@ -1306,174 +1487,255 @@ end
 declare class Character extends Entity
     constructor(location: Vector, rotation: Rotator, skeletal_mesh_asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, max_health: number?, death_sound: string?, pain_sound: string?, defer_spawn: boolean?)
     -- Drops any Pickable the Character is holding
+    @side(server)
     function Drop(): nil
     -- Enters the Vehicle at Seat (0 - Driver)
+    @side(server)
     function EnterVehicle(vehicle: Vehicle, seat: number?): nil
     -- Gives a Prop to the Character
+    @side(server)
     function GrabProp(prop: Prop): nil
     -- Leaves the current Vehicle
+    @side(server)
     function LeaveVehicle(): nil
     -- AI: Tries to make this Character to look at Location
+    @side(server)
     function LookAt(location: Vector): nil
     -- Gives a Melee/Grenade/Weapon (Pickable) to the Character
+    @side(server)
     function PickUp(pickable: Pickable): nil
     -- Plays an Animation Montage on this character
+    @side(shared)
     function PlayAnimation(animation_path: string, slot_type: AnimationSlotType?, loop_indefinitely: boolean?, blend_in_time: number?, blend_out_time: number?, play_rate: number?, stop_all_montages: boolean?): nil
     -- Sets the Blend Space (2D) Animation for Standing
+    @side(server)
     function SetAnimationIdleWalkRunStanding(blend_space_path: string, enable_turn_in_place: boolean?): nil
     -- Sets the Blend Space (2D) Animation for Crouching
     -- 
     -- Horizontal Axis stands for Speed X and Vertical Axis for Speed Y
+    @side(server)
     function SetAnimationIdleWalkRunCrouching(blend_space_path: string, enable_turn_in_place: boolean?): nil
     -- Sets the Blend Space (2D) Animation for Proning
     -- 
     -- Horizontal Axis stands for Speed X and Vertical Axis for Speed Y
+    @side(server)
     function SetAnimationIdleWalkRunProning(blend_space_path: string): nil
     -- Sets the Transition Animation between Standing and Crouching
+    @side(server)
     function SetAnimationsTransitionStandingCrouching(standing_to_crouching: string, crouching_to_standing: string): nil
     -- Sets the Transition Animation between Crouching and Proning
+    @side(server)
     function SetAnimationsTransitionCrouchingProning(crouching_to_proning: string, proning_to_crouching: string): nil
     -- Sets the Movement Max Acceleration of this Character
+    @side(server)
     function SetAccelerationSettings(walking: number?, parachuting: number?, skydiving: number?, falling: number?, swimming: number?, swimming_surface: number?, flying: number?): nil
     -- Sets the amount of movement control allowed when it is in air
+    @side(server)
     function SetAirControl(air_control: number?, boost_multiplier: number?, boost_velocity_threshold: number?): nil
     -- Sets the Camera Mode
+    @side(server)
     function SetCameraMode(camera_mode: CameraMode): nil
     -- Sets if this Character is allowed to Aim
+    @side(server)
     function SetCanAim(can_aim: boolean): nil
     -- Sets if this Character is allowed to Drop the Picked up item
+    @side(server)
     function SetCanDrop(can_drop: boolean): nil
     -- Sets if this Character is allowed to Dive
+    @side(server)
     function SetCanDive(can_dive: boolean): nil
     -- Sets if this Character is allowed to Sprint
+    @side(server)
     function SetCanSprint(can_sprint: boolean): nil
     -- Sets if this Character is allowed to Grab any Prop
+    @side(server)
     function SetCanGrabProps(can_grab_props: boolean): nil
     -- Sets if this Character is allowed to Pick up any Pickable (Weapon, Grenade, Melee...)
+    @side(server)
     function SetCanPickupPickables(can_pickup: boolean): nil
     -- Sets if this Character is allowed to use Pickables (Weapon, Grenade, Melee...)
+    @side(server)
     function SetCanUsePickables(can_use: boolean): nil
     -- Sets if this Character is allowed to Punch
+    @side(server)
     function SetCanPunch(can_punch: boolean): nil
     -- Sets if this Character is allowed to deploy the Parachute
+    @side(server)
     function SetCanDeployParachute(can_deploy_parachute: boolean): nil
     -- Changes the Death sound when Character dies
+    @side(server)
     function SetDeathSound(sound_asset: string): nil
     -- Set the Fall Damage multiplier taken when falling from High places
+    @side(server)
     function SetFallDamageTaken(damage: number): nil
     -- Sets the Field of View multiplier
+    @side(server)
     function SetFOVMultiplier(multiplier: number): nil
     -- Sets time to transition to HighFalling state
+    @side(server)
     function SetHighFallingTime(time: number): nil
     -- Sets if the character will enter ragdoll mode when being hit by an object or falling from a high place
+    @side(server)
     function SetRagdollOnHitEnabled(is_enabled: boolean): nil
     -- Sets the cooldown time (in seconds) before this Character can stand up from ragdoll
+    @side(server)
     function SetRagdollStandUpCooldown(time: number): nil
     -- Sets the Gait Mode
+    @side(server)
     function SetGaitMode(gait_mode: GaitMode): nil
     -- Set the Impact Damage taken when being roamed by things
+    @side(server)
     function SetImpactDamageTaken(impact_damage: number): nil
     -- Set the minimum radial damage (e.g. explosions) taken to enter in ragdoll mode
+    @side(server)
     function SetRadialDamageToRagdoll(damage: number): nil
     -- Set the Footstep Volume multiplier
+    @side(server)
     function SetFootstepVolumeMultiplier(volume_multiplier: number): nil
     -- Sets if the Character can receive any damage
+    @side(server)
     function SetInvulnerable(is_invulnerable: boolean): nil
     -- Changes the Character Mesh on the fly
+    @side(server)
     function SetMesh(skeletal_mesh_asset: string): nil
     -- Set Morph Target with Name and Value
+    @side(shared)
     function SetMorphTarget(name: string, value: number): nil
     -- Returns the value of a Morph Target
+    @side(shared)
     function GetMorphTarget(name: string): number
     -- Clear all Morph Target that are set to this Mesh
+    @side(shared)
     function ClearMorphTargets(): nil
     -- Returns a table with all morph targets available
+    @side(client)
     function GetAllMorphTargetNames(): string[]
     -- Applies the physical animation settings to the body given
+    @side(shared)
     function SetPhysicalAnimationSettings(bone: string, include_self: boolean, is_local_simulation: boolean, orientation_strength: number?, angular_velocity_strength: number?, position_strength: number?, velocity_strength: number?, max_linear_force: number?, max_angular_force: number?): nil
     -- Resets all Physical Animation settings
+    @side(shared)
     function ResetPhysicalAnimationSettings(): nil
     -- Enables/Disables Character's Input
+    @side(server)
     function SetInputEnabled(is_enabled: boolean): nil
     -- Changes the Parachute Texture
+    @side(server)
     function SetParachuteTexture(texture: string): nil
     -- Changes the Pain sound when Character takes damage
+    @side(server)
     function SetPainSound(sound_asset: string): nil
     -- Set the Punch Damage this Character will apply on others
+    @side(server)
     function SetPunchDamage(punch_damage: number): nil
     -- Sets Character Ragdoll Mode
+    @side(server)
     function SetRagdollMode(ragdoll_enabled: boolean): nil
     -- Sets the Character Capsule to simulate physics
+    @side(server)
     function SetSimulatePhysics(simulate_physics: boolean): nil
     -- Sets all speed multiplier
+    @side(server)
     function SetSpeedMultiplier(speed_multiplier: number): nil
     -- Sets the Stance Mode
+    @side(server)
     function SetStanceMode(stance_mode: StanceMode): nil
     -- Sets a Team which will disable damaging same Team Members
+    @side(server)
     function SetTeam(team: number): nil
     -- Sets the View Mode
     function SetViewMode(view_mode: ViewMode): nil
     -- Sets the Weapon's Aim Mode
     function SetWeaponAimMode(aim_mode: AimMode): nil
     -- UnGrabs/Drops the Prop the Character is holding
+    @side(server)
     function UnGrabProp(): nil
     -- Gets if Character is in ragdoll mode
+    @side(shared)
     function IsInRagdollMode(): boolean
     -- Gets if is invulnerable
+    @side(shared)
     function IsInvulnerable(): boolean
     -- Gets if has input enabled
+    @side(shared)
     function IsInputEnabled(): boolean
     -- Gets the camera mode
+    @side(shared)
     function GetCameraMode(): CameraMode
     -- Gets if can drop
+    @side(shared)
     function GetCanDrop(): boolean
     -- Gets if can punch
+    @side(shared)
     function GetCanPunch(): boolean
     -- Gets if can aim
+    @side(shared)
     function GetCanAim(): boolean
     -- Gets if can crouch
+    @side(shared)
     function GetCanCrouch(): boolean
     -- Gets if can sprint
+    @side(shared)
     function GetCanSprint(): boolean
     -- Gets if can grab props
+    @side(shared)
     function GetCanGrabProps(): boolean
     -- Gets if can pickup Pickables (Weapons, Melee, Grenade...)
+    @side(shared)
     function GetCanPickupPickables(): boolean
     -- Gets if can use Pickables (Weapons, Melee, Grenade...)
+    @side(shared)
     function GetCanUsePickables(): boolean
     -- Gets the Fall Damage
+    @side(shared)
     function GetFallDamageTaken(): number
     -- Gets the FallingMode
+    @side(shared)
     function GetFallingMode(): FallingMode
     -- Gets the GaitMode
+    @side(shared)
     function GetGaitMode(): GaitMode
     -- Gets the Grabbed Prop
+    @side(shared)
     function GetGrabbedProp(): Prop?
     -- Gets the impact damage taken
+    @side(shared)
     function GetImpactDamageTaken(): number
     -- Gets the Jump Z Velocity
+    @side(shared)
     function GetJumpZVelocity(): number
     -- Gets the Pickable if picking up
+    @side(shared)
     function GetPicked(): Pickable?
     -- Gets the punch damage
+    @side(shared)
     function GetPunchDamage(): number
     -- Gets the speed multiplier
+    @side(shared)
     function GetSpeedMultiplier(): number
     -- Gets the Stance Mode
+    @side(shared)
     function GetStanceMode(): StanceMode
     -- Gets the Swimming Mode
+    @side(shared)
     function GetSwimmingMode(): SwimmingMode
     -- Gets the Team
+    @side(shared)
     function GetTeam(): number
     -- Gets the entered Vehicle
+    @side(shared)
     function GetVehicle(): Vehicle?
     -- Gets the entered Vehicle seat
+    @side(shared)
     function GetVehicleSeat(): number
     -- Gets the View Mode
+    @side(shared)
     function GetViewMode(): ViewMode
     -- Gets the Weapon Aim Mode
+    @side(shared)
     function GetWeaponAimMode(): AimMode
     -- Sets the Physics Asset for the Character
+    @side(server)
     function SetPhysicsAsset(physics_asset: any): nil
 end
 
@@ -1489,6 +1751,7 @@ declare class CharacterSimple extends Entity
     -- Sets the max acceleration
     function SetMaxAcceleration(acceleration: number): nil
     -- Sets the Spring Arm Settings of this Character
+    @side(shared)
     function SetSpringArmSettings(relative_location: Vector?, target_arm_length: number?, socket_offset: Vector?, enable_camera_lag: boolean?, camera_lag_speed: number?, camera_lag_max_distance: number?): nil
     -- Sets the Rotation Settings of this Character
     function SetRotationSettings(rotation_rate: Rotator, use_controller_desired_rotation: boolean, orient_rotation_to_movement: boolean): nil
@@ -1501,10 +1764,13 @@ declare class CharacterSimple extends Entity
     -- Sets the Animation Blueprint of this Character
     function SetAnimationBlueprint(custom_animation_blueprint: string): nil
     -- Calls an Animation Blueprint Event or Function
+    @side(shared)
     function CallAnimationBlueprintEvent(event_name: string, ...: any): any
     -- Assigns and Binds an Animation Blueprint Event Dispatcher
+    @side(client)
     function BindAnimationBlueprintEventDispatcher(dispatcher_name: string, callback: any): any
     -- Unbinds an Animation Blueprint Event Dispatcher
+    @side(client)
     function UnbindAnimationBlueprintEventDispatcher(dispatcher_name: string, callback: any?): nil
 end
 
@@ -1512,14 +1778,19 @@ end
 declare class Database
     constructor(database_engine: string, connection_string: string, pool_size: number?)
     -- Closes the Database
+    @side(server)
     function Close(): nil
     -- Execute a query asynchronously
+    @side(server)
     function ExecuteAsync(query: string, callback: any?, ...: any): nil
     -- Execute a query synchronously
+    @side(server)
     function Execute(query: string, ...: any): (number, string)
     -- Execute a select query asynchronously
+    @side(server)
     function SelectAsync(query: string, callback: any?, ...: any): nil
     -- Selects a query synchronously
+    @side(server)
     function Select(query: string, ...: any): (any[], string)
 end
 
@@ -1538,54 +1809,79 @@ end
 declare class File
     constructor(file_path: string, truncate: boolean?)
     -- Closes the file and destroys the entity
+    @side(shared)
     function Close(): nil
     -- Flushes content to the file
+    @side(shared)
     function Flush(): nil
     -- Checks if the file status is End of File
+    @side(shared)
     function IsEOF(): boolean
     -- Checks if the file status is Bad
+    @side(shared)
     function IsBad(): boolean
     -- Checks if the file status is Good
+    @side(shared)
     function IsGood(): boolean
     -- Checks if the last operation has Failed
+    @side(shared)
     function HasFailed(): boolean
     -- Reads characters from the File and returns it. Also moves the file pointer to the latest read position. Pass 0 to read the whole file
+    @side(shared)
     function Read(length: number?): string
     -- Reads characters from the File asynchronously.
+    @side(shared)
     function ReadAsync(length: number?, callback: any): nil
     -- Reads and returns the next file line
+    @side(shared)
     function ReadLine(): string
     -- Reads the whole file as a JSON and returns it.
+    @side(shared)
     function ReadJSON(): any
     -- Reads the whole file as a JSON and returns it asynchronously.
+    @side(shared)
     function ReadJSONAsync(callback: any): nil
     -- Sets the file pointer to a specific position
+    @side(shared)
     function Seek(position: number): nil
     -- Returns the size of the file
+    @side(shared)
     function Size(): number
     -- Skips n (amount) positions from the current file pointer position
+    @side(shared)
     function Skip(amount: number): nil
     -- Returns the current file pointer position
+    @side(shared)
     function Tell(): number
     -- Writes the Data at the current position of the file
+    @side(shared)
     function Write(data: string): nil
     -- Returns when a file was last modified in Unix time
+    @side(shared)
     static function Time(path: string): number
     -- Creates a Directory (for every folder passed)
+    @side(shared)
     static function CreateDirectory(path: string): boolean
     -- Deletes a folder or file
+    @side(shared)
     static function Remove(path: string): number
     -- Verifies if a entry exists in the file system
+    @side(shared)
     static function Exists(path: string): boolean
     -- Checks if a path is a directory
+    @side(shared)
     static function IsDirectory(path: string): boolean
     -- Checks if a path is a file
+    @side(shared)
     static function IsRegularFile(path: string): boolean
     -- Gets a list of all directories given a path
+    @side(shared)
     static function GetDirectories(path_filter: string?, max_depth: number?): string[]
     -- Gets a list of all files in a directory
+    @side(shared)
     static function GetFiles(path_filter: string | any?, extension_filter: string?, max_depth: number?): string[]
     -- Gets the full path given a relative path based on the current side (client or server)
+    @side(shared)
     static function GetFullPath(path: string): string
 end
 
@@ -1593,17 +1889,25 @@ end
 declare class Gizmo extends Entity
     constructor()
     -- Enable the interaction
+    @side(client)
     function Activate(location: Vector, rotation: Rotator, scale: Vector): nil
     -- Disable the interaction
+    @side(client)
     function Deactivate(): nil
     -- Returns if it's currently interacting
+    @side(client)
     function IsInteracting(): boolean
     -- Triggers the press pointer event on it
+    @side(client)
     function PressPointer(): nil
     -- Triggers the release pointer event on it
+    @side(client)
     function ReleasePointer(): nil
+    @side(client)
     function SetTransformMode(transform_mode: GizmoTransformMode, combine_translate_rotate: boolean): nil
+    @side(client)
     function SetAlignSpace(align_space: GizmoAlignSpace): nil
+    @side(client)
     function SetSnapSettings(location_grid_size: number, rotation_grid_size: number, scale_grid_size: number): nil
 end
 
@@ -1611,26 +1915,37 @@ end
 declare class Grenade extends Entity
     constructor(location: Vector, rotation: Rotator, static_mesh_asset: string?, explosion_particles: string?, explosion_sound: string?, collision_type: CollisionType?, gravity_enabled: boolean?, defer_spawn: boolean?)
     -- Forces this grenade to Explode
+    @side(server)
     function Explode(): nil
     -- Sets Damage parameters of this Grenade
+    @side(server)
     function SetDamage(base_damage: number?, minimum_damage: number?, damage_inner_radius: number?, damage_outer_radius: number?, damage_falloff: number?): nil
     -- Set Time until Explosion after thrown
+    @side(server)
     function SetTimeToExplode(time: number): nil
     -- Set Impulse applied when throwing
+    @side(server)
     function SetThrowForce(throw_force: number): nil
     -- Damage at Inner Radius
+    @side(shared)
     function GetBaseDamage(): number
     -- Radius which BaseDamage will apply proportionally
+    @side(shared)
     function GetDamageFalloff(): number
     -- Radius which MinimumDamage will apply
+    @side(shared)
     function GetDamageInnerRadius(): number
     -- Radius which BaseDamage will apply
+    @side(shared)
     function GetDamageOuterRadius(): number
     -- Damage at Outer Radius
+    @side(shared)
     function GetMinimumDamage(): number
     -- Time until Explosion
+    @side(shared)
     function GetTimeToExplode(): number
     -- Impulse applied when throwing
+    @side(shared)
     function GetThrowForce(): number
 end
 
@@ -1638,6 +1953,7 @@ end
 declare class InstancedStaticMesh extends Entity
     constructor(location: Vector, rotation: Rotator, static_mesh_asset: string, collision_type: CollisionType?, instances: any?, defer_spawn: boolean?)
     -- Gets the Asset path mesh used
+    @side(shared)
     function GetMesh(): string
     -- Add an instance to this component
     function AddInstance(relative_location: Vector, relative_rotation: Rotator?, scale: Vector?): number
@@ -1648,8 +1964,10 @@ declare class InstancedStaticMesh extends Entity
     -- Changes the transform of an existing instance. You can pass all other parameters as nil to modify only a single property
     function SetInstanceTransform(index: number, relative_location: Vector?, relative_rotation: Rotator?, scale: Vector?): nil
     -- Returns the current transform of the instance at the given index
+    @side(shared)
     function GetInstanceTransform(index: number): (Vector, Rotator, Vector)
     -- Returns the number of instances currently stored
+    @side(shared)
     function GetInstanceCount(): number
     -- Removes all instances.
     function ClearInstances(): nil
@@ -1659,15 +1977,24 @@ end
 declare class Light extends Entity
     constructor(location: Vector, rotation: Rotator?, color: Color?, light_type: LightType?, intensity: number?, attenuation_radius: number?, cone_angle: number?, inner_cone_angle_percent: number?, max_draw_distance: number?, use_inverse_squared_falloff: boolean?, cast_shadows: boolean?, visible: boolean?, source_radius: number?, defer_spawn: boolean?)
     -- Sets the light color
+    @side(shared)
     function SetColor(color: Color): nil
     -- Sets the light Texture Profile
+    @side(shared)
     function SetTextureLightProfile(light_profile: LightProfile): nil
+    @side(shared)
     function SetCastShadows(is_shadows_enabled: boolean): nil
+    @side(shared)
     function SetIntensity(intensity: number): nil
+    @side(shared)
     function SetAttenuationRadius(attenuation_radius: number): nil
+    @side(shared)
     function GetCastShadows(): boolean
+    @side(shared)
     function GetIntensity(): number
+    @side(shared)
     function GetAttenuationRadius(): number
+    @side(shared)
     function GetColor(): Color
 end
 
@@ -1675,26 +2002,37 @@ end
 declare class Melee extends Entity
     constructor(location: Vector, rotation: Rotator, asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, handling_mode: HandlingMode?, crosshair_material: string?, can_use: boolean?, defer_spawn: boolean?)
     -- Sets an Animation when attacking
+    @side(server)
     function AddAnimationCharacterUse(asset_path: string, play_rate: number?, slot_Type: AnimationSlotType?): nil
     -- Clears the Character Attack Animation list
+    @side(server)
     function ClearAnimationsCharacterUse(): nil
     -- Sets the Sound when hitting something
+    @side(shared)
     function SetImpactSound(surface_type: SurfaceType, asset_path: string, volume: number?, pitch: number?): nil
     -- Sets the Sound when attacking
+    @side(shared)
     function SetSoundUse(asset_path: string): nil
     -- Sets the Base Damage
+    @side(server)
     function SetBaseDamage(damage: number?): nil
     -- Sets the times when to start applying damage and when to end
+    @side(server)
     function SetDamageSettings(damage_start_time: number, damage_duration_time: number): nil
     -- Sets the cooldown between attacking
+    @side(shared)
     function SetCooldown(cooldown: number): nil
     -- Gets the Animations when Character uses it
+    @side(shared)
     function GetAnimationsCharacterUse(): string[]
     -- Gets the Sound when Character uses it
+    @side(shared)
     function GetSoundUse(): string
     -- Gets the Base Damage
+    @side(shared)
     function GetBaseDamage(): number
     -- Gets the Cooldown between usages
+    @side(shared)
     function GetCooldown(): number
 end
 
@@ -1702,114 +2040,173 @@ end
 declare class Particle extends Entity
     constructor(location: Vector, rotation: Rotator, asset: string, auto_destroy: boolean?, auto_activate: boolean?, defer_spawn: boolean?)
     -- Activates the Emitter
+    @side(shared)
     function Activate(should_reset: boolean?): nil
     -- Deactivate the Emitter
+    @side(shared)
     function Deactivate(): nil
     -- Returns if this Particle is active
+    @side(shared)
     function IsActive(): boolean
     -- Sets a float parameter in this Particle System
+    @side(shared)
     function SetParameterFloat(parameter: string, value: number): nil
     -- Sets an integer parameter in this Particle System
+    @side(shared)
     function SetParameterInt(parameter: string, value: number): nil
     -- Sets a boolean parameter in this Particle System
+    @side(shared)
     function SetParameterBool(parameter: string, value: boolean): nil
     -- Sets a Vector parameter in this Particle System
+    @side(shared)
     function SetParameterVector(parameter: string, value: Vector): nil
     -- Sets a Color parameter in this Particle System
+    @side(shared)
     function SetParameterColor(parameter: string, value: Color): nil
     -- Sets a Material parameter in this Particle System
+    @side(shared)
     function SetParameterMaterial(parameter: string, value: string): nil
     -- Sets a Material from a Texture parameter in this Particle System
+    @side(client)
     function SetParameterMaterialFromTexture(parameter: string, value: string): nil
     -- Sets a Material from a Canvas parameter in this Particle System
+    @side(client)
     function SetParameterMaterialFromCanvas(parameter: string, value: Canvas): nil
     -- Sets a Material from a Canvas parameter in this Particle System
+    @side(client)
     function SetParameterMaterialFromWebUI(parameter: string, value: WebUI): nil
 end
 
 -- Players are Entities that represents the individual behind the mouse and keyboard. Players are spawned automatically when connected to the server.
 declare class Player extends Entity
     -- Bans the player from the server
+    @side(server)
     function Ban(reason: string): nil
     -- Redirects the player to another server
+    @side(server)
     function Connect(IP: string, password: string?): nil
     -- Kicks the player from the server
+    @side(server)
     function Kick(reason: string): nil
     -- Makes a Player to possess and control a Pawn
+    @side(server)
     function Possess(new_pawn: Pawn, blend_time: number?, exp: number?): nil
     -- Does a camera fade to/from a solid color
+    @side(shared)
     function StartCameraFade(from_alpha: number, to_alpha: number, duration: number, to_color: Color, should_fade_audio: boolean?, hold_when_finished: boolean?): nil
     -- Turns on camera fading at the given opacity
+    @side(shared)
     function SetManualCameraFade(in_fade_amount: number, color: Color, in_fade_audio: boolean): nil
     -- Stops camera fading.
+    @side(shared)
     function StopCameraFade(): nil
     -- Sets the Player's Camera Location (only works if not possessing any Character)
+    @side(shared)
     function SetCameraLocation(location: Vector): nil
     -- Sets the Player's Camera Rotation
+    @side(shared)
     function SetCameraRotation(rotation: Rotator): nil
     -- Smoothly moves the Player's Camera Location (only works if not possessing any Character)
+    @side(shared)
     function TranslateCameraTo(location: Vector, time: number, exp: number?): nil
     -- Smoothly moves the Player's Camera Rotation
+    @side(shared)
     function RotateCameraTo(rotation: Rotator, time: number, exp: number?): nil
     -- Sets the Player's Camera Socket Offset (Spring Arm Offset)
+    @side(shared)
     function SetCameraSocketOffset(socket_offset: Vector): nil
     -- Sets the Player's Camera Arm Length (Spring Arm length)
+    @side(shared)
     function SetCameraArmLength(length: number, force: boolean?): nil
     -- Sets the Player's Camera FOV (if not possessing a Character)
+    @side(shared)
     function SetCameraFOV(fov: number?): nil
     -- Sets the Player's Camera Speed Settings (if not possessing a Character)
+    @side(shared)
     function SetCameraSpeedSettings(max_speed: number?, acceleration: number?, deceleration: number?, turning_boost: number?): nil
     -- Attaches the Player`s Camera to an Actor
+    @side(shared)
     function AttachCameraTo(actor: Actor, socket_offset: Vector?, blend_speed: number?): nil
     -- Resets the Camera to default state (Unspectate and Detaches)
+    @side(shared)
     function ResetCamera(): nil
     -- Spectates other Player
+    @side(shared)
     function Spectate(player: Player, blend_speed: number?): nil
     -- Sets the player's name
+    @side(server)
     function SetName(player_name: string): nil
     -- Sets the VOIP setting for a specific global channel
+    @side(server)
     function SetVOIPGlobalChannelSetting(channel: number, setting: VOIPSetting): nil
     -- Sets the VOIP setting for all global channels
+    @side(server)
     function SetVOIPGlobalAllChannelsSetting(setting: VOIPSetting): nil
     -- Sets the VOIP setting for the local/proximity
+    @side(server)
     function SetVOIPLocalSetting(setting: VOIPSetting): nil
     -- Sets the local/proximity VOIP max distance. This also affects networking usage
+    @side(shared)
     function SetVOIPLocalMaxDistance(max_distance: number): nil
     -- Sets the local/proximity VOIP input/output volume. It only affects the local/proximity channel
+    @side(shared)
     function SetVOIPLocalVolume(volume: number): nil
     -- Sets the global VOIP volume. It only affects the global channels
+    @side(shared)
     function SetVOIPGlobalVolume(volume: number): nil
     -- Sets the global VOIP high-pass filter threshold frequency
+    @side(shared)
     function SetVOIPGlobalHighPassFilter(threshold: number): nil
     -- Sets the global VOIP low-pass filter threshold frequency
+    @side(shared)
     function SetVOIPGlobalLowPassFilter(threshold: number): nil
     -- Mutes or unmutes VOIP for this player
+    @side(shared)
     function SetVOIPMuted(is_muted: boolean): nil
     -- Returns whether VOIP is muted for this player
+    @side(shared)
     function IsVOIPMuted(): boolean
     -- Release the Player from the Character
+    @side(server)
     function UnPossess(): nil
+    @side(shared)
     function GetSteamID(): string
+    @side(shared)
     function GetAccountID(): string
+    @side(shared)
     function GetAccountName(): string
     -- Return a URL which can be used through WebUI and Widgets to display the Player's Steam Avatar (64x64)
+    @side(shared)
     function GetAccountIconURL(): string
+    @side(client)
     function GetCameraLocation(): Vector
+    @side(client)
     function GetCameraArmLength(return_base: boolean?): number
+    @side(client)
     function GetCameraRotation(): Rotator
+    @side(shared)
     function GetControlledCharacter(): Character?
+    @side(server)
     function GetIP(): string
     -- Gets this Player's dimension
+    @side(shared)
     function GetDimension(): number
     -- Sets this Player's dimension
+    @side(server)
     function SetDimension(dimension: number): nil
+    @side(shared)
     function GetName(): string
+    @side(shared)
     function GetPing(): number
     -- Returns a list of VOIP channels this player is listening to
+    @side(shared)
     function GetVOIPListeningChannels(): number[]
     -- Returns a list of VOIP channels this player is currently speaking to
+    @side(shared)
     function GetVOIPSpeakingChannels(): number[]
+    @side(client)
     function IsHost(): boolean
+    @side(client)
     function IsLocalPlayer(): boolean
 end
 
@@ -1817,26 +2214,33 @@ end
 declare class Prop extends Entity
     constructor(location: Vector, rotation: Rotator, asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, grab_mode: GrabMode?, ccd_mode: CCDMode?, defer_spawn: boolean?)
     -- Sets ability to Characters to Grab this Prop
+    @side(server)
     function SetGrabMode(grab_mode: GrabMode): nil
     -- Sets the interaction tooltip text shown when a Character interacts with this Prop
+    @side(client)
     function SetInteractionToolTipText(tool_tip_text: string): nil
     -- Sets the Physics damping of this Prop
     function SetPhysicsDamping(linear_damping: number, angular_damping: number): nil
     -- Changes the mesh in runtime
     function SetMesh(asset: string): nil
     -- Gets the Asset name
+    @side(shared)
     function GetMesh(): string
     -- Gets the Character (if existing) which is holding this
+    @side(shared)
     function GetHandler(): Character?
     -- Gets ability to Grab this Prop
+    @side(shared)
     function GetGrabMode(): GrabMode
     -- Override the mass (in Kg) of this Prop
     function SetMassOverride(mass: number): nil
     -- Gets the overridden mass
+    @side(shared)
     function GetMassOverride(): number
     -- Change the mass scale used to calculate the mass of this Prop
     function SetMassScale(scale: number): nil
     -- Gets the mass scale
+    @side(shared)
     function GetMassScale(): number
 end
 
@@ -1844,30 +2248,42 @@ end
 declare class SceneCapture extends Entity
     constructor(location: Vector?, rotation: Rotator?, width: number?, height: number?, render_rate: number?, view_distance: number?, fov_angle: number?, enable_distance_optimization: boolean?)
     -- Adds an Actor to the Render Only list
+    @side(client)
     function AddRenderActor(actor: Actor): nil
     -- Removes an Actor from the Render Only list
+    @side(client)
     function RemoveRenderActor(actor: Actor): nil
     -- Clears the Render Only list
+    @side(client)
     function ClearRenderActors(): nil
     -- Stops or Restore Capturing
+    @side(client)
     function SetFreeze(freeze: boolean): nil
     -- Takes a snapshot of the SceneCapture and returns a Base64 of it
+    @side(client)
     function EncodeToBase64(image_format: ImageFormat?): string
     -- Takes a snapshot of the SceneCapture and returns a Base64 of it (asynchronously)
+    @side(client)
     function EncodeToBase64Async(image_format: ImageFormat?, callback: any): nil
     -- Sets the FOV
+    @side(client)
     function SetFOVAngle(angle: number): nil
     -- Enables/Disables rendering features from being captured
+    @side(client)
     function SetShowFlag(flag: string, enable: boolean): nil
     -- Change the output Texture size
     -- Note: too high texture will make the capture slower and will affect game performance
+    @side(client)
     function Resize(width: number, height: number): nil
     -- Set how frequent is the capture
     -- Note: Set to 0 to capture every frame, or -1 to disable auto-capturing
+    @side(client)
     function SetRenderRate(render_rate: number): nil
     -- Enables or not the rendering frequency optimization if the entities with this Material are too far
+    @side(client)
     function SetDistanceOptimizationEnabled(enabled: boolean): nil
     -- Captures the scene. If deferred is true, performs deferred capture and records the frame; otherwise captures immediately and triggers Capture event
+    @side(client)
     function CaptureScene(deferred: boolean?): nil
 end
 
@@ -1877,8 +2293,10 @@ declare class StaticMesh extends Entity
     -- Changes the mesh in runtime
     function SetMesh(static_mesh_asset: string): nil
     -- Gets the Asset path mesh used
+    @side(shared)
     function GetMesh(): string
     -- Gets if this StaticMesh is from the Level
+    @side(client)
     function IsFromLevel(): boolean
 end
 
@@ -1886,39 +2304,60 @@ end
 declare class Sound extends Entity
     constructor(location: Vector, asset: string, is_2D_sound: boolean?, auto_destroy: boolean?, sound_type: SoundType?, volume: number?, pitch: number?, inner_radius: number?, falloff_distance: number?, attenuation_function: AttenuationFunction?, keep_playing_when_silent: boolean?, loop_mode: SoundLoopMode?, auto_play: boolean?)
     -- Plays the sound with a fade effect
+    @side(client)
     function FadeIn(fade_in_duration: number, fade_volume_level: number?, start_time: number?): nil
     -- Stops the sound with a fade effect
+    @side(client)
     function FadeOut(fade_out_duration: number, fade_volume_level: number?, destroy_after_fadeout: boolean?): nil
     -- Starts the sound
+    @side(client)
     function Play(start_time: number?): nil
     -- If a 3D Sound, sets the distance which the sound is inaudible
+    @side(client)
     function SetFalloffDistance(falloff_distance: number): nil
     -- If a 3D Sound, sets the distance within the volume is 100%
+    @side(client)
     function SetInnerRadius(inner_radius: number): nil
     -- Sets low-pass filter frequency. Sets 0 to disable it.
+    @side(client)
     function SetLowPassFilter(frequency: number): nil
     -- Pauses the sound
+    @side(client)
     function SetPaused(pause: boolean?): nil
     -- Sets the Sound's pitch
+    @side(client)
     function SetPitch(new_pitch: number): nil
     -- Sets the Sound's volume
+    @side(client)
     function SetVolume(new_volume: number): nil
     -- Stops the sound
+    @side(client)
     function Stop(): nil
     -- Stops the sound after the provided delay
+    @side(client)
     function StopDelayed(delay: number): nil
     -- Gets if the sound is 2D
+    @side(client)
     function Is2D(): boolean
     -- Gets if the sound is playing
+    @side(client)
     function IsPlaying(): boolean
     -- Gets the duration of the Sound
+    @side(client)
     function GetDuration(): number
+    @side(client)
     function GetPitch(): number
+    @side(client)
     function GetVolume(): number
+    @side(client)
     function GetLowPassFilter(): number
+    @side(client)
     function GetInnerRadius(): number
+    @side(client)
     function GetFalloffDistance(): number
+    @side(client)
     function GetSoundType(): number
+    @side(client)
     function GetPath(): string
 end
 
@@ -1926,22 +2365,31 @@ end
 declare class TextRender extends Entity
     constructor(location: Vector, rotation: Rotator, text: string, word_size: number?, color: Color?, rendering_type: TextRenderRenderingType?, horizontal_alignment: TextRenderHorizontalAlignment?, vertical_alignment: TextRenderVerticalAlignment?, font_asset: string?, cast_shadow: boolean?)
     -- Gets the current Text
+    @side(shared)
     function GetText(): string
     -- Gets the current Text Color
+    @side(shared)
     function GetTextColor(): Color
     -- Gets the current Word Size
+    @side(shared)
     function GetWordSize(): number
     -- Sets the Font. The font must be pre-cooked as a offline cached, distance field font.
+    @side(shared)
     function SetFont(font_asset: string): nil
     -- Sets the Text alignment
+    @side(shared)
     function SetAlignment(horizontal_alignment: TextRenderHorizontalAlignment, vertical_alignment: TextRenderVerticalAlignment): nil
     -- Sets the horizontal and vertical spacing adjust values
+    @side(shared)
     function SetSpacingAdjust(horizontal_spacing: number, vertical_spacing: number): nil
     -- Sets the Text
+    @side(shared)
     function SetText(text: string): nil
     -- Sets the Text Color
+    @side(shared)
     function SetTextColor(text_color: Color): nil
     -- Sets the Word Size
+    @side(shared)
     function SetWordSize(word_size: number): nil
 end
 
@@ -1949,16 +2397,22 @@ end
 declare class Text3D extends Entity
     constructor(location: Vector, rotation: Rotator, text: string, scale: Vector?, color: Color?, font_type: FontType?, align_camera: any?)
     -- Sets the Font
+    @side(shared)
     function SetFont(font_type: FontType): nil
     -- Freeze mesh rebuild, to avoid unnecessary mesh rebuilds when setting a few properties together
+    @side(shared)
     function SetFreeze(freeze: boolean): nil
     -- Sets the Glyph representation settings to generate the 3D Mesh for this text render
+    @side(shared)
     function SetGlyphSettings(extrude: number?, level: number?, bevel_type: any?, bevel_segments: number?, outline: boolean?): nil
     -- Sets the Max Size of the Text3D, optionally scaling it proportionally
+    @side(shared)
     function SetMaxSize(max_width: number?, max_height: number?, scale_proportionally: boolean?): nil
     -- Sets the Text
+    @side(shared)
     function SetText(text: string): nil
     -- Sets the Text & Font settings for this text render
+    @side(shared)
     function SetTextSettings(kerning: number?, line_spacing: number?, word_spacing: number?, horizontal_alignment: any?, vertical_alignment: any?): nil
 end
 
@@ -1970,6 +2424,7 @@ declare class Trigger extends Entity
     -- Sets the extent size of this trigger (sphere triggers can receive as float for radius)
     function SetExtent(extent: Vector | number): nil
     -- Sets the Trigger color (if visible)
+    @side(shared)
     function SetColor(color: Color): nil
     -- Sets the filter to Trigger to only overlap specific Classes. Leave it empty for all Classes
     function SetOverlapOnlyClasses(overlap_only_classes: string[]): nil
@@ -1979,40 +2434,58 @@ end
 declare class VehicleWheeled extends Entity
     constructor(location: Vector, rotation: Rotator, asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, auto_unflip: boolean?, engine_sound: string?, horn_sound: string?, brake_sound: string?, engine_start_sound: string?, vehicle_door_sound: string?, auto_start_engine: boolean?, custom_animation_blueprint: string?, defer_spawn: boolean?)
     -- Starts or stops the vehicles horn
+    @side(server)
     function Horn(enable_horn: boolean): nil
     -- Sets the sound asset used by the vehicle horn
+    @side(server)
     function SetHornSound(sound_asset: string): nil
     -- Sets the Vehicle Camera Offset
+    @side(shared)
     function SetCameraOffset(offset: Vector): nil
     -- Sets if the Engine auto starts when the driver enters the Vehicle
+    @side(server)
     function SetAutoStartEngine(auto_start: boolean): nil
     -- Sets if the Engine is turned off/on
+    @side(server)
     function SetEngineStarted(started: boolean): nil
     -- Configures the Vehicle Steering
+    @side(server)
     function SetSteeringSetup(steering_type: SteeringType, angle_ratio: number?, steering_curve: any?): nil
     -- Configures the Vehicle Engine (Torque, RPM, Braking)
+    @side(server)
     function SetEngineSetup(max_torque: number?, max_rpm: number?, idle_rpm: number?, brake_effect: number?, rev_up_moi: number?, rev_down_rate: number?, torque_curve: any?): nil
     -- Configures the Vehicle Aerodynamics Settings
+    @side(server)
     function SetAerodynamicsSetup(mass: number?, drag_coefficient: number?, vehicle_chassis_width: number?, vehicle_chassis_height: number?, vehicle_downforce_coefficient: number?, center_of_mass_override: Vector?): nil
     -- Configures the Vehicle Transmission
+    @side(server)
     function SetTransmissionSetup(transmission_final_ratio: number?, transmission_change_up_rpm: number?, transmission_change_down_rpm: number?, transmission_gear_change_time: number?, transmission_efficiency: number?, forward_gear_ratios: number[]?, reverse_gear_ratios: number[]?): nil
     -- Configures a Vehicle Wheel
+    @side(server)
     function SetWheel(index: number, bone_name: string, radius: number?, width: number?, max_steer_angle: number?, offset: Vector?, is_affected_by_engine: boolean?, is_affected_by_brake: boolean?, is_affected_by_handbrake: boolean?, has_abs_enabled: boolean?, has_traction_control_enabled: boolean?, max_brake_torque: number?, max_handbrake_torque: number?, cornering_stiffness: number?, side_slip_modifier: number?, friction_force_multiplier: number?, slip_threshold: number?, skid_threshold: number?, suspension_spring_rate: number?, suspension_spring_preload: number?, suspension_max_raise: number?, suspension_max_drop: number?, suspension_smoothing: number?, suspension_damping_ratio: number?, suspension_wheel_load_ratio: number?, suspension_axis: Vector?, suspension_force_offset: Vector?, suspension_sweep_shape: SuspensionSweepShape?): nil
     -- Configures the type of Differential
+    @side(server)
     function SetDifferentialSetup(differential_type: DifferentialType, front_rear_split: number?): nil
     -- Configures where the Steering Wheel is located
+    @side(server)
     function SetSteeringWheelSetup(relative_location: Vector, radius: number, rotation: Rotator?): nil
     -- Configures the Headlights Offset and Color.
+    @side(server)
     function SetHeadlightsSetup(location: Vector, color: Color?): nil
     -- Configures the Taillights Offset.
+    @side(server)
     function SetTaillightsSetup(location: Vector): nil
     -- Sets a Tire as Flat or not
+    @side(server)
     function SetTireFlat(wheel_index: number, is_flat: boolean): nil
     -- Gets the current RPM
+    @side(client)
     function GetRPM(): number
     -- Gets the current Gear
+    @side(client)
     function GetGear(): number
     -- Checks if the vehicle is in the air (no wheels touching the ground)
+    @side(client)
     function IsInAir(): boolean
 end
 
@@ -2020,8 +2493,10 @@ end
 declare class VehicleWater extends Entity
     constructor(location: Vector, rotation: Rotator, asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, defer_spawn: boolean?)
     -- Sets the relative location of the Engine (where the Physics Thruster, sounds and effects are attached)
+    @side(server)
     function SetEngineOffset(offset: Vector): nil
     -- Sets the force of the Engine/Thruster
+    @side(server)
     function SetThrustStrength(force: number): nil
 end
 
@@ -2031,106 +2506,171 @@ end
 declare class Weapon extends Entity
     constructor(location: Vector, rotation: Rotator, asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, defer_spawn: boolean?)
     -- Forces this Weapon to reload
+    @side(server)
     function Reload(): nil
     -- Sets this Weapon's Ammo in the Bag
+    @side(server)
     function SetAmmoBag(new_ammo_bag: number): nil
     -- Sets this Weapon's Ammo in the Clip
+    @side(server)
     function SetAmmoClip(new_ammo_clip: number): nil
     -- Aux for setting and configuring ammo
+    @side(server)
     function SetAmmoSettings(ammo_clip: number, ammo_bag: number, ammo_to_reload: number?, clip_capacity: number?): nil
     -- Animation played by the Weapon when Firing
+    @side(server)
     function SetAnimationFire(animation_fire_path: string, play_rate: number?): nil
     -- Animation played by the Character when Firing
+    @side(server)
     function SetAnimationCharacterFire(animation_character_fire_path: string, play_rate: number?): nil
     -- Animation played by the Character when Reloading
+    @side(server)
     function SetAnimationReload(reload_animation_path: string, play_rate: number?): nil
     -- Gets the reload animation
+    @side(shared)
     function GetAnimationReload(): string
     -- If the Character will reload automatically when ammo empties
+    @side(server)
     function SetAutoReload(auto_reload: boolean): nil
     -- Set the Bullet Color
+    @side(server)
     function SetBulletColor(bullet_color: Color): nil
     -- Aux for setting and configuring the Bullet
+    @side(server)
     function SetBulletSettings(bullet_count: number, bullet_max_distance: number, bullet_velocity: number, bullet_color: Color): nil
     -- Speed of shots
+    @side(server)
     function SetCadence(cadence: number): nil
     -- Capacity of the Weapon's clip
+    @side(server)
     function SetClipCapacity(clip: number): nil
     -- Set the Base Weapon's Damage
+    @side(server)
     function SetDamage(damage: number): nil
     -- Sets how the Character grabs this Weapon
+    @side(server)
     function SetHandlingMode(handling_mode: HandlingMode): nil
     -- Left Hand Offset
+    @side(server)
     function SetLeftHandTransform(left_hand_location: Vector, left_hand_rotation: Rotator): nil
     -- Set the mesh used when the Character reloads the weapon
+    @side(server)
     function SetMagazineMesh(magazine_mesh: string, magazine_mesh_hide_bone: string?): nil
     -- Plays an Animation on this Weapon
+    @side(shared)
     function PlayAnimation(animation_path: string, slot_name: string?, loop_indefinitely: boolean?, blend_in_time: number?, blend_out_time: number?, play_rate: number?, stop_all_montages: boolean?): nil
     -- Particle of the Bullet flying
+    @side(server)
     function SetParticlesBulletTrail(particle_bullet_trail_asset_path: string): nil
     -- Particle of the Fire Blast in the muzzle
+    @side(server)
     function SetParticlesBarrel(particle_asset_path: string): nil
     -- Particle of the empty bullet flying from the weapon when shooting
+    @side(server)
     function SetParticlesShells(particle_shells_asset_path: string): nil
     -- Set the offset of Right Hand
+    @side(server)
     function SetRightHandOffset(right_hand_offset: Vector): nil
     -- The FOV multiplier when ADS
+    @side(server)
     function SetSightFOVMultiplier(sight_fov_multiplier: number): nil
     -- Offset applied to align player's head to weapon's sight and rotation applied on the weapon when ADS
+    @side(server)
     function SetSightTransform(sight_location: Vector, sight_rotation: Rotator): nil
     -- Sound when weapon has not bullet and try to shoot
+    @side(server)
     function SetSoundDry(sound_dry_asset_path: string, volume: number?, pitch: number?): nil
     -- Sound when Loading a magazine
+    @side(server)
     function SetSoundLoad(sound_load_asset_path: string, volume: number?, pitch: number?): nil
     -- Sound when Unloading a magazine
+    @side(server)
     function SetSoundUnload(sound_unload_asset_path: string, volume: number?, pitch: number?): nil
     -- Sound when Zooming
+    @side(server)
     function SetSoundZooming(sound_zooming_asset_path: string, volume: number?, pitch: number?): nil
     -- Sound when Shooting
+    @side(server)
     function SetSoundFire(sound_fire_asset_path: string, volume: number?, pitch: number?): nil
     -- Sound when Aiming
+    @side(server)
     function SetSoundAim(sound_aim_asset_path: string, volume: number?, pitch: number?): nil
     -- Sound when firing with only having X remaining bullets in the magazine
+    @side(server)
     function SetSoundFireLastBullets(sound_asset_path: string, remaining_bullets_count: number?): nil
     -- Base Weapon's Spread
+    @side(server)
     function SetSpread(spread: number): nil
     -- Base Weapon's Recoil
+    @side(server)
     function SetRecoil(recoil: number): nil
     -- Sets if the Weapon can hold to keep firing and if it needs to release to fire
+    @side(server)
     function SetUsageSettings(can_hold_use: boolean, hold_release_use: boolean): nil
     -- Sets how the bullet will pass through walls
+    @side(server)
     function SetWallbangSettings(max_distance: number, damage_multiplier: number): nil
     -- Gets this Weapon's Ammo Bag
+    @side(shared)
     function GetAmmoBag(): number
     -- Gets this Weapon's Ammo Clip
+    @side(shared)
     function GetAmmoClip(): number
+    @side(shared)
     function GetAmmoToReload(): number
+    @side(shared)
     function GetHandlingMode(): HandlingMode
+    @side(shared)
     function GetAnimationCharacterFire(): string
+    @side(shared)
     function GetAnimationFire(): string
+    @side(shared)
     function GetMagazineMesh(): string
+    @side(shared)
     function GetParticlesBulletTrail(): string
+    @side(shared)
     function GetParticlesShells(): string
+    @side(shared)
     function GetSoundDry(): string
+    @side(shared)
     function GetSoundLoad(): string
+    @side(shared)
     function GetSoundUnload(): string
+    @side(shared)
     function GetSoundZooming(): string
+    @side(shared)
     function GetSoundAim(): string
+    @side(shared)
     function GetSoundFire(): string
+    @side(shared)
     function GetCanHoldUse(): boolean
+    @side(shared)
     function GetHoldReleaseUse(): boolean
+    @side(shared)
     function GetBulletCount(): number
+    @side(shared)
     function GetBulletColor(): Color
+    @side(shared)
     function GetCadence(): number
+    @side(shared)
     function GetClipCapacity(): number
+    @side(shared)
     function GetDamage(): number
+    @side(shared)
     function GetRightHandOffset(): Vector
+    @side(shared)
     function GetLeftHandLocation(): Vector
+    @side(shared)
     function GetLeftHandRotation(): Rotator
+    @side(shared)
     function GetSightLocation(): Vector
+    @side(shared)
     function GetSightRotation(): Rotator
+    @side(shared)
     function GetSightFOVMultiplier(): number
+    @side(shared)
     function GetSpread(): number
+    @side(shared)
     function GetRecoil(): number
 end
 
@@ -2138,50 +2678,73 @@ end
 declare class WebUI extends Entity
     constructor(name: string, path: string, visibility: WidgetVisibility?, is_transparent: boolean?, auto_resize: boolean?, width: number?, height: number?)
     -- Puts this WebUI in the front of all WebUIs and Widgets
+    @side(client)
     function BringToFront(): nil
     -- Calls an Event on the Browser's JavaScript
+    @side(client)
     function CallEvent(event_name: string, ...: any): nil
     -- Loads a new File/URL in this Browser
+    @side(client)
     function LoadURL(url: string): nil
     -- Loads a pure HTML in this Browser
+    @side(client)
     function LoadHTML(html: string): nil
     -- Gets this WebUI name
+    @side(client)
     function GetName(): string
     -- Executes a JavaScript code in the Browser
+    @side(client)
     function ExecuteJavaScript(javascript_code: string): nil
     -- Enables the focus on this browser (i.e. can receive Keyboard input and will trigger input events)
+    @side(client)
     function SetFocus(): nil
     -- Returns if this WebUI has any DOM Node focused
+    @side(client)
     function HasNodeFocus(): nil
     -- Removes the focus from this WebUI (and sets it back to game viewport)
+    @side(client)
     function RemoveFocus(): nil
     -- Sets the Layout as Canvas on Screen
+    @side(client)
     function SetLayout(screen_location_offset_left_top: Vector2D?, size_offset_right_bottom: Vector2D?, anchors_min: Vector2D?, anchors_max: Vector2D?, alignment: Vector2D?): nil
     -- Freezes the WebUI Rendering to the surface (it will still execute the JS under the hood)
+    @side(client)
     function SetFreeze(freeze: boolean): nil
     -- Sets the visibility in screen
+    @side(client)
     function SetVisibility(visibility: WidgetVisibility): nil
     -- Spawns a Sound entity to plays this WebUI sound
+    @side(client)
     function SpawnSound(location: Vector?, is_2d: boolean?, volume: number?, inner_radius: number?, falloff_distance: number?, attenuation_function: AttenuationFunction?): Sound
     -- Sends a Mouse Event into the WebUI programmatically
+    @side(client)
     function SendMouseWheelEvent(mouse_x: number, mouse_y: number, delta_x: number, delta_y: number): nil
     -- Sends a Key Event into the WebUI programmatically
+    @side(client)
     function SendKeyEvent(key_type: WebUIKeyType, key_code: number, modifiers: WebUIModifier?): nil
     -- Sends a Mouse Move Event into the WebUI programmatically
+    @side(client)
     function SendMouseMoveEvent(mouse_x: number, mouse_y: number, modifiers: WebUIModifier?, mouse_leave: boolean?): nil
     -- Sends a Mouse Click into the WebUI programmatically
+    @side(client)
     function SendMouseClickEvent(mouse_x: number, mouse_y: number, mouse_type: WebUIMouseType, is_mouse_up: boolean, modifiers: WebUIModifier?, click_count: number?): nil
     -- Gets the current size of this WebUI
+    @side(client)
     function GetSize(): Vector2D
     -- Returns the current WebUI visibility
+    @side(client)
     function GetVisibility(): WidgetVisibility
     -- Returns if this WebUI is currently frozen
+    @side(client)
     function IsFrozen(): boolean
     -- Returns if this WebUI is ready
+    @side(client)
     function IsReady(): boolean
     -- Opens the Developer Tools for this WebUI, it only works if the Client.SetDebugEnabled() was not disabled
+    @side(client)
     function OpenDevTools(): nil
     -- Closes the Developer Tools for this WebUI, it only works if the Client.SetDebugEnabled() not disabled
+    @side(client)
     function CloseDevTools(): nil
 end
 
@@ -2192,47 +2755,67 @@ declare class Widget extends Entity
     -- Spawns a Widget passing a NativeWidget enum
     constructor(native_widget: NativeWidget)
     -- Spawns a 3D Widget actor rendering this Widget in the world
+    @side(client)
     function SpawnWidget3D(location: Vector?, rotation: Rotator?, widget_space: WidgetSpace?, auto_size: boolean?, size: Vector2D?, auto_repaint_rate: number?, pivot: Vector2D?): Widget3D
     -- Sets the visibility in screen
+    @side(client)
     function SetVisibility(visibility: WidgetVisibility): nil
     -- Returns the current WebUI visibility
+    @side(client)
     function GetVisibility(): WidgetVisibility
     -- Enables the focus on this Widget (i.e. can receive Keyboard input and will trigger input events)
+    @side(client)
     function SetFocus(): nil
     -- Puts this Widget in the front of all WebUIs and Widgets
+    @side(client)
     function BringToFront(): nil
     -- Adds it to the game's viewport and fills the entire screen
+    @side(client)
     function AddToViewport(): nil
     -- Adds a new child widget to this Widget container, if this is a Panel
+    @side(client)
     function AddChild(other: WebUI | Widget): nil
     -- Sets the widget for a given slot by name, if this is a UserWidget
+    @side(client)
     function SetContentForSlot(slot_name: string, widget: Widget?): nil
     -- Sets the Layout as Canvas on Screen
+    @side(client)
     function SetSlotCanvasLayout(screen_location_offset_left_top: Vector2D?, size_offset_right_bottom: Vector2D?, anchors_min: Vector2D?, anchors_max: Vector2D?, alignment: Vector2D?): nil
     -- Calls a Blueprint Event or Function
+    @side(client)
     function CallBlueprintEvent(event_name: string, ...: any): any
     -- Assigns and Binds a Blueprint Event Dispatcher
+    @side(client)
     function BindBlueprintEventDispatcher(dispatcher_name: string, callback: any): any
     -- Unbinds a Blueprint Event Dispatcher
+    @side(client)
     function UnbindBlueprintEventDispatcher(dispatcher_name: string, callback: any?): nil
     -- Sets a Blueprint Property/Variable value directly
+    @side(client)
     function SetBlueprintPropertyValue(property_name: string, value: any): nil
     -- Gets a Blueprint Property/Variable value
+    @side(client)
     function GetBlueprintPropertyValue(property_name: string): any
     -- Sets the slot alignment for horizontal and vertical positioning
+    @side(client)
     function SetSlotAlignment(horizontal_alignment: WidgetHorizontalAlignment?, vertical_alignment: WidgetVerticalAlignment?): nil
     -- Sets the slot padding for horizontal and vertical spacing
+    @side(client)
     function SetSlotPadding(padding_horizontal: Vector2D?, padding_vertical: Vector2D?): nil
     -- Sets the slot size and size rule
+    @side(client)
     function SetSlotSize(size: number?, slate_size_rule: WidgetSizeRule?): nil
 end
 
 -- The Widget3D class is the 3D representation of a Widget class spawned in the world.
 declare class Widget3D extends Entity
     -- Sets the auto repaint rate
+    @side(client)
     function SetAutoRepaintRate(rate: number): nil
     -- Forces this to repaint
+    @side(client)
     function Repaint(): nil
+    @side(client)
     function GetWidget(): Widget
 end
 
@@ -2310,6 +2893,7 @@ declare TOML: TOML__Static
 -- ========================================================================
 
 -- Retrieve Assets Data from Asset Packs.
+@side(shared)
 declare interface Assets__Static
     -- Gets a list containing information about all loaded Asset Packs
     function GetAssetPacks(): any[]
@@ -2334,28 +2918,39 @@ declare interface Assets__Static
     -- Gets a list containing all Other Assets Keys from an AssetPack
     function GetOthers(asset_pack_path: string): any[]
     -- Manually adds an Asset to be loaded during the Player's loading screen
+    @side(server)
     function Precache(asset_path: string, asset_type: AssetType): nil
 end
+@side(shared)
 declare Assets: Assets__Static
 
 -- Configure, send and intercept chat messages.
+@side(shared)
 declare interface Chat__Static
     -- Adds a chat message which will display local only
+    @side(client)
     function AddMessage(message: string): nil
     -- Sends a chat message to a Player only
+    @side(server)
     function SendMessage(player: Player, message: string): nil
     -- Configures the Chat visuals and position
+    @side(client)
     function SetConfiguration(screen_location: Vector2D?, size: Vector2D?, anchors_min: Vector2D?, anchors_max: Vector2D?, alignment: Vector2D?, justify: boolean?, show_scrollbar: boolean?): nil
     -- Sets if the Chat is visible or not
+    @side(client)
     function SetVisibility(is_visible: boolean): nil
     -- Clears all messages
+    @side(client)
     function Clear(): nil
     -- Sends a chat message to all Players
+    @side(server)
     function BroadcastMessage(message: string): nil
 end
+@side(shared)
 declare Chat: Chat__Static
 
 -- Static Class present on Client side.
+@side(client)
 declare interface Client__Static
     -- Disconnects from the server
     function Disconnect(): nil
@@ -2410,9 +3005,11 @@ declare interface Client__Static
     -- Gets the current language of the Client
     function GetLanguage(): string
 end
+@side(client)
 declare Client: Client__Static
 
 -- Exposes access to registering Console Commands and Logging messages.
+@side(shared)
 declare interface Console__Static
     -- Logs and formats a message in the console
     function Log(message: string, ...: any): nil
@@ -2427,9 +3024,11 @@ declare interface Console__Static
     -- Logs a debug message in the console, with formatted arguments. Outputted only when the current log level is Debug or Verbose
     function Debug(message: string, ...: any): nil
 end
+@side(shared)
 declare Console: Console__Static
 
 -- Draws Debug shapes in the world.
+@side(client)
 declare interface Debug__Static
     -- Draws a Debug box in the world
     function DrawBox(location: Vector, extent: Vector, rotation: Rotator, color: Color, life_time: number?, thickness: number?): nil
@@ -2450,30 +3049,39 @@ declare interface Debug__Static
     -- Draws a Debug string in the world
     function DrawString(location: Vector, text: string, color: Color?, life_time: number?, draw_shadow: boolean?, font_scale: number?): nil
 end
+@side(client)
 declare Debug: Debug__Static
 
 -- Initialize and set Discord activity.
+@side(client)
 declare interface Discord__Static
     -- Initializes the Discord Integration with your custom client_id
     function Initialize(client_id: number): nil
     -- Communicates with Discord and sets a custom user status
     function SetActivity(state: string, details: string, large_image: string, large_text: string, reset_time: boolean?): nil
 end
+@side(client)
 declare Discord: Discord__Static
 
 -- Subscribe for user-defined Events.
+@side(shared)
 declare interface Events__Static
     -- Calls an Event which will be triggered in all Local Packages
     function Call(event_name: string, ...: any): nil
     -- Calls an Event if on Client which will be triggered in all Server Packages
+    @side(client)
     function CallRemote(event_name: string, ...: any): nil
     -- Calls an Event if on Server which will be triggered in all Client's Packages of a specific Player
+    @side(server)
     function CallRemote(event_name: string, player: Player, ...: any): nil
     -- Calls an Event if on Server which will be triggered in all Client's Packages of all specified Player. This is more efficient than calling CallRemote multiple times for each player
+    @side(server)
     function CallRemotePlayers(event_name: string, players: Player[], ...: any): nil
     -- Calls an Event on Server which will be triggered in all Client's Packages of all Players
+    @side(server)
     function BroadcastRemote(event_name: string, ...: any): nil
     -- Calls an Event on Server which will be triggered in all Client's Packages of all Players in that dimension
+    @side(server)
     function BroadcastRemoteDimension(dimension: number, event_name: string, ...: any): nil
     -- Subscribes for an user-created event which will be triggered for only local called events
     function Subscribe(event_name: string, callback: any): any
@@ -2484,24 +3092,29 @@ declare interface Events__Static
     -- Unsubscribes from all subscribed remote events in this Package with that event name, optionally passing the function to unsubscribe only that callback
     function UnsubscribeRemote(event_name: string, callback: any?): nil
 end
+@side(shared)
 declare Events: Events__Static
 
 -- HTTP Requests Interface.
+@side(shared)
 declare interface HTTP__Static
     -- Makes an asynchronous HTTP Request
     function RequestAsync(uri: string, endpoint: string?, method: HTTPMethod?, data: string?, content_type: string?, compress: boolean?, headers: any?, callback: any?): nil
     -- Makes a synchronous HTTP Request.
     -- 
     -- The request will be made synchronously and will freeze the server until it's done.
+    @side(server)
     function Request(uri: string, endpoint: string?, method: HTTPMethod?, data: string?, content_type: string?, compress: boolean?, headers: any?): any
     -- Sets the global Connection Timeout in seconds
     function SetConnectionTimeout(connection_timeout: number): nil
     -- Sets the global Read and Write Timeout in seconds
     function SetReadWriteTimeout(read_write_timeout: number): nil
 end
+@side(shared)
 declare HTTP: HTTP__Static
 
 -- Create custom keybindings and retrieve input information.
+@side(client)
 declare interface Input__Static
     -- Binds a function to an Input defined using `Register` or from the game
     function Bind(binding_name: string, input_event: InputEvent, callback: any): nil
@@ -2538,9 +3151,11 @@ declare interface Input__Static
     function IsMouseEnabled(): boolean
     function IsInputEnabled(): boolean
 end
+@side(client)
 declare Input: Input__Static
 
 -- Work with Unreal level in runtime.
+@side(client)
 declare interface Level__Static
     -- Loads a Level in runtime
     function LoadStreamLevel(level_name: string, should_block_on_load: boolean?, make_visible_after_load: boolean?): nil
@@ -2553,9 +3168,11 @@ declare interface Level__Static
     -- Calls a Level Blueprint custom event (which can be added when creating levels through Unreal Engine)
     function CallLevelBlueprintEvent(event_name: string, ...: any): any
 end
+@side(client)
 declare Level: Level__Static
 
 -- Creates a reachable path into navigable space.
+@side(client)
 declare interface Navigation__Static
     -- Finds random, reachable point in navigable space restricted to radius around origin
     function GetRandomReachablePointInRadius(origin: Vector, radius: number): Vector
@@ -2564,9 +3181,11 @@ declare interface Navigation__Static
     -- Finds a Path given Start and End location
     function FindPathToLocation(start_location: Vector, end_location: Vector): any
 end
+@side(client)
 declare Navigation: Navigation__Static
 
 -- Class which represents the current Package
+@side(shared)
 declare interface Package__Static
     -- Makes any variable available in the global scope
     function Export(variable_name: string, value: any): nil
@@ -2597,9 +3216,11 @@ declare interface Package__Static
     -- Returns whether this package is currently unloading
     function IsUnloading(): boolean
 end
+@side(shared)
 declare Package: Package__Static
 
 -- Interaction with Post Process effects.
+@side(client)
 declare interface PostProcess__Static
     -- Set Post Process Bloom Settings
     function SetBloom(intensity: number?, threshold: number?): nil
@@ -2628,9 +3249,11 @@ declare interface PostProcess__Static
     -- Removes the current Post Process Material
     function RemoveMaterial(): nil
 end
+@side(client)
 declare PostProcess: PostProcess__Static
 
 -- Server represents all Server controls in the Server side.
+@side(server)
 declare interface Server__Static
     -- Restarts the server in a new Map, restarts all packages and reconnects all players
     function ChangeMap(map_path: string): nil
@@ -2724,9 +3347,11 @@ declare interface Server__Static
     -- Returns if the Server is announced in the Master List
     function IsAnnounced(): boolean
 end
+@side(server)
 declare Server: Server__Static
 
 -- Interact with built-in Sky & Weather system.
+@side(client)
 declare interface Sky__Static
     -- Replaces all Sky/Sun actors with the Ultra Dynamic Sky Actor, to be able to use the functions from this page
     function Spawn(spawn_weather: boolean?, find_existing: boolean?): boolean
@@ -2783,18 +3408,22 @@ declare interface Sky__Static
     -- Changes the Weather
     function ChangeWeather(weather: WeatherType, transition_time: number): nil
 end
+@side(client)
 declare Sky: Sky__Static
 
 -- Interact with Steam APIs.
+@side(client)
 declare interface Steam__Static
     -- Sets Steam Rich Presence text
     function SetRichPresence(text: string): nil
     -- Triggers a Steam screenshot
     function TriggerScreenshot(): nil
 end
+@side(client)
 declare Steam: Steam__Static
 
 -- Execute code at specified time intervals.
+@side(shared)
 declare interface Timer__Static
     -- Executes a function, after waiting a specified number of milliseconds
     function SetTimeout(callback: any, milliseconds: number?, ...: any): number
@@ -2819,9 +3448,11 @@ declare interface Timer__Static
     -- Resets a Timer to restart from beginning
     function ResetElapsedTime(timer_id: number): nil
 end
+@side(shared)
 declare Timer: Timer__Static
 
 -- Trace a ray against the world and get collided objects information.
+@side(client)
 declare interface Trace__Static
     -- Trace a ray against the world and returns a table with the first blocking hit information
     function LineSingle(start_location: Vector, end_location: Vector, collision_channel: CollisionChannel | number?, trace_mode: TraceMode | number?, ignored_actors: Actor[]?): any
@@ -2840,9 +3471,11 @@ declare interface Trace__Static
     -- Trace a capsule against the world using object types and return overlapping hits and then first blocking hit
     function CapsuleMulti(start_location: Vector, end_location: Vector, radius: number, half_height: number, collision_channel: CollisionChannel | number?, trace_mode: TraceMode | number?, ignored_actors: Actor[]?): any[]
 end
+@side(client)
 declare Trace: Trace__Static
 
 -- Work with screen properties and effects.
+@side(client)
 declare interface Viewport__Static
     -- Transforms a 3D world-space vector into 2D screen coordinates
     function ProjectWorldToScreen(world_position: Vector): Vector2D
@@ -2869,4 +3502,5 @@ declare interface Viewport__Static
     -- Sets the Branding Bar settings (the bar with 'nanos world - closed alpha ver...')
     function SetBrandingBarSettings(horizontal_alignment: WidgetHorizontalAlignment, vertical_alignment: WidgetVerticalAlignment, is_lean: boolean?): nil
 end
+@side(client)
 declare Viewport: Viewport__Static

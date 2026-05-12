@@ -638,6 +638,7 @@ end
 -- ========================================================================
 
 -- A color composed of components (R, G, B, A) with floating point precision.
+@overrideCtor("$class($args)")
 declare class Color
     constructor(R: number?, G: number?, B: number?, A: number?)
     -- Red color percentage (0-1)
@@ -692,6 +693,7 @@ declare class Color
 end
 
 -- A Matrix is an array of numbers this can be used for geometric and positional calculations. This is mainly used internally.
+@overrideCtor("$class($args)")
 declare class Matrix
     constructor(rotation: Rotator, origin: Vector)
     -- Transform the vector with the matrix
@@ -701,6 +703,7 @@ declare class Matrix
 end
 
 -- Floating point Quaternion that can represent a rotation about an axis in 3-D space
+@overrideCtor("$class($args)")
 declare class Quat
     constructor(X: number?, Y: number?, Z: number?, W: number?)
     -- The quaternion's X-component
@@ -733,6 +736,7 @@ declare class Quat
 end
 
 -- A container for rotation information (Pitch, Yaw, Roll). All rotation values are stored in degrees.
+@overrideCtor("$class($args)")
 declare class Rotator
     constructor(pitch: number?, yaw: number?, roll: number?)
     -- Rotation around the right axis (around Y axis), Looking up and down (0=Straight Ahead, +Up, -Down)
@@ -769,6 +773,7 @@ declare class Rotator
 end
 
 -- A Vector composed of components (X, Y, Z) with floating point precision. Used mainly for entity position.
+@overrideCtor("$class($args)")
 declare class Vector
     constructor(X: number?, Y: number?, Z: number?)
     -- X Coordinate
@@ -815,6 +820,7 @@ declare class Vector
 end
 
 -- A Vector2D composed of components (X, Y) with floating point precision. Used mainly for HUD and Drawing on screen.
+@overrideCtor("$class($args)")
 declare class Vector2D
     constructor(X: number?, Y: number?)
     -- X Coordinate
@@ -1344,11 +1350,14 @@ declare class Pawn extends Entity
 end
 
 -- A Billboard is a 2D Material that will be rendered always facing the camera.
+@overrideCtor("$class($args)")
+@side(client)
 declare class Billboard extends Entity
     constructor(location: Vector, material_asset: string, size: Vector2D?, size_in_screen_space: boolean?)
 end
 
 -- A Blueprint Class allows spawning any Unreal Blueprint Actor in nanos world.
+@overrideCtor("$class($args)")
 declare class Blueprint extends Entity
     constructor(location: Vector, rotation: Rotator, blueprint_asset: string, collision_type: CollisionType?)
     -- Calls a Blueprint Event or Function
@@ -1369,6 +1378,7 @@ declare class Blueprint extends Entity
 end
 
 -- A Cable represents a Physics Constraint which joins two Actors with a rope-like visual representation between them.
+@overrideCtor("$class($args)")
 declare class Cable extends Entity
     constructor(location: Vector, enable_visuals: boolean?, defer_spawn: boolean?)
     -- Attaches the beginning of this cable to another Actor at a specific bone or relative location
@@ -1428,6 +1438,8 @@ declare class Cable extends Entity
 end
 
 -- Canvas is an entity which you can draw onto it.
+@overrideCtor("$class($args)")
+@side(client)
 declare class Canvas
     constructor(is_visible: boolean?, clear_color: Color?, auto_repaint_rate: number?, should_clear_before_update: boolean?, auto_resize: boolean?, width: number?, height: number?, screen_position: Vector2D?)
     -- Draws an unfilled box on the Canvas
@@ -1484,6 +1496,7 @@ declare class Canvas
 end
 
 -- Characters represents Actors which can be possessed, can move and interact with world. They are the default Skeletal Mesh Character built for nanos world.
+@overrideCtor("$class($args)")
 declare class Character extends Entity
     constructor(location: Vector, rotation: Rotator, skeletal_mesh_asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, max_health: number?, death_sound: string?, pain_sound: string?, defer_spawn: boolean?)
     -- Drops any Pickable the Character is holding
@@ -1740,6 +1753,7 @@ declare class Character extends Entity
 end
 
 -- CharacterSimple is a simpler Character implementation with basic Movement implementation. Aimed for custom NPCs or basic Pawns.
+@overrideCtor("$class($args)")
 declare class CharacterSimple extends Entity
     constructor(location: Vector, rotation: Rotator, mesh: string | string, custom_animation_blueprint: string?, collision_type: CollisionType?, gravity_enabled: boolean?, defer_spawn: boolean?)
     -- Changes the Character Mesh on the fly
@@ -1775,8 +1789,10 @@ declare class CharacterSimple extends Entity
 end
 
 -- The Database entity provides programmers a way to access SQL databases easily through scripting.
+@overrideCtor("$class($args)")
+@side(server)
 declare class Database
-    constructor(database_engine: string, connection_string: string, pool_size: number?)
+    constructor(database_engine: DatabaseEngine, connection_string: string, pool_size: number?)
     -- Closes the Database
     @side(server)
     function Close(): nil
@@ -1795,6 +1811,7 @@ declare class Database
 end
 
 -- Decals are Materials that are projected onto meshes in your level, including Static Meshes and Skeletal Meshes.
+@overrideCtor("$class($args)")
 declare class Decal extends Entity
     constructor(location: Vector, rotation: Rotator, material_asset: string, size: Vector?, lifespan: number?, fade_screen_size: number?)
     -- Sets the size of this Decal.
@@ -1806,6 +1823,8 @@ declare class Decal extends Entity
 end
 
 -- A File represents an entry to a system file.
+@overrideCtor("$class($args)")
+@side(shared)
 declare class File
     constructor(file_path: string, truncate: boolean?)
     -- Closes the file and destroys the entity
@@ -1886,6 +1905,8 @@ declare class File
 end
 
 -- A tool to transform objects at runtime.
+@overrideCtor("$class($args)")
+@side(client)
 declare class Gizmo extends Entity
     constructor()
     -- Enable the interaction
@@ -1912,6 +1933,7 @@ declare class Gizmo extends Entity
 end
 
 -- Grenades are Pickables which Characters can grab and throw. It explodes after X seconds after thrown, causing damage around.
+@overrideCtor("$class($args)")
 declare class Grenade extends Entity
     constructor(location: Vector, rotation: Rotator, static_mesh_asset: string?, explosion_particles: string?, explosion_sound: string?, collision_type: CollisionType?, gravity_enabled: boolean?, defer_spawn: boolean?)
     -- Forces this grenade to Explode
@@ -1950,6 +1972,7 @@ declare class Grenade extends Entity
 end
 
 -- An Instanced Static Mesh entity allows spawning a mesh that can have multiple instances efficiently rendered.
+@overrideCtor("$class($args)")
 declare class InstancedStaticMesh extends Entity
     constructor(location: Vector, rotation: Rotator, static_mesh_asset: string, collision_type: CollisionType?, instances: any?, defer_spawn: boolean?)
     -- Gets the Asset path mesh used
@@ -1974,6 +1997,8 @@ declare class InstancedStaticMesh extends Entity
 end
 
 -- A Light represents a Lighting source.
+@overrideCtor("$class($args)")
+@side(shared)
 declare class Light extends Entity
     constructor(location: Vector, rotation: Rotator?, color: Color?, light_type: LightType?, intensity: number?, attenuation_radius: number?, cone_angle: number?, inner_cone_angle_percent: number?, max_draw_distance: number?, use_inverse_squared_falloff: boolean?, cast_shadows: boolean?, visible: boolean?, source_radius: number?, defer_spawn: boolean?)
     -- Sets the light color
@@ -1999,6 +2024,7 @@ declare class Light extends Entity
 end
 
 -- A Melee represents an Entity which can be Pickable by a Character and can be used to melee attack, Charactes can hold it with hands with pre-defined handling modes.
+@overrideCtor("$class($args)")
 declare class Melee extends Entity
     constructor(location: Vector, rotation: Rotator, asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, handling_mode: HandlingMode?, crosshair_material: string?, can_use: boolean?, defer_spawn: boolean?)
     -- Sets an Animation when attacking
@@ -2037,6 +2063,7 @@ declare class Melee extends Entity
 end
 
 -- Class to spawn Particle Systems used to create effects in the world.
+@overrideCtor("$class($args)")
 declare class Particle extends Entity
     constructor(location: Vector, rotation: Rotator, asset: string, auto_destroy: boolean?, auto_activate: boolean?, defer_spawn: boolean?)
     -- Activates the Emitter
@@ -2211,6 +2238,7 @@ declare class Player extends Entity
 end
 
 -- A Prop represents a Dynamic Mesh which can be spawned in the world, can be grabbed around by characters and have physics.
+@overrideCtor("$class($args)")
 declare class Prop extends Entity
     constructor(location: Vector, rotation: Rotator, asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, grab_mode: GrabMode?, ccd_mode: CCDMode?, defer_spawn: boolean?)
     -- Sets ability to Characters to Grab this Prop
@@ -2245,6 +2273,8 @@ declare class Prop extends Entity
 end
 
 -- Scene Capture is an Actor which captures a fully dynamic image of the scene into a Texture. It captures the scene from its view frustum, stores that view as an image, which is then used within a Material.
+@overrideCtor("$class($args)")
+@side(client)
 declare class SceneCapture extends Entity
     constructor(location: Vector?, rotation: Rotator?, width: number?, height: number?, render_rate: number?, view_distance: number?, fov_angle: number?, enable_distance_optimization: boolean?)
     -- Adds an Actor to the Render Only list
@@ -2288,6 +2318,7 @@ declare class SceneCapture extends Entity
 end
 
 -- A StaticMesh entity represents a Mesh which can be spawned in the world, can't move and is more optimized for using in decorating the world.
+@overrideCtor("$class($args)")
 declare class StaticMesh extends Entity
     constructor(location: Vector, rotation: Rotator, static_mesh_asset: string, collision_type: CollisionType?, defer_spawn: boolean?)
     -- Changes the mesh in runtime
@@ -2301,6 +2332,8 @@ declare class StaticMesh extends Entity
 end
 
 -- Class for playing in-game 2D and 3D sounds.
+@overrideCtor("$class($args)")
+@side(client)
 declare class Sound extends Entity
     constructor(location: Vector, asset: string, is_2D_sound: boolean?, auto_destroy: boolean?, sound_type: SoundType?, volume: number?, pitch: number?, inner_radius: number?, falloff_distance: number?, attenuation_function: AttenuationFunction?, keep_playing_when_silent: boolean?, loop_mode: SoundLoopMode?, auto_play: boolean?)
     -- Plays the sound with a fade effect
@@ -2362,6 +2395,8 @@ declare class Sound extends Entity
 end
 
 -- A Text Render class is useful for spawning Texts in 3D world.
+@overrideCtor("$class($args)")
+@side(shared)
 declare class TextRender extends Entity
     constructor(location: Vector, rotation: Rotator, text: string, word_size: number?, color: Color?, rendering_type: TextRenderRenderingType?, horizontal_alignment: TextRenderHorizontalAlignment?, vertical_alignment: TextRenderVerticalAlignment?, font_asset: string?, cast_shadow: boolean?)
     -- Gets the current Text
@@ -2394,6 +2429,8 @@ declare class TextRender extends Entity
 end
 
 -- Class to create 3D Text with advanced options
+@overrideCtor("$class($args)")
+@side(shared)
 declare class Text3D extends Entity
     constructor(location: Vector, rotation: Rotator, text: string, scale: Vector?, color: Color?, font_type: FontType?, align_camera: any?)
     -- Sets the Font
@@ -2417,6 +2454,7 @@ declare class Text3D extends Entity
 end
 
 -- A Trigger class is a utility class to trigger events when any Entity enters an Area.
+@overrideCtor("$class($args)")
 declare class Trigger extends Entity
     constructor(location: Vector, rotation: Rotator, extent: Vector | number, trigger_type: TriggerType?, is_visible: boolean?, color: Color?, overlap_only_classes: string[]?)
     -- Forces a Overlap checking to occur, will immediately trigger overlaps
@@ -2431,6 +2469,7 @@ declare class Trigger extends Entity
 end
 
 -- Vehicles are wheeled entities which Characters can possesses and drive.
+@overrideCtor("$class($args)")
 declare class VehicleWheeled extends Entity
     constructor(location: Vector, rotation: Rotator, asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, auto_unflip: boolean?, engine_sound: string?, horn_sound: string?, brake_sound: string?, engine_start_sound: string?, vehicle_door_sound: string?, auto_start_engine: boolean?, custom_animation_blueprint: string?, defer_spawn: boolean?)
     -- Starts or stops the vehicles horn
@@ -2490,6 +2529,8 @@ declare class VehicleWheeled extends Entity
 end
 
 -- VehicleWater are entities which Characters can possesses and drive over the water with dynamic physics.
+@overrideCtor("$class($args)")
+@side(server)
 declare class VehicleWater extends Entity
     constructor(location: Vector, rotation: Rotator, asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, defer_spawn: boolean?)
     -- Sets the relative location of the Engine (where the Physics Thruster, sounds and effects are attached)
@@ -2503,6 +2544,7 @@ end
 -- Weapons are entities with firing, reloading and aiming functionalities.
 -- 
 -- They are fully customizable, all pieces of the weapon can be changed with immense possibility of creation.
+@overrideCtor("$class($args)")
 declare class Weapon extends Entity
     constructor(location: Vector, rotation: Rotator, asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, defer_spawn: boolean?)
     -- Forces this Weapon to reload
@@ -2675,6 +2717,8 @@ declare class Weapon extends Entity
 end
 
 -- Class for spawning a dynamic Web Browser.
+@overrideCtor("$class($args)")
+@side(client)
 declare class WebUI extends Entity
     constructor(name: string, path: string, visibility: WidgetVisibility?, is_transparent: boolean?, auto_resize: boolean?, width: number?, height: number?)
     -- Puts this WebUI in the front of all WebUIs and Widgets
@@ -2749,6 +2793,8 @@ declare class WebUI extends Entity
 end
 
 -- The Widget class supports spawning Unreal Widgets classes through scripting and manipulate them such as Blueprints!
+@overrideCtor("$class($args)")
+@side(client)
 declare class Widget extends Entity
     -- Spawns a Widget passing a UserWidget blueprint
     constructor(blueprint_path: string)
@@ -2808,6 +2854,7 @@ declare class Widget extends Entity
 end
 
 -- The Widget3D class is the 3D representation of a Widget class spawned in the world.
+@side(client)
 declare class Widget3D extends Entity
     -- Sets the auto repaint rate
     @side(client)

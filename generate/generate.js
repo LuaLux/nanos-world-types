@@ -62,6 +62,30 @@ function memberSideLine(indent, authority) {
     return side ? `${indent}@side(${side})\n` : '';
 }
 
+// Picks the side label to put on the class declaration itself. Returns a side
+// string only when EVERY recorded authority on the class collapses to the same
+// bucket — so a class whose top-level + every member is `server` (e.g.
+// Database) ends up with `@side(server)` on the class, making `new Database(...)`
+// from a client file a side error. Mixed classes (Player has both/server/client
+// methods) get no class-level annotation and stay reachable as a type.
+function pickClassSide(klass) {
+    const authorities = [];
+    if (klass.authority) authorities.push(klass.authority);
+    for (const k of ['functions', 'static_functions', 'constructors', 'operators', 'properties', 'static_properties']) {
+        for (const m of klass[k] || []) {
+            if (m && m.authority) authorities.push(m.authority);
+        }
+    }
+    const sides = new Set();
+    for (const a of authorities) {
+        const mapped = authoritySide(a);
+        if (mapped === null) return null;       // ambiguous (authority / network-authority)
+        sides.add(mapped);
+    }
+    if (sides.size !== 1) return null;
+    return [...sides][0];
+}
+
 function loadJson(rel) {
     return JSON.parse(fs.readFileSync(path.join(API_DIR, rel), 'utf8'));
 }
@@ -90,12 +114,18 @@ function mapType(raw) {
 
     const lower = t.toLowerCase();
     if (PRIMITIVE_MAP[lower] !== undefined) return PRIMITIVE_MAP[lower];
+
+    // Known declared type — keep as-is. CRITICAL: this MUST come before the
+    // STRING_ALIASES regex check, otherwise enums like `DatabaseEngine` get
+    // swallowed by the `*Engine` rule and emitted as `string` instead of the
+    // real enum, breaking type-checked constructor / parameter signatures.
+    if (KNOWN_TYPES.has(t)) return t;
+
     if (STRING_ALIASES.test(t)) return 'string';
 
-    // Known declared type — keep as-is. Unknown identifiers (e.g. Text3DAlignCamera
-    // referenced in Text3D.json but never declared) fall back to `any` so the
-    // generated file stays well-formed.
-    if (KNOWN_TYPES.has(t)) return t;
+    // Unknown identifier (e.g. Text3DAlignCamera referenced in Text3D.json
+    // but never declared) — fall back to `any` so the generated file stays
+    // well-formed.
     return 'any';
 }
 
@@ -220,10 +250,26 @@ function emitClass(klass) {
     const doc = emitDoc('', klass.description);
     if (doc) out.push(doc.trimEnd());
 
-    // Per-member @side is emitted inside emitFunction / emitProperty /
-    // emitConstructor / emitOperator below. The class type itself stays
-    // unannotated so a `Player` reference is reachable from any side — only
-    // calls into individual server-only / client-only methods raise an error.
+    // Nanos exposes every class as a plain global call: `Player(...)` not
+    // `Player.new(...)`. Override Lux's default `ClassName.new(args)` shape
+    // so `new Player(...)` lowers to what the nanos loader expects. We only
+    // emit this on classes with constructors — Base* classes (Entity, Actor,
+    // ...) are abstract bases never directly instantiated, so they don't
+    // need the override and would just clutter the output.
+    if ((klass.constructors || []).length > 0) {
+        out.push('@overrideCtor("$class($args)")');
+    }
+
+    // When every member of a class collapses to the same side (typical for
+    // server-only classes like Database / VehicleWater, or client-only ones
+    // like Canvas / Widget3D), tag the class itself. That makes the type —
+    // and therefore `new ClassName(...)` and any reference to it — unreachable
+    // from forbidden sides. Mixed classes (Player, Character, Entity bases)
+    // stay unannotated so their type can still be passed around across sides
+    // and individual server-only/client-only members are gated per-method.
+    const classSide = pickClassSide(klass);
+    if (classSide) out.push(`@side(${classSide})`);
+
     let header = `declare class ${klass.name}`;
     const parents = klass.inheritance || [];
     if (parents.length > 0) {

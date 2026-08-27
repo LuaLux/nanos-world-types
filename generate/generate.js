@@ -2,18 +2,18 @@
 'use strict';
 
 // Reads the nanos-world api JSON specs from ../api/ and emits a single
-// declaration file at ../src/nanos-world.d.lux. Everything lives at the
-// top level so the Lux compiler's ResolveLibsPass auto-discovers it when
-// the package is installed via `lux add github:...`.
+// declaration file at ../src/nanos-world.d.neb. Everything lives at the
+// top level so the Nebra compiler's ResolveLibsPass auto-discovers it when
+// the package is installed via `nebra add github:...`.
 
 const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const API_DIR = path.join(ROOT, 'api');
-const OUT_PATH = path.join(ROOT, 'src', 'nanos-world.d.lux');
+const OUT_PATH = path.join(ROOT, 'src', 'nanos-world.d.neb');
 
-const LUX_KEYWORDS = new Set([
+const NEBRA_KEYWORDS = new Set([
     'abstract', 'and', 'async', 'await', 'break', 'case', 'class', 'constructor',
     'declare', 'do', 'else', 'elseif', 'end', 'enum', 'export', 'extends', 'false',
     'for', 'from', 'function', 'goto', 'if', 'implements', 'import', 'in',
@@ -34,9 +34,9 @@ const PRIMITIVE_MAP = {
 // Asset-path "types" exposed by the nanos docs are really just strings.
 const STRING_ALIASES = /(Path|Asset|Engine|Permission|Authority)$/;
 
-// nanos's per-member `authority` field maps onto Lux's @side annotation:
+// nanos's per-member `authority` field maps onto Nebra's @side annotation:
 //   - "server" / "client" → matching side
-//   - "both"              → `shared` (Lux models shared as its own bit, not the union of client+server)
+//   - "both"              → `shared` (Nebra models shared as its own bit, not the union of client+server)
 //   - "both-net-authority-first" → also shared (still callable on both, just with auth precedence)
 //   - "authority" / "network-authority" → null (ambiguous — whoever owns the entity);
 //     members carrying this stay unannotated so they remain reachable.
@@ -95,7 +95,7 @@ function safeIdent(name) {
     let n = String(name).replace(/\.\.\.$/, '').trim();
     n = n.replace(/[^A-Za-z0-9_]/g, '_');
     if (/^[0-9]/.test(n)) n = '_' + n;
-    if (LUX_KEYWORDS.has(n)) return n + '_';
+    if (NEBRA_KEYWORDS.has(n)) return n + '_';
     return n || '_';
 }
 
@@ -207,7 +207,7 @@ function emitConstructor(indent, ctor) {
 }
 
 // nanos describes operators with a __metamethod name AND a symbol. We emit the
-// symbol form because that's what `operator + (rhs: T): R` in Lux expects. The
+// symbol form because that's what `operator + (rhs: T): R` in Nebra expects. The
 // compiler re-derives the metamethod name from the symbol + arity.
 const META_TO_SYM = {
     __add: '+', __sub: '-', __mul: '*', __div: '/', __idiv: '//',
@@ -218,8 +218,8 @@ const META_TO_SYM = {
 const UNARY_METAS = new Set(['__unm', '__len']);
 
 function emitOperator(indent, op) {
-    // Only emit operators Lux's grammar supports. Skip __tostring, __index,
-    // __call, bitwise ops, etc. — they have no `operator <sym>` form in Lux.
+    // Only emit operators Nebra's grammar supports. Skip __tostring, __index,
+    // __call, bitwise ops, etc. — they have no `operator <sym>` form in Nebra.
     const sym = META_TO_SYM[op.operator];
     if (!sym) return null;
     const isUnary = UNARY_METAS.has(op.operator);
@@ -251,7 +251,7 @@ function emitClass(klass) {
     if (doc) out.push(doc.trimEnd());
 
     // Nanos exposes every class as a plain global call: `Player(...)` not
-    // `Player.new(...)`. Override Lux's default `ClassName.new(args)` shape
+    // `Player.new(...)`. Override Nebra's default `ClassName.new(args)` shape
     // so `new Player(...)` lowers to what the nanos loader expects. We only
     // emit this on classes with constructors — Base* classes (Entity, Actor,
     // ...) are abstract bases never directly instantiated, so they don't
@@ -273,11 +273,11 @@ function emitClass(klass) {
     let header = `declare class ${klass.name}`;
     const parents = klass.inheritance || [];
     if (parents.length > 0) {
-        // Lux only supports single inheritance via `extends`. nanos lists
+        // Nebra only supports single inheritance via `extends`. nanos lists
         // multiple bases (e.g. Character extends Entity, Actor, Paintable,
         // Damageable, Pawn); we take the first and drop the rest. Members
         // from the dropped bases will appear as missing on Character — this
-        // is a known limitation until Lux grows multi-base support.
+        // is a known limitation until Nebra grows multi-base support.
         header += ` extends ${parents[0]}`;
     }
     out.push(header);
@@ -315,7 +315,7 @@ function emitStaticClass(sc, { iface = null } = {}) {
     for (const p of sc.static_properties || []) out.push(emitProperty('    ', p));
     for (const f of sc.static_functions || []) {
         // Inside an interface, methods are written without the `function`
-        // body — but Lux supports `function name(...)` form for members of
+        // body — but Nebra supports `function name(...)` form for members of
         // declare interface, same as the stdlib uses. We also emit per-method
         // @side when the method's authority differs from the class default,
         // so e.g. Chat.* (top-level `both` ⇒ shared) still gates its
@@ -399,7 +399,7 @@ function main() {
     }
 
     // Standard libraries (math/string/table) are intentionally skipped — they
-    // are already covered by Lux's built-in stdlib declarations.
+    // are already covered by Nebra's built-in stdlib declarations.
 
     fs.mkdirSync(path.dirname(OUT_PATH), { recursive: true });
     fs.writeFileSync(OUT_PATH, parts.join('\n'));

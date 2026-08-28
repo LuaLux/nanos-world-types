@@ -837,8 +837,7 @@ end
 -- Classes
 -- ========================================================================
 
--- Entity is the base for all Classes, and all those entities share the same Methods and Events described in this page.
-declare class Entity
+declare interface EntityBase
     -- Finish the spawning process and send the entity to clients if it was spawned with `defer_spawn`
     @side(server)
     function FinishSpawn(): nil
@@ -889,6 +888,10 @@ declare class Entity
     -- Calls a custom remote event directly on this entity to all Players
     @side(server)
     function BroadcastRemoteEvent(event_name: string, ...: any): nil
+end
+
+-- Entity is the base for all Classes, and all those entities share the same Methods and Events described in this page.
+declare class Entity implements EntityBase
     -- Returns a table containing all Entities of the class this is called on
     @side(shared)
     static function GetAll(): Entity[]
@@ -928,7 +931,7 @@ end
 -- Actors support 3D transformations such as translation (location), rotation, and scale.
 -- 
 -- An Actor is the base for several entities, and all those entities share the same Methods and Events described in this page.
-declare class Actor extends Entity
+declare interface Actor extends EntityBase
     -- Add an impulse to this Actor. Good for one time instant burst
     function AddImpulse(impulse: Vector, velocity_change: boolean?): nil
     -- Add an angular impulse to this Actor. Good for one time instant burst
@@ -1066,7 +1069,7 @@ declare class Actor extends Entity
 end
 
 -- Pickables are special Actors which can be grabbed, held and used by Characters.
-declare class Pickable extends Entity
+declare interface Pickable extends EntityBase, Actor, Paintable
     -- Attaches a Skeletal Mesh as master pose to this entity
     @side(shared)
     function AddSkeletalMeshAttached(id: string, skeletal_mesh_path: string, use_parent_bounds: boolean?, use_base_leader_pose_component: boolean?, attachable_id: string?): nil
@@ -1124,7 +1127,7 @@ declare class Pickable extends Entity
 end
 
 -- Base class for all Paintable entities. This class provides customization for materials, exposing common functions to allow you to set custom material parameters, including loading textures from disk.
-declare class Paintable extends Entity
+declare interface Paintable extends EntityBase, Actor
     -- Sets the material at the specified index of this Actor
     @side(shared)
     function SetMaterial(material_path: string, index: number?, attachable_id: string?): nil
@@ -1170,7 +1173,7 @@ declare class Paintable extends Entity
 end
 
 -- Base class for all Damageable entities. It provides Health and Damage related methods and events.
-declare class Damageable extends Entity
+declare interface Damageable extends EntityBase, Actor
     -- Do damage to this entity
     @side(server)
     function ApplyDamage(damage: number, bone_name: string?, damage_type: DamageType?, from_direction: Vector?, instigator: Player?, causer: any?): number
@@ -1201,7 +1204,7 @@ declare class Damageable extends Entity
 end
 
 -- Base class for all Vehicle entities.
-declare class Vehicle extends Entity
+declare interface Vehicle extends EntityBase, Actor, Paintable, Damageable
     -- Attaches a Skeletal Mesh as master pose to this entity
     @side(shared)
     function AddSkeletalMeshAttached(id: string, skeletal_mesh_path: string, use_parent_bounds: boolean?, use_base_leader_pose_component: boolean?, attachable_id: string?): nil
@@ -1253,7 +1256,7 @@ declare class Vehicle extends Entity
 end
 
 -- Base class for all Character entities.
-declare class Pawn extends Entity
+declare interface Pawn extends EntityBase, Actor, Paintable, Damageable
     -- Attaches a Skeletal Mesh as master pose to this entity
     @side(shared)
     function AddSkeletalMeshAttached(id: string, skeletal_mesh_path: string, use_parent_bounds: boolean?, use_base_leader_pose_component: boolean?, attachable_id: string?): nil
@@ -1352,13 +1355,13 @@ end
 -- A Billboard is a 2D Material that will be rendered always facing the camera.
 @overrideCtor("$class($args)")
 @side(client)
-declare class Billboard extends Entity
+declare class Billboard extends Entity implements Actor, Paintable
     constructor(location: Vector, material_asset: string, size: Vector2D?, size_in_screen_space: boolean?)
 end
 
 -- A Blueprint Class allows spawning any Unreal Blueprint Actor in nanos world.
 @overrideCtor("$class($args)")
-declare class Blueprint extends Entity
+declare class Blueprint extends Entity implements Actor, Paintable
     constructor(location: Vector, rotation: Rotator, blueprint_asset: string, collision_type: CollisionType?)
     -- Calls a Blueprint Event or Function
     @side(shared)
@@ -1379,7 +1382,7 @@ end
 
 -- A Cable represents a Physics Constraint which joins two Actors with a rope-like visual representation between them.
 @overrideCtor("$class($args)")
-declare class Cable extends Entity
+declare class Cable extends Entity implements Actor, Paintable
     constructor(location: Vector, enable_visuals: boolean?, defer_spawn: boolean?)
     -- Attaches the beginning of this cable to another Actor at a specific bone or relative location
     @side(server)
@@ -1497,7 +1500,7 @@ end
 
 -- Characters represents Actors which can be possessed, can move and interact with world. They are the default Skeletal Mesh Character built for nanos world.
 @overrideCtor("$class($args)")
-declare class Character extends Entity
+declare class Character extends Entity implements Actor, Paintable, Damageable, Pawn
     constructor(location: Vector, rotation: Rotator, skeletal_mesh_asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, max_health: number?, death_sound: string?, pain_sound: string?, defer_spawn: boolean?)
     -- Drops any Pickable the Character is holding
     @side(server)
@@ -1754,7 +1757,7 @@ end
 
 -- CharacterSimple is a simpler Character implementation with basic Movement implementation. Aimed for custom NPCs or basic Pawns.
 @overrideCtor("$class($args)")
-declare class CharacterSimple extends Entity
+declare class CharacterSimple extends Entity implements Actor, Paintable, Damageable, Pawn
     constructor(location: Vector, rotation: Rotator, mesh: string | string, custom_animation_blueprint: string?, collision_type: CollisionType?, gravity_enabled: boolean?, defer_spawn: boolean?)
     -- Changes the Character Mesh on the fly
     function SetMesh(mesh_asset: string | string, adjust_capsule_size: boolean): nil
@@ -1812,7 +1815,7 @@ end
 
 -- Decals are Materials that are projected onto meshes in your level, including Static Meshes and Skeletal Meshes.
 @overrideCtor("$class($args)")
-declare class Decal extends Entity
+declare class Decal extends Entity implements Actor, Paintable
     constructor(location: Vector, rotation: Rotator, material_asset: string, size: Vector?, lifespan: number?, fade_screen_size: number?)
     -- Sets the size of this Decal.
     function SetSize(size: Vector): nil
@@ -1907,7 +1910,7 @@ end
 -- A tool to transform objects at runtime.
 @overrideCtor("$class($args)")
 @side(client)
-declare class Gizmo extends Entity
+declare class Gizmo extends Entity implements Actor
     constructor()
     -- Enable the interaction
     @side(client)
@@ -1934,7 +1937,7 @@ end
 
 -- Grenades are Pickables which Characters can grab and throw. It explodes after X seconds after thrown, causing damage around.
 @overrideCtor("$class($args)")
-declare class Grenade extends Entity
+declare class Grenade extends Entity implements Actor, Paintable, Pickable
     constructor(location: Vector, rotation: Rotator, static_mesh_asset: string?, explosion_particles: string?, explosion_sound: string?, collision_type: CollisionType?, gravity_enabled: boolean?, defer_spawn: boolean?)
     -- Forces this grenade to Explode
     @side(server)
@@ -1973,7 +1976,7 @@ end
 
 -- An Instanced Static Mesh entity allows spawning a mesh that can have multiple instances efficiently rendered.
 @overrideCtor("$class($args)")
-declare class InstancedStaticMesh extends Entity
+declare class InstancedStaticMesh extends Entity implements Actor, Paintable
     constructor(location: Vector, rotation: Rotator, static_mesh_asset: string, collision_type: CollisionType?, instances: any?, defer_spawn: boolean?)
     -- Gets the Asset path mesh used
     @side(shared)
@@ -1999,7 +2002,7 @@ end
 -- A Light represents a Lighting source.
 @overrideCtor("$class($args)")
 @side(shared)
-declare class Light extends Entity
+declare class Light extends Entity implements Actor
     constructor(location: Vector, rotation: Rotator?, color: Color?, light_type: LightType?, intensity: number?, attenuation_radius: number?, cone_angle: number?, inner_cone_angle_percent: number?, max_draw_distance: number?, use_inverse_squared_falloff: boolean?, cast_shadows: boolean?, visible: boolean?, source_radius: number?, defer_spawn: boolean?)
     -- Sets the light color
     @side(shared)
@@ -2025,7 +2028,7 @@ end
 
 -- A Melee represents an Entity which can be Pickable by a Character and can be used to melee attack, Charactes can hold it with hands with pre-defined handling modes.
 @overrideCtor("$class($args)")
-declare class Melee extends Entity
+declare class Melee extends Entity implements Actor, Paintable, Pickable
     constructor(location: Vector, rotation: Rotator, asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, handling_mode: HandlingMode?, crosshair_material: string?, can_use: boolean?, defer_spawn: boolean?)
     -- Sets an Animation when attacking
     @side(server)
@@ -2064,7 +2067,7 @@ end
 
 -- Class to spawn Particle Systems used to create effects in the world.
 @overrideCtor("$class($args)")
-declare class Particle extends Entity
+declare class Particle extends Entity implements Actor
     constructor(location: Vector, rotation: Rotator, asset: string, auto_destroy: boolean?, auto_activate: boolean?, defer_spawn: boolean?)
     -- Activates the Emitter
     @side(shared)
@@ -2239,7 +2242,7 @@ end
 
 -- A Prop represents a Dynamic Mesh which can be spawned in the world, can be grabbed around by characters and have physics.
 @overrideCtor("$class($args)")
-declare class Prop extends Entity
+declare class Prop extends Entity implements Actor, Paintable
     constructor(location: Vector, rotation: Rotator, asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, grab_mode: GrabMode?, ccd_mode: CCDMode?, defer_spawn: boolean?)
     -- Sets ability to Characters to Grab this Prop
     @side(server)
@@ -2275,7 +2278,7 @@ end
 -- Scene Capture is an Actor which captures a fully dynamic image of the scene into a Texture. It captures the scene from its view frustum, stores that view as an image, which is then used within a Material.
 @overrideCtor("$class($args)")
 @side(client)
-declare class SceneCapture extends Entity
+declare class SceneCapture extends Entity implements Actor
     constructor(location: Vector?, rotation: Rotator?, width: number?, height: number?, render_rate: number?, view_distance: number?, fov_angle: number?, enable_distance_optimization: boolean?)
     -- Adds an Actor to the Render Only list
     @side(client)
@@ -2319,7 +2322,7 @@ end
 
 -- A StaticMesh entity represents a Mesh which can be spawned in the world, can't move and is more optimized for using in decorating the world.
 @overrideCtor("$class($args)")
-declare class StaticMesh extends Entity
+declare class StaticMesh extends Entity implements Actor, Paintable
     constructor(location: Vector, rotation: Rotator, static_mesh_asset: string, collision_type: CollisionType?, defer_spawn: boolean?)
     -- Changes the mesh in runtime
     function SetMesh(static_mesh_asset: string): nil
@@ -2334,7 +2337,7 @@ end
 -- Class for playing in-game 2D and 3D sounds.
 @overrideCtor("$class($args)")
 @side(client)
-declare class Sound extends Entity
+declare class Sound extends Entity implements Actor
     constructor(location: Vector, asset: string, is_2D_sound: boolean?, auto_destroy: boolean?, sound_type: SoundType?, volume: number?, pitch: number?, inner_radius: number?, falloff_distance: number?, attenuation_function: AttenuationFunction?, keep_playing_when_silent: boolean?, loop_mode: SoundLoopMode?, auto_play: boolean?)
     -- Plays the sound with a fade effect
     @side(client)
@@ -2397,7 +2400,7 @@ end
 -- A Text Render class is useful for spawning Texts in 3D world.
 @overrideCtor("$class($args)")
 @side(shared)
-declare class TextRender extends Entity
+declare class TextRender extends Entity implements Actor
     constructor(location: Vector, rotation: Rotator, text: string, word_size: number?, color: Color?, rendering_type: TextRenderRenderingType?, horizontal_alignment: TextRenderHorizontalAlignment?, vertical_alignment: TextRenderVerticalAlignment?, font_asset: string?, cast_shadow: boolean?)
     -- Gets the current Text
     @side(shared)
@@ -2431,7 +2434,7 @@ end
 -- Class to create 3D Text with advanced options
 @overrideCtor("$class($args)")
 @side(shared)
-declare class Text3D extends Entity
+declare class Text3D extends Entity implements Actor, Paintable
     constructor(location: Vector, rotation: Rotator, text: string, scale: Vector?, color: Color?, font_type: FontType?, align_camera: any?)
     -- Sets the Font
     @side(shared)
@@ -2455,7 +2458,7 @@ end
 
 -- A Trigger class is a utility class to trigger events when any Entity enters an Area.
 @overrideCtor("$class($args)")
-declare class Trigger extends Entity
+declare class Trigger extends Entity implements Actor
     constructor(location: Vector, rotation: Rotator, extent: Vector | number, trigger_type: TriggerType?, is_visible: boolean?, color: Color?, overlap_only_classes: string[]?)
     -- Forces a Overlap checking to occur, will immediately trigger overlaps
     function ForceOverlapChecking(): nil
@@ -2470,7 +2473,7 @@ end
 
 -- Vehicles are wheeled entities which Characters can possesses and drive.
 @overrideCtor("$class($args)")
-declare class VehicleWheeled extends Entity
+declare class VehicleWheeled extends Entity implements Actor, Paintable, Damageable, Vehicle
     constructor(location: Vector, rotation: Rotator, asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, auto_unflip: boolean?, engine_sound: string?, horn_sound: string?, brake_sound: string?, engine_start_sound: string?, vehicle_door_sound: string?, auto_start_engine: boolean?, custom_animation_blueprint: string?, defer_spawn: boolean?)
     -- Starts or stops the vehicles horn
     @side(server)
@@ -2531,7 +2534,7 @@ end
 -- VehicleWater are entities which Characters can possesses and drive over the water with dynamic physics.
 @overrideCtor("$class($args)")
 @side(server)
-declare class VehicleWater extends Entity
+declare class VehicleWater extends Entity implements Actor, Paintable, Damageable, Vehicle
     constructor(location: Vector, rotation: Rotator, asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, defer_spawn: boolean?)
     -- Sets the relative location of the Engine (where the Physics Thruster, sounds and effects are attached)
     @side(server)
@@ -2545,7 +2548,7 @@ end
 -- 
 -- They are fully customizable, all pieces of the weapon can be changed with immense possibility of creation.
 @overrideCtor("$class($args)")
-declare class Weapon extends Entity
+declare class Weapon extends Entity implements Actor, Paintable, Pickable
     constructor(location: Vector, rotation: Rotator, asset: string, collision_type: CollisionType?, gravity_enabled: boolean?, defer_spawn: boolean?)
     -- Forces this Weapon to reload
     @side(server)
@@ -2855,7 +2858,7 @@ end
 
 -- The Widget3D class is the 3D representation of a Widget class spawned in the world.
 @side(client)
-declare class Widget3D extends Entity
+declare class Widget3D extends Entity implements Actor
     -- Sets the auto repaint rate
     @side(client)
     function SetAutoRepaintRate(rate: number): nil

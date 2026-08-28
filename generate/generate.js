@@ -245,7 +245,81 @@ function emitProperty(indent, prop, { isStatic = false } = {}) {
     return out.join('\n');
 }
 
+// nanos lists several bases per class (Character: Entity, Actor, Paintable,
+// Damageable, Pawn). Nebra has single class inheritance, so the first base
+// stays the `extends` parent and every type used as a *secondary* base is
+// emitted as an interface the class `implements`. Filled by collectMixins().
+const MIXINS = new Set();
+
+// Every class descends from Entity, and Entity carries static functions that
+// subclasses inherit (`Character.GetAll()`), so it has to stay a class. A
+// mixin interface cannot extend a class, which would leave a mixin-typed value
+// without Entity's instance methods - `weapon: Pickable` could not call
+// `IsValid()`. Entity's instance members therefore live in an interface that
+// both the Entity class and every mixin share.
+const ROOT_CLASS = 'Entity';
+const ROOT_INTERFACE = 'EntityBase';
+
+// Reads every class spec and records the names that appear as a secondary
+// base, which are exactly the types that have to become interfaces.
+function collectMixins(index) {
+    for (const [, file] of Object.entries(index.Classes || {})) {
+        const klass = loadJson(`Classes/${file}`);
+        for (const parent of (klass.inheritance || []).slice(1)) MIXINS.add(parent);
+    }
+}
+
+// The bases of `klass` that are themselves mixins, in declaration order.
+function mixinBases(klass) {
+    return (klass.inheritance || []).filter(p => MIXINS.has(p));
+}
+
+// The interfaces a mixin extends: its mixin bases, plus the shared Entity
+// interface in place of the Entity class it nominally descends from.
+function mixinInterfaceBases(klass) {
+    const bases = (klass.inheritance || [])
+        .map(p => (p === ROOT_CLASS ? ROOT_INTERFACE : p))
+        .filter(p => p === ROOT_INTERFACE || MIXINS.has(p));
+    return [...new Set(bases)];
+}
+
+// Emits the interface holding Entity's instance members, which the Entity
+// class implements and every mixin extends.
+function emitRootInterface(klass) {
+    const out = [];
+    out.push(`declare interface ${ROOT_INTERFACE}`);
+    for (const p of klass.properties || []) out.push(emitProperty('    ', p));
+    for (const f of klass.functions || []) out.push(emitFunction('    ', f));
+    out.push('end');
+    return out.join('\n');
+}
+
+// A mixin carries instance methods only - no constructor, no statics, no
+// operators - so it maps onto a `declare interface` one to one.
+function emitMixinInterface(klass) {
+    const out = [];
+    const doc = emitDoc('', klass.description);
+    if (doc) out.push(doc.trimEnd());
+
+    const classSide = pickClassSide(klass);
+    if (classSide) out.push(`@side(${classSide})`);
+
+    const bases = mixinInterfaceBases(klass);
+    let header = `declare interface ${klass.name}`;
+    if (bases.length > 0) header += ` extends ${bases.join(', ')}`;
+    out.push(header);
+
+    for (const p of klass.properties || []) out.push(emitProperty('    ', p));
+    for (const f of klass.functions || []) out.push(emitFunction('    ', f));
+
+    out.push('end');
+    return out.join('\n');
+}
+
 function emitClass(klass) {
+    if (MIXINS.has(klass.name)) return emitMixinInterface(klass);
+    if (klass.name === ROOT_CLASS) return emitRootClass(klass);
+
     const out = [];
     const doc = emitDoc('', klass.description);
     if (doc) out.push(doc.trimEnd());
@@ -272,14 +346,11 @@ function emitClass(klass) {
 
     let header = `declare class ${klass.name}`;
     const parents = klass.inheritance || [];
-    if (parents.length > 0) {
-        // Nebra only supports single inheritance via `extends`. nanos lists
-        // multiple bases (e.g. Character extends Entity, Actor, Paintable,
-        // Damageable, Pawn); we take the first and drop the rest. Members
-        // from the dropped bases will appear as missing on Character — this
-        // is a known limitation until Nebra grows multi-base support.
+    if (parents.length > 0 && !MIXINS.has(parents[0])) {
         header += ` extends ${parents[0]}`;
     }
+    const implemented = mixinBases(klass);
+    if (implemented.length > 0) header += ` implements ${implemented.join(', ')}`;
     out.push(header);
 
     for (const c of klass.constructors || []) out.push(emitConstructor('    ', c));
@@ -292,6 +363,26 @@ function emitClass(klass) {
         if (line) out.push(line);
     }
 
+    out.push('end');
+    return out.join('\n');
+}
+
+// The Entity class keeps what an interface cannot carry - its static members -
+// and takes the rest from the shared root interface it implements.
+function emitRootClass(klass) {
+    const out = [];
+    out.push(emitRootInterface(klass));
+    out.push('');
+
+    const doc = emitDoc('', klass.description);
+    if (doc) out.push(doc.trimEnd());
+
+    const classSide = pickClassSide(klass);
+    if (classSide) out.push(`@side(${classSide})`);
+
+    out.push(`declare class ${klass.name} implements ${ROOT_INTERFACE}`);
+    for (const p of klass.static_properties || []) out.push(emitProperty('    ', p, { isStatic: true }));
+    for (const f of klass.static_functions || []) out.push(emitFunction('    ', f, { isStatic: true }));
     out.push('end');
     return out.join('\n');
 }
@@ -360,6 +451,7 @@ function section(title) {
 function main() {
     const index = loadJson('APIFiles.json');
     collectKnownTypes(index);
+    collectMixins(index);
     const parts = [];
 
     parts.push('-- Auto-generated from the nanos-world api JSON specs.');
